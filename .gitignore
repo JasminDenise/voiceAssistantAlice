@@ -1,2 +1,3 @@
 va_env/
 __pycache__/
+.rasa/cache/
