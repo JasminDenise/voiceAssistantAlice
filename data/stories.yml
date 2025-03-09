@@ -1,11 +1,13 @@
 version: "3.1"
 
+# ML policies: training data to teach assistant what to do next
+# actual user conversations, small stories, not full conversations
 stories:
 
 - story: greet path
   steps:
   - intent: greet
-  - action: utter_greet
+  - action: utter_greet # response
 
 
 - story: happy path

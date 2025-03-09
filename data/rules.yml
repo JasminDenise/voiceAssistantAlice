@@ -1,5 +1,7 @@
 version: "3.1"
 
+# describe short pieces of conversations that always go the same way
+# for one-off interactions
 rules:
 
 - rule: Say goodbye anytime the user says goodbye
