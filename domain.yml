@@ -9,9 +9,11 @@ intents:
   #- mood_unhappy
   #- bot_challenge
 
+# can include mutliple possible responses -> rasa randomly select one 
 responses:
   utter_greet:
   - text: "Hey! How are you?"
+  - text: "Hello there :-)"
 
   utter_cheer_up:
   - text: "Here is something to cheer you up:"
@@ -29,6 +31,41 @@ responses:
   utter_iamabot:
   - text: "I am a bot, powered by Rasa."
 
+
+#storing information
+slots:
+  past_bookings:
+    type: text
+  dietry_preferences:
+    type: text
+  cuisine_preferences:
+    type: text
+  time_of_booking:
+    type: any
+    mappings:
+    - type: from_entity
+      entity: time
+  day_of_booking:
+    type: any
+    mappings:
+    - type: from_entity
+      entity: date
+  num_of_guests:
+    type: float
+
+# business logic, mandatory information
+forms:
+  restaurant_form:
+    required_slots:
+    - past_bookings
+    - dietry_preferences
+    - cuisine_preferences
+    - time_of_booking
+    - day_of_booking
+    - num_of_guests
+
+
+# custom actions (run any code you want, including API calls, database queries etc.): https://rasa.com/docs/rasa/custom-actions/
 
 session_config:
   session_expiration_time: 60

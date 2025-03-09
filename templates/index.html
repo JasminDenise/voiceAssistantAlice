@@ -3,80 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voice Assistant Eliza</title>
-    <style>
-        #chat-box {
-            border: 1px solid #ccc;
-            height: 300px;
-            overflow-y: scroll;
-            padding: 10px;
-            margin-bottom: 10px;
-        }
-    </style>
+    <title class="poppins-semibold">Voice Assistant Alice</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <script src="https://kit.fontawesome.com/fb25c25d2f.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <h1>Voice Assistant</h1>
+    <center>
+    <h1 style="color: rebeccapurple;"><i class="fa-solid fa-robot"></i> Voice Assistant Alice</h1>
+    <p>Hi, I'm Alice! How can I help you?</p>
     <div id="chat-box"></div>
-    <button id="start-record-btn">Start Voice Input</button>
-
-    <script>
-        // Check if the browser supports the Web Speech API
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (!SpeechRecognition) {
-            alert("Your browser does not support Speech Recognition. Please use Chrome or Edge.");
-        } else {
-            const recognition = new SpeechRecognition();
-            recognition.lang = 'en-US';
-            recognition.interimResults = false;
-            recognition.maxAlternatives = 1;
-
-            recognition.onresult = (event) => {
-                const transcript = event.results[0][0].transcript;
-                addChatMessage("You (spoken)", transcript);
-                sendTextToBackend(transcript);
-            };
-
-            recognition.onerror = (event) => {
-                console.error("Speech recognition error:", event.error);
-            };
-
-            document.getElementById('start-record-btn').addEventListener('click', () => {
-                recognition.start();
-            });
-        }
-
-        // Function to send recognized text to the Flask backend
-        function sendTextToBackend(text) {
-            fetch('/process', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ text: text })
-            })
-            .then(response => response.json())
-            .then(data => {
-                addChatMessage("Assistant", data.response);
-                if (data.audioUrl) {
-                    playAudio(data.audioUrl);
-                }
-            })
-            .catch(error => console.error('Error:', error));
-        }
-
-        // Function to add messages to the chat box
-        function addChatMessage(sender, message) {
-            const chatBox = document.getElementById('chat-box');
-            const newMessage = document.createElement('p');
-            newMessage.innerHTML = `<strong>${sender}:</strong> ${message}`;
-            chatBox.appendChild(newMessage);
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
-
-        // Function to play audio from the TTS engine
-        function playAudio(url) {
-            const audio = new Audio(url);
-            audio.play();
-        }
-    </script>
-    
+    <button class="poppins-medium"><i class="fa-solid fa-circle-play"></i> Start conversation</button>
+    </center>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>
