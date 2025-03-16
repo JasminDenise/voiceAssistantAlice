@@ -1,6 +1,8 @@
 version: "3.1"
 
-#
+# NLU training data
+# Training examples grouped by user intent e.g. optionally with annotated entities
+# Synonyms, reg. expressions or lookup tables
 nlu:
 - intent: greet
   examples: |
@@ -90,3 +92,58 @@ nlu:
     - are you a human?
     - am I talking to a bot?
     - am I talking to a human?
+
+## Slot mappings
+- intent: restaurant_request
+  examples: |
+   - I want to eat
+   - I want to have dinner
+   - I want to have a meal
+   - I'm looking for a restaurant
+   - I'm looking for a place to eat
+   - Suggest a restaurant
+   - I'm hungry
+   - Can you suggest a restaurant?
+   - Where should I go for dinner?
+   - Recommend a restaurant with vegan options.  
+
+# - intent: past_bookings ## where?
+#   examples: |
+#     - I’ve booked a place before
+#     - Yes, I have a past reservation
+#     - No, this will be my first time booking
+
+# - intent: dietry_preferences
+#   examples: |
+#     - I am vegetarian
+#     - I have a gluten allergy
+#     - I'm allergic to nuts
+#     - I'm lactose intolerant
+#     - I prefer vegan options 
+
+# - intent: cuisine_preferences
+#   examples: |
+#     - I want Italian food
+#     - Let’s go for Mexican cuisine
+#     - Chinese sounds good
+
+# - intent: time_of_booking
+#   examples: |
+#     - I want to book it for 7 PM
+#     - Let's book it at 8 in the evening
+#     - Book a table for 9 o'clock
+#     - I want to book in the morning
+
+# - intent: day_of_booking
+#   examples: |
+#     - I want to book it for next Friday
+#     - Can I book for this Saturday?
+#     - I’d like to go tomorrow
+#     - I want a table for today
+
+# - intent: num_of_guests
+#   examples: |
+#     - There will be four of us
+#     - I am bringing six people
+#     - Just two guests
+#     - Only one person

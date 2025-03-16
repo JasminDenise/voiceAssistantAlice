@@ -13,3 +13,13 @@ rules:
   steps:
   - intent: bot_challenge
   - action: utter_iamabot
+
+
+- rule: submit restaurant form
+  steps:
+    - intent: restaurant_request
+    - action: restaurant_form
+    - active_loop: restaurant_form
+    - active_loop: null # Form complete
+    - action: action_suggest_restaurant
+    - action: utter_suggest_restaurant

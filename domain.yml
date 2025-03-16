@@ -2,12 +2,17 @@ version: "3.1"
 
 intents:
   - greet
-  #- goodbye
-  #- affirm
-  #- deny
-  #- mood_great
-  #- mood_unhappy
-  #- bot_challenge
+  - goodbye
+  - affirm
+  - deny
+  - mood_great
+  - mood_unhappy
+  - bot_challenge
+  - restaurant_request
+
+entities:
+  - time
+  - date
 
 # can include mutliple possible responses -> rasa randomly select one 
 responses:
@@ -31,27 +36,38 @@ responses:
   utter_iamabot:
   - text: "I am a bot, powered by Rasa."
 
+  utter_suggest_restaurant: ##
+  - text: "I recommend the {restaurant}. It is a {cuisine} restaurant."
+
 
 #storing information
 slots:
   past_bookings:
     type: text
+    mappings:
+      - type: from_text
   dietry_preferences:
     type: text
+    mappings:
+      - type: from_text
   cuisine_preferences:
     type: text
+    mappings:
+      - type: from_text
   time_of_booking:
     type: any
     mappings:
-    - type: from_entity
-      entity: time
+      - type: from_entity
+        entity: time
   day_of_booking:
     type: any
     mappings:
-    - type: from_entity
-      entity: date
+      - type: from_entity
+        entity: date
   num_of_guests:
     type: float
+    mappings:
+      - type: from_text
 
 # business logic, mandatory information
 forms:
@@ -66,6 +82,8 @@ forms:
 
 
 # custom actions (run any code you want, including API calls, database queries etc.): https://rasa.com/docs/rasa/custom-actions/
+actions:
+ - action_suggest_restaurant
 
 session_config:
   session_expiration_time: 60

@@ -89,3 +89,27 @@ stories:
       are you a bot?
     intent: bot_challenge
   - action: utter_iamabot
+
+## restaurant specific
+
+- story: test restaurant form complete flow
+  steps:
+    - intent: restaurant_request
+    - action: restaurant_form
+    - active_loop: restaurant_form
+
+    # Simulate slot filling through user inputs.
+    - slot_was_set:
+      - past_bookings: "Yes, I've booked before"
+    - slot_was_set:
+      - dietry_preferences: "vegetarian"
+    - slot_was_set:
+      - cuisine_preferences: "Italian"
+    - slot_was_set:
+      - time_of_booking: "7:00 PM"
+    - slot_was_set:
+      - day_of_booking: "2025-03-20"
+    - slot_was_set:
+      - num_of_guests: 4
+    - action: action_suggest_restaurant
+    - action: utter_suggest_restaurant

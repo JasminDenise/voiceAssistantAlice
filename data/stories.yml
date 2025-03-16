@@ -1,9 +1,11 @@
 version: "3.1"
 
 # ML policies: training data to teach assistant what to do next
+# conversation training data
 # actual user conversations, small stories, not full conversations
 stories:
 
+# general
 - story: greet path
   steps:
   - intent: greet
@@ -36,3 +38,24 @@ stories:
   - action: utter_did_that_help
   - intent: deny
   - action: utter_goodbye
+
+
+### restaurant specific
+- story: restaurant suggestion flow
+  steps:
+  - intent: restaurant_request
+  - action: restaurant_form # Activate form
+  - active_loop: restaurant_form # This form is currently active
+  - active_loop: null # Form complete
+  - action: action_suggest_restaurant
+  - action: utter_suggest_restaurant
+
+
+- story: restaurant with no past bookings
+  steps:
+    - intent: restaurant_request
+    - action: restaurant_form
+    - active_loop: restaurant_form
+    - active_loop: null # Form complete
+    - action: action_suggest_restaurant
+    - action: utter_suggest_restaurant

@@ -1,0 +1,26 @@
+[
+    {
+        "name": "The Green Spoon",
+        "cuisine": "Vegetarian",
+        "dietary_options": ["Vegan", "Gluten-Free"],
+        "location": "Downtown",
+        "price_range": "$$",
+        "rating": 4.5
+    },
+    {
+        "name": "Spicy Delight",
+        "cuisine": "Indian",
+        "dietary_options": ["Halal", "Vegetarian"],
+        "location": "Uptown",
+        "price_range": "$$",
+        "rating": 4.7
+    },
+    {
+        "name": "Sushi Express",
+        "cuisine": "Japanese",
+        "dietary_options": ["Pescatarian"],
+        "location": "Midtown",
+        "price_range": "$$$",
+        "rating": 4.8
+    }
+]
