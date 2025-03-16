@@ -1,4 +1,5 @@
 // Check if the browser supports the Web Speech API
+// let recognition;
 const SpeechRecognition =
     window.SpeechRecognition || window.webkitSpeechRecognition;
 if (!SpeechRecognition) {
@@ -18,10 +19,21 @@ if (!SpeechRecognition) {
     const transcript = event.results[0][0].transcript;
     addChatMessage('You:', transcript);
     sendTextToBackend(transcript);
+
+    // After processing, continue listening automatically
+    recognition.start();  // Restart listening for the next input
   };
 
   recognition.onerror = (event) => {
     console.error('Speech recognition error:', event.error);
+    console.log('Restarting speech recognition...');
+    recognition.start();  // Restart on error
+  };
+
+  // Triggered when speech recognition ends (e.g., user stops talking)
+  recognition.onspeechend = () => {
+    recognition.stop();   // Stop the recognition, then restart
+    recognition.start();  // Automatically start listening again
   };
 
   // Start SpeechRecognition if button is clicked
@@ -30,6 +42,12 @@ if (!SpeechRecognition) {
   });
 }
 
+document.getElementById('stop-btn').addEventListener('click', () => {
+  recognition.stop();  // Stop the recognition
+  console.log('Speech recognition stopped.');
+});
+
+
 recognition.onspeechend = () => {
   recognition.stop();
   console.log('Speech recognition has stopped.');
@@ -37,13 +55,17 @@ recognition.onspeechend = () => {
 
 // Send recognized text to the Flask backend
 function sendTextToBackend(text) {
-  fetch('/process', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({text: text})
+  fetch(' http://127.0.0.1:5000/process', {
+    // http://127.0.0.1:5000/process
+    method: 'POST',  // send data to server
+    headers: {
+      'Content-Type': 'application/json'
+    },                                  // request body contains JSOn data
+    body: JSON.stringify({text: text})  // convert text to JSON string
   })
-      .then(response => response.json())
-      .then(data => {
+      .then(response => response.json())  // handling response from backend;
+                                          // parsed into JS object
+      .then(data => {  // handles processed data from the server
         addChatMessage('Alice:', data.response);
         if (data.audioUrl) {
           playAudio(data.audioUrl);
@@ -64,6 +86,16 @@ function addChatMessage(sender, message) {
 
 // Play audio from the TTS engine
 function playAudio(url) {
-  const audio = new Audio(url);
-  audio.play();
+  if (!url) return;  // Prevent trying to play a missing file
+  const audio = new Audio(
+      url + '?t=' +
+      new Date().getTime());  // force fresh request (avoid caching issues)
+  audio.play().catch(
+      error => console.error(
+          'Audio playback error:', error));  // handle autoplay restrictions
+
+  //  // Try playing again on user interaction
+  //  document.body.addEventListener('click', () => {
+  //   audio.play().catch(err => console.error('Audio playback error:', err));
+  // }, { once: true });
 }

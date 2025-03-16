@@ -52,39 +52,45 @@ nlu:
     - no way
     - not really
 
-- intent: mood_great
+- intent: ask_price_range
   examples: |
-    - perfect
-    - great
-    - amazing
-    - feeling like a king
-    - wonderful
-    - I am feeling very good
-    - I am great
-    - I am amazing
-    - I am going to save the world
-    - super stoked
-    - extremely good
-    - so so perfect
-    - so good
-    - so perfect
+    - I want to go to a cheap restaurant
+    - I want to go to a expensive restaurant
+    - I want to go to a mid range restaurant
 
-- intent: mood_unhappy
-  examples: |
-    - my day was horrible
-    - I am sad
-    - I don't feel very well
-    - I am disappointed
-    - super sad
-    - I'm so sad
-    - sad
-    - very sad
-    - unhappy
-    - not good
-    - not very good
-    - extremly sad
-    - so saad
-    - so sad
+# - intent: mood_great
+#   examples: |
+#     - perfect
+#     - great
+#     - amazing
+#     - feeling like a king
+#     - wonderful
+#     - I am feeling very good
+#     - I am great
+#     - I am amazing
+#     - I am going to save the world
+#     - super stoked
+#     - extremely good
+#     - so so perfect
+#     - so good
+#     - so perfect
+
+# - intent: mood_unhappy
+#   examples: |
+#     - my day was horrible
+#     - I am sad
+#     - I don't feel very well
+#     - I am disappointed
+#     - super sad
+#     - I'm so sad
+#     - sad
+#     - very sad
+#     - unhappy
+#     - not good
+#     - not very good
+#     - extremly sad
+#     - so saad
+#     - so sad
 
 - intent: bot_challenge
   examples: |
@@ -93,7 +99,7 @@ nlu:
     - am I talking to a bot?
     - am I talking to a human?
 
-## Slot mappings
+# Slot mappings
 - intent: restaurant_request
   examples: |
    - I want to eat
@@ -103,6 +109,7 @@ nlu:
    - I'm looking for a place to eat
    - Suggest a restaurant
    - I'm hungry
+   - I am hungry
    - Can you suggest a restaurant?
    - Where should I go for dinner?
    - Recommend a restaurant with vegan options.  

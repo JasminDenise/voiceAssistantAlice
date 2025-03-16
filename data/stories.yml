@@ -6,56 +6,100 @@ version: "3.1"
 stories:
 
 # general
-- story: greet path
-  steps:
-  - intent: greet
-  - action: utter_greet # response
+# - story: greet path
+#   steps:
+#   - intent: greet
+#   - action: utter_greet # response
 
 
-- story: happy path
-  steps:
-  - intent: greet
-  - action: utter_greet
-  - intent: mood_great
-  - action: utter_happy
+# - story: happy path
+#   steps:
+#   - intent: greet
+#   - action: utter_greet
+#   - intent: mood_great
+#   - action: utter_happy
 
-- story: sad path 1
-  steps:
-  - intent: greet
-  - action: utter_greet
-  - intent: mood_unhappy
-  - action: utter_cheer_up
-  - action: utter_did_that_help
-  - intent: affirm
-  - action: utter_happy
+# - story: sad path 1
+#   steps:
+#   - intent: greet
+#   - action: utter_greet
+#   - intent: mood_unhappy
+#   - action: utter_cheer_up
+#   - action: utter_did_that_help
+#   - intent: affirm
+#   - action: utter_happy
 
-- story: sad path 2
-  steps:
-  - intent: greet
-  - action: utter_greet
-  - intent: mood_unhappy
-  - action: utter_cheer_up
-  - action: utter_did_that_help
-  - intent: deny
-  - action: utter_goodbye
+# - story: sad path 2
+#   steps:
+#   - intent: greet
+#   - action: utter_greet
+#   - intent: mood_unhappy
+#   - action: utter_cheer_up
+#   - action: utter_did_that_help
+#   - intent: deny
+#   - action: utter_goodbye
 
 
 ### restaurant specific
-- story: restaurant suggestion flow
-  steps:
-  - intent: restaurant_request
-  - action: restaurant_form # Activate form
-  - active_loop: restaurant_form # This form is currently active
-  - active_loop: null # Form complete
-  - action: action_suggest_restaurant
-  - action: utter_suggest_restaurant
+# - story: restaurant suggestion flow
+#   steps:
+#   - intent: restaurant_request
+#   - action: restaurant_form # Activate form
+#   - active_loop: restaurant_form # This form is currently active
+#   - active_loop: null # Form complete
+#   - action: action_suggest_restaurant
+#   - action: utter_suggest_restaurant
 
 
-- story: restaurant with no past bookings
+- story: User asks for a restaurant recommendation and follows up with a question
   steps:
     - intent: restaurant_request
     - action: restaurant_form
     - active_loop: restaurant_form
-    - active_loop: null # Form complete
+    - active_loop: null  # Form is completed
     - action: action_suggest_restaurant
     - action: utter_suggest_restaurant
+    - intent: ask_price_range  # User asks about the price range
+    - action: utter_price_range
+
+- story: Restaurant recommendation after greeting
+  steps:
+    - intent: greet
+    - action: utter_greet
+    - intent: restaurant_request
+    - action: restaurant_form
+    - active_loop: restaurant_form
+    - active_loop: null
+    - action: action_suggest_restaurant
+    - action: utter_suggest_restaurant
+
+- story: User confirms restaurant suggestion
+  steps:
+    - intent: restaurant_request
+    - action: restaurant_form
+    - active_loop: restaurant_form
+    - active_loop: null  # Form is completed
+    - action: action_suggest_restaurant
+    - action: utter_suggest_restaurant
+    - intent: affirm
+    - action: utter_confirm_booking  # Example response when user agrees
+
+- story: User declines restaurant suggestion
+  steps:
+    - intent: restaurant_request
+    - action: restaurant_form
+    - active_loop: restaurant_form
+    - active_loop: null  # Form is completed
+    - action: action_suggest_restaurant
+    - action: utter_suggest_restaurant
+    - intent: deny
+    - action: utter_ask_for_other_options  # Example response when user says no
+
+# - story: restaurant with no past bookings
+#   steps:
+#     - intent: restaurant_request
+#     - action: restaurant_form
+#     - active_loop: restaurant_form
+#     - active_loop: null # Form complete
+#     - action: action_suggest_restaurant
+#     - action: utter_suggest_restaurant
