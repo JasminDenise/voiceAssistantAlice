@@ -25,7 +25,7 @@ if (!SpeechRecognition) {
   };
 
   // Start SpeechRecognition if button is clicked
-  document.getElementById('start-record-btn').addEventListener('click', () => {
+  document.getElementById('record-btn').addEventListener('click', () => {
     recognition.start();
   });
 }

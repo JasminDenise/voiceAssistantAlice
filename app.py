@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify, send_from_directory, render_template
 import requests
 import os
-
 app = Flask(__name__)
 
 # Define a route for the home page that renders index.html
