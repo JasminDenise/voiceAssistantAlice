@@ -1,5 +1,4 @@
 // Check if the browser supports the Web Speech API
-// let recognition;
 const SpeechRecognition =
     window.SpeechRecognition || window.webkitSpeechRecognition;
 if (!SpeechRecognition) {

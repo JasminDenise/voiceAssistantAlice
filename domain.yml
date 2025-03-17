@@ -8,10 +8,20 @@ intents:
   - bot_challenge
   - restaurant_request
   - ask_price_range
+  - past_bookings
+  - cuisine_preferences
+  - dietry_preferences
+  - time_of_booking
+  - day_of_booking
+  - num_of_guests
 
 entities:
-  - time
-  - date
+  - time_of_booking
+  - day_of_booking
+  - num_of_guests
+  - cuisine_preferences
+  - dietry_preferences
+
 
 # can include mutliple possible responses -> rasa randomly select one 
 responses:
@@ -25,7 +35,7 @@ responses:
   utter_iamabot:
   - text: "I am a bot, powered by Rasa."
 
-  utter_suggest_restaurant: ##
+  utter_suggest_restaurant: 
   - text: "I recommend the {restaurant}. It is a {cuisine} restaurant."
 
   utter_price_range:
@@ -37,6 +47,21 @@ responses:
   utter_confirm_booking:
   - text: "Is this okay?"
   - text: "Yes, that's perfect. Is this okay?"
+
+  utter_ask_for_guests:
+  - text: "How many guests will be joining you?"
+
+  utter_ask_for_time:
+  - text: "What time would you like to book the table?"
+
+  utter_ask_for_day:
+  - text: "Which day would you like to book for?"
+
+  utter_ask_for_dietary:
+  - text: "Do you have any dietary preferences?"
+
+  utter_ask_for_cuisine:
+  - text: "What kind of cuisine would you like?"
 
 
 #storing information
@@ -57,12 +82,12 @@ slots:
     type: any
     mappings:
       - type: from_entity
-        entity: time
+        entity: time_of_booking
   day_of_booking:
     type: any
     mappings:
       - type: from_entity
-        entity: date
+        entity: day_of_booking
   num_of_guests:
     type: float
     mappings:
