@@ -31,6 +31,8 @@ import random
 from typing import Any, Text, Dict, List
 from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
+# from rasa_sdk.events import SlotSet
+# from datetime import datetime
 
 class ActionSuggestRestaurant(Action):
     def name(self) -> Text:
@@ -43,7 +45,7 @@ class ActionSuggestRestaurant(Action):
 
         # Get user preferences from slots
         cuisine_pref = tracker.get_slot("cuisine_preferences")
-        dietary_pref = tracker.get_slot("dietry_preferences")
+        dietary_pref = tracker.get_slot("dietary_preferences")
 
         # Filter restaurants based on user preferences
         filtered_restaurants = [
@@ -63,65 +65,30 @@ class ActionSuggestRestaurant(Action):
         return []
 
 
-# import requests
-# from rasa_sdk import Action, Tracker
-# from rasa_sdk.executor import CollectingDispatcher
+# from rasa_sdk import Action
 
-# class ActionSuggestRestaurant(Action):
+
+# class ActionValidateTimeAndDay(Action):
+
 #     def name(self) -> str:
-#         return "action_suggest_restaurant"
+#         return "action_validate_time_and_day"
 
-#     def run(self, dispatcher: CollectingDispatcher,
-#             tracker: Tracker, domain: dict) -> list:
-#         past_bookings = tracker.get_slot("past_bookings")
-#         dietry_preferences = tracker.get_slot("dietry_preferences")
-#         cuisine_preferences = tracker.get_slot("cuisine_preferences")
-#         time_of_booking = tracker.get_slot("time_of_booking")
-#         day_of_booking = tracker.get_slot("day_of_booking")
-#         num_of_guests = tracker.get_slot("num_of_guests")
+#     def run(self, dispatcher, tracker, domain):
+#         time_of_booking = tracker.get_slot('time_of_booking')
+#         day_of_booking = tracker.get_slot('day_of_booking')
 
-#         # # Here you would typically query your database or API
-#         # # For demonstration, we'll use a static suggestion.
-#         # restaurant = {
-#         #     "name": "Luigi’s Trattoria",
-#         #     "cuisine": "Italian",
-#         #     "ambiance": "Quiet",
-#         #     "rating": 4.5,
-#         # }
-
-#         # message = (f"I found a great restaurant: {restaurant['name']}, "
-#         #            f"serving {restaurant['cuisine']} cuisine with a {restaurant['ambiance']} ambiance "
-#         #            f"and a rating of {restaurant['rating']}.")
-#         # dispatcher.utter_message(text=message)
-#         # return []
-
-#          # Construct the API URL and parameters
-#         url = "https://api.example.com/get_restaurant"  # Replace with the actual open source API URL
-#         params = {
-#             "cuisine": cuisine,
-#             "dietary": dietary,
-#             "time": time_booking,
-#             "date": day_booking,
-#             "guests": num_guests
-#         }
-
-#         # Make the API request
+#         # Validate time (e.g., ensure it follows a format like "7:00 PM")
 #         try:
-#             response = requests.get(url, params=params)
-#             response.raise_for_status()  # raise an exception for HTTP errors
-#             data = response.json()
+#             datetime.strptime(time_of_booking, "%I:%M %p")  # Example validation for time
+#         except ValueError:
+#             dispatcher.utter_message("Please provide a valid time format (e.g., 7:00 PM).")
+#             return [SlotSet("time_of_booking", None)]  # Reset invalid slot
 
-#             # Extract details from the response
-#             restaurant_name = data.get("name", "Unknown Restaurant")
-#             restaurant_address = data.get("address", "Address not available")
-#             restaurant_rating = data.get("rating", "No rating")
-            
-#             # Construct a suggestion message
-#             message = (f"I suggest {restaurant_name}, located at {restaurant_address}. "
-#                        f"It has a rating of {restaurant_rating} and suits your preferences.")
-#         except requests.exceptions.RequestException:
-#             message = "I'm sorry, I'm having trouble connecting to the restaurant service right now."
-        
-#         # Dispatch the message to the user
-#         dispatcher.utter_message(text=message)
+#         # Validate day (e.g., ensure it's a valid day)
+#         try:
+#             datetime.strptime(day_of_booking, "%A")  # Example validation for day (e.g., "Monday")
+#         except ValueError:
+#             dispatcher.utter_message("Please provide a valid day of the week.")
+#             return [SlotSet("day_of_booking", None)]  # Reset invalid slot
+
 #         return []

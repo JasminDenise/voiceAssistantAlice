@@ -4,22 +4,56 @@ version: "3.1"
 # for one-off interactions
 rules:
 
-- rule: Say goodbye anytime the user says goodbye
+- rule: say goodbye anytime the user says goodbye
   steps:
   - intent: goodbye
   - action: utter_goodbye
 
-- rule: Say 'I am a bot' anytime the user challenges
+- rule: say 'I am a bot' anytime the user challenges
   steps:
   - intent: bot_challenge
   - action: utter_iamabot
 
+# - rule: activate restaurant booking form
+#   steps:
+#     - intent: restaurant_request
+#     - action: restaurant_form
+#     - active_loop: restaurant_form
 
-- rule: submit restaurant form
-  steps:
-    - intent: restaurant_request
-    - action: restaurant_form
-    - active_loop: restaurant_form
-    - active_loop: null # Form complete
-    - action: action_suggest_restaurant
-    - action: utter_suggest_restaurant
+
+# - rule: ask for missing slots in the restaurant form
+#   condition:
+#   - active_loop: restaurant_form
+#   steps:
+#   - action: restaurant_form
+#   - active_loop: null
+#   - action: utter_booking_slots
+#   - action: utter_confirm_booking
+
+# - rule: handle stop intent
+#   steps:
+#   - intent: stop
+#   - action: utter_ask_continue
+#   - intent: deny
+#   - action: utter_booking_canceled
+#   - action: utter_ask_for_other_options
+
+# - rule: respond to price range query
+#   steps:
+#   - intent: ask_price_range
+#   - action: utter_price_range
+
+
+# - rule: activate restaurant form
+#   steps:
+#     - intent: restaurant_request
+#     - action: restaurant_form 
+#     - active_loop: restaurant_form
+
+# - rule: submit restaurant form
+#   condition:
+#   - active_loop: restaurant_form
+#   steps:
+#     - action: restaurant_form
+#     - active_loop: null # Form complete
+#     - action: action_suggest_restaurant

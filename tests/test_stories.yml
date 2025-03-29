@@ -2,79 +2,14 @@
 #### If you want to learn more, please see the docs: https://rasa.com/docs/rasa/testing-your-assistant
 
 stories:
+
 - story: say hello
   steps:
   - user: |
       hello there!
     intent: greet
   - action: utter_greet
-#   - user: |
-#       amazing
-#     intent: mood_great
-#   - action: utter_happy
 
-# - story: happy path 2
-#   steps:
-#   - user: |
-#       hello there!
-#     intent: greet
-#   - action: utter_greet
-#   - user: |
-#       amazing
-#     intent: mood_great
-#   - action: utter_happy
-#   - user: |
-#       bye-bye!
-#     intent: goodbye
-#   - action: utter_goodbye
-
-# - story: sad path 1
-#   steps:
-#   - user: |
-#       hello
-#     intent: greet
-#   - action: utter_greet
-#   - user: |
-#       not good
-#     intent: mood_unhappy
-#   - action: utter_cheer_up
-#   - action: utter_did_that_help
-#   - user: |
-#       yes
-#     intent: affirm
-#   - action: utter_happy
-
-# - story: sad path 2
-#   steps:
-#   - user: |
-#       hello
-#     intent: greet
-#   - action: utter_greet
-#   - user: |
-#       not good
-#     intent: mood_unhappy
-#   - action: utter_cheer_up
-#   - action: utter_did_that_help
-#   - user: |
-#       not really
-#     intent: deny
-#   - action: utter_goodbye
-
-# - story: sad path 3
-#   steps:
-#   - user: |
-#       hi
-#     intent: greet
-#   - action: utter_greet
-#   - user: |
-#       very terrible
-#     intent: mood_unhappy
-#   - action: utter_cheer_up
-#   - action: utter_did_that_help
-#   - user: |
-#       no
-#     intent: deny
-#   - action: utter_goodbye
 
 - story: say goodbye
   steps:
@@ -99,8 +34,7 @@ stories:
       intent: restaurant_request
     - action: restaurant_form
     - active_loop: restaurant_form
-
-    # Simulate slot filling through user inputs.
+    # Simulate slot filling through user inputs
     - slot_was_set:
       - past_bookings: "Yes, I've booked before"
     - slot_was_set:
@@ -114,4 +48,3 @@ stories:
     - slot_was_set:
       - num_of_guests: 4.0
     - action: action_suggest_restaurant
-    - action: utter_suggest_restaurant

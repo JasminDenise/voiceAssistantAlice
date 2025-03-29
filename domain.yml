@@ -1,33 +1,39 @@
 version: "3.1"
 
+# categories of things users say
+# classes for multiclass classification
 intents:
   - greet
   - goodbye
-  - affirm
-  - deny
+  - affirm # confirm booking
+  - deny # deny booking
+  - stop # stop booking process
   - bot_challenge
-  - restaurant_request
-  - ask_price_range
-  - past_bookings
-  - cuisine_preferences
-  - dietry_preferences
-  - time_of_booking
-  - day_of_booking
-  - num_of_guests
+  - restaurant_request # trigger the restaurant form
+  # - ask_price_range
+  # - past_bookings
+  # - cuisine_preferences
+  # - dietary_preferences
+  # - time_of_booking
+  # - day_of_booking
+  # - num_of_guests
 
+ # pieces of info extracted form incoming text
 entities:
+  - past_bookings
   - time_of_booking
   - day_of_booking
   - num_of_guests
   - cuisine_preferences
-  - dietry_preferences
+  - dietary_preferences
 
-
+# assistant responses
 # can include mutliple possible responses -> rasa randomly select one 
 responses:
   utter_greet:
   - text: "Hey! How are you?"
   - text: "Hello there :-)"
+  - text: "Hi! How can I help you today?"
 
   utter_goodbye:
   - text: "Bye"
@@ -35,79 +41,126 @@ responses:
   utter_iamabot:
   - text: "I am a bot, powered by Rasa."
 
-  utter_suggest_restaurant: 
-  - text: "I recommend the {restaurant}. It is a {cuisine} restaurant."
+  #utter_suggest_restaurant: 
+  #- text: "I recommend the {restaurant}. It is a {cuisine} restaurant."
+ 
+  utter_ask_past_bookings:
+  - text: "Have you had any past bookings?"
 
-  utter_price_range:
-  - text: "The price range for {restaurant} is {price_range}."
+  utter_ask_dietary_preferences:
+  - text: "Do you have any dietary preferences?"
 
-  utter_ask_for_other_options:
-  - text: "Do you have any other preferences?"
+  utter_ask_cuisine_preferences:
+  - text: "What kind of cuisine would you like?"
+
+  utter_ask_time_of_booking:
+  - text: "What time would you like to book the table?"
+
+  utter_ask_day_of_booking:
+  - text: "Which day would you like to book for?"
+
+  utter_ask_num_of_guests:
+  - text: "How many guests will be joining you?"
+
+  # utter_price_range:
+  # - text: "The price range for {restaurant} is {price_range}."
 
   utter_confirm_booking:
   - text: "Is this okay?"
   - text: "Yes, that's perfect. Is this okay?"
 
-  utter_ask_for_guests:
-  - text: "How many guests will be joining you?"
+  utter_ask_for_other_options:
+  - text: "Do you have any other preferences?"
 
-  utter_ask_for_time:
-  - text: "What time would you like to book the table?"
+  utter_booking_canceled:
+    - text: "Okay, I have cancelled your booking request."
 
-  utter_ask_for_day:
-  - text: "Which day would you like to book for?"
+  utter_booking_slots: # slot in {}
+  - text: |
+      I am going to run a restaurant search using the following information:\n
+      - cuisine: {cuisine_preferences}\n 
+      - dietary: {dietary_preferences}\n
+      - guests: {num_of_guests}\n
+      - time: {time_of_booking}\n
+      - day: {day_of_booking}
 
-  utter_ask_for_dietary:
-  - text: "Do you have any dietary preferences?"
+  utter_submit:
+  - text: "All done. I hope you enjoy your meal!"
 
-  utter_ask_for_cuisine:
-  - text: "What kind of cuisine would you like?"
+  utter_ask_continue:
+  - text: "Are you sure you want to stop the form?"
 
 
-#storing information
+
+#storing information, variables rememberes over the course of a conversation
 slots:
   past_bookings:
+    type: bool
+    #influence_conversation: true #TODO presence or not influence conversation
+    mappings:
+      - type: from_intent
+        intent: affirm
+        value: true
+      - type: from_intent
+        intent: deny
+        value: false
+
+  dietary_preferences:
     type: text
     mappings:
-      - type: from_text
-  dietry_preferences:
-    type: text
-    mappings:
-      - type: from_text
+      - type: from_entity
+        entity: dietary_preferences
+
   cuisine_preferences:
     type: text
     mappings:
-      - type: from_text
+      - type: from_entity
+        entity: cuisine_preferences
+
   time_of_booking:
-    type: any
+    type: text  #  Use 'text' if storing a time string (e.g., "6:00 PM")
+    influence_conversation: true
     mappings:
       - type: from_entity
         entity: time_of_booking
+      - type: from_text
+
+
   day_of_booking:
-    type: any
+    type: text
+    influence_conversation: true
     mappings:
       - type: from_entity
         entity: day_of_booking
+      - type: from_text
+
   num_of_guests:
     type: float
+    min_value: 1
+    max_value: 20
+    influence_conversation: true
     mappings:
-      - type: from_text
+      - type: from_entity
+        entity: num_of_guests
+
 
 # business logic, mandatory information
 forms:
   restaurant_form:
     required_slots:
     - past_bookings
-    - dietry_preferences
+    - dietary_preferences
     - cuisine_preferences
     - time_of_booking
     - day_of_booking
     - num_of_guests
 
 
-# custom actions (run any code you want, including API calls, database queries etc.): https://rasa.com/docs/rasa/custom-actions/
+# also responses?? custom actions (run any code you want, including API calls, database queries etc.): https://rasa.com/docs/rasa/custom-actions/
 actions:
  - action_suggest_restaurant
+ #- action_validate_time_and_day
+
 
 session_config:
   session_expiration_time: 60

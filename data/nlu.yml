@@ -1,30 +1,28 @@
 version: "3.1"
 
-# NLU training data
+# NLU training data, possible user input
 # Training examples grouped by user intent e.g. optionally with annotated entities
 # Synonyms, reg. expressions or lookup tables
 nlu:
 - intent: greet
   examples: |
     - hey
-    - hello
-    - hi
+    - hello, my name is [Jasmin](name)
+    - hi, I am [Jasmin](name)
     - hello there
     - good morning
     - good evening
     - moin
     - hey there
-    - let's go
-    - hey dude
+    - hey alice
     - goodmorning
     - goodevening
     - good afternoon
 
 - intent: goodbye
   examples: |
-    - cu
-    - good by
-    - cee you later
+    - see you
+    - see you later
     - good night
     - bye
     - goodbye
@@ -36,7 +34,7 @@ nlu:
 - intent: affirm
   examples: |
     - yes
-    - y
+    - yes, please
     - indeed
     - of course
     - that sounds good
@@ -45,52 +43,27 @@ nlu:
 - intent: deny
   examples: |
     - no
-    - n
+    - no, don't
+    - nope
     - never
     - I don't think so
+    - no I don't want that
     - don't like that
     - no way
     - not really
 
-- intent: ask_price_range
+- intent: stop
   examples: |
-    - I want to go to a cheap restaurant
-    - I want to go to a expensive restaurant
-    - I want to go to a mid range restaurant
+    - stop
+    - cancel
+    - I don't want to book anymore
+    - I have changed my mind
 
-# - intent: mood_great
+# - intent: ask_price_range
 #   examples: |
-#     - perfect
-#     - great
-#     - amazing
-#     - feeling like a king
-#     - wonderful
-#     - I am feeling very good
-#     - I am great
-#     - I am amazing
-#     - I am going to save the world
-#     - super stoked
-#     - extremely good
-#     - so so perfect
-#     - so good
-#     - so perfect
-
-# - intent: mood_unhappy
-#   examples: |
-#     - my day was horrible
-#     - I am sad
-#     - I don't feel very well
-#     - I am disappointed
-#     - super sad
-#     - I'm so sad
-#     - sad
-#     - very sad
-#     - unhappy
-#     - not good
-#     - not very good
-#     - extremly sad
-#     - so saad
-#     - so sad
+#     - I want to go to a cheap restaurant
+#     - I want to go to a expensive restaurant
+#     - I want to go to a mid range restaurant
 
 - intent: bot_challenge
   examples: |
@@ -109,46 +82,61 @@ nlu:
     - Suggest a restaurant
     - Can you suggest a restaurant?
     - Where should I go for dinner?
-    - Recommend a restaurant with vegan options.  
+    - Recommend a restaurant
+    - I want to book a table for [2](num_of_guests) people on [Friday](day_of_booking) at [7:00 PM](time_of_booking)
+    - Can I book a table for [4](num_of_guests) tomorrow at [6 PM](time_of_booking)?
+    - I'd like to reserve for [3](num_of_guests) people on [Saturday](day_of_booking) evening at [8:00 PM](time_of_booking)
+    - I want to eat [Italian](cuisine) food
+    - Can you suggest a good [Mexican](cuisine) restaurant?
+    - I am craving [Japanese](cuisine) cuisine
+    - Where can I find a nice [Indian](cuisine) place?
+    - Do you know a good [Chinese](cuisine) restaurant around here?
+    - I’d like to book a table at a [French](cuisine) restaurant
+    - I am looking for a [vegan](dietary_preference) restaurant
+    - Do you have any [vegetarian](dietary_preference) options?
+    - I need a [gluten-free](dietary_preference) friendly place
+    - I prefer a [halal](dietary_preference) restaurant
+    - Can you recommend a good [kosher](dietary_preference) place?
+    - I want a [dairy-free](dietary_preference) meal
 
 
-- intent: past_bookings ## where?
-  examples: |
-    - I’ve booked a place before
-    - Yes, I have a past reservation
-    - No, this will be my first time booking
+# - intent: past_bookings ## where?
+#   examples: |
+#     - I’ve booked a place before
+#     - Yes, I have a past reservation
+#     - No, this will be my first time booking
 
-- intent: dietry_preferences
-  examples: |
-    - I am vegetarian
-    - I have a gluten allergy
-    - I'm allergic to nuts
-    - I'm lactose intolerant
-    - I prefer vegan options 
+# - intent: dietary_preferences
+#   examples: |
+#     - I am vegetarian
+#     - I have a gluten allergy
+#     - I'm allergic to nuts
+#     - I'm lactose intolerant
+#     - I prefer vegan options 
 
-- intent: cuisine_preferences
-  examples: |
-    - I want Italian food
-    - Let’s go for Mexican cuisine
-    - Chinese sounds good
+# - intent: cuisine_preferences
+#   examples: |
+#     - I want Italian food
+#     - Let’s go for Mexican cuisine
+#     - Chinese sounds good
 
-- intent: time_of_booking
-  examples: |
-    - I want to book it for 7 PM
-    - Let's book it at 8 in the evening
-    - Book a table for 9 o'clock
-    - I want to book in the morning
+# - intent: time_of_booking
+#   examples: |
+#     - I want to book it for [7 PM](time_of_booking)
+#     - Let's book it [at 8 in the evening](time_of_booking)
+#     - Book a table for [9 o'clock](time_of_booking)
+#     - I want to book in the morning
 
-- intent: day_of_booking
-  examples: |
-    - I want to book it for [next Friday](day_of_booking)
-    - Can I book for [this Saturday](day_of_booking)?
-    - I’d like to go [tomorrow](day_of_booking)
-    - I want a table for [today](day_of_booking)
+# - intent: day_of_booking
+#   examples: |
+#     - I want to book it for [next Friday](day_of_booking)
+#     - Can I book for [this Saturday](day_of_booking)?
+#     - I’d like to go [tomorrow](day_of_booking)
+#     - I want a table for [today](day_of_booking)
 
-- intent: num_of_guests
-  examples: |
-    - There will be [4](num_of_guests) of us
-    - I am bringing [6](num_of_guests) people
-    - Just [2](num_of_guests) guests
-    - Only [1](num_of_guests) person
+# - intent: num_of_guests
+#   examples: |
+#     - There will be [4](num_of_guests) of us
+#     - I am bringing [6](num_of_guests) people
+#     - Just [2](num_of_guests) guests
+#     - Only [1](num_of_guests) person
