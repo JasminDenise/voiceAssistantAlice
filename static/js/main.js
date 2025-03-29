@@ -1,4 +1,4 @@
-
+let recognition;
 // Check if the browser supports the Web Speech API
 const SpeechRecognition =
     window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -6,7 +6,7 @@ if (!SpeechRecognition) {
   alert(
       'Your browser does not support Speech Recognition. Please use Chrome or Edge.');
 } else {
-  const recognition = new SpeechRecognition();
+  recognition = new SpeechRecognition();
   // let isRecognizing = false;  // State of recognition
 
   // Initialize SpeechRecognition only when needed
@@ -78,6 +78,9 @@ async function sendTextToBackend(text) {
 
     if (data.audioUrl) {
       playAudio(data.audioUrl);
+    } else {
+      // If there's no audio, restart recognition immediately.
+      recognition.start();
     }
   } catch (error) {
     console.error('Error:', error);
@@ -101,7 +104,17 @@ function playAudio(url) {
   const audio = new Audio(
       url + '?t=' +
       new Date().getTime());  // force fresh request (avoid caching issues)
-  audio.play().catch(
-      error => console.error(
-          'Audio playback error:', error));  // handle autoplay restrictions
+  audio.play()
+      .then(() => {
+        // When the audio finishes, restart the recognition.
+        // Option: You might add a delay if needed.
+        audio.onended = () => {
+          recognition.start();
+        };
+      })
+      .catch(error => {
+        console.error('Audio playback error:', error);
+        // Restart recognition even if playback fails.
+        recognition.start();
+      });
 }
