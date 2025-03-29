@@ -4,101 +4,117 @@ version: "3.1"
 # Training examples grouped by user intent e.g. optionally with annotated entities
 # Synonyms, reg. expressions or lookup tables
 nlu:
-- intent: greet
-  examples: |
-    - hey
-    - hello, my name is [Jasmin](name)
-    - hi, I am [Jasmin](name)
-    - hello there
-    - good morning
-    - good evening
-    - moin
-    - hey there
-    - hey alice
-    - goodmorning
-    - goodevening
-    - good afternoon
+  - intent: greet
+    examples: |
+      - hey
+      - hello, my name is [Jasmin](name)
+      - hi, I am [Jasmin](name)
+      - hello there
+      - good morning
+      - good evening
+      - moin
+      - hey there
+      - hey alice
+      - goodmorning
+      - goodevening
+      - good afternoon
 
-- intent: goodbye
-  examples: |
-    - see you
-    - see you later
-    - good night
-    - bye
-    - goodbye
-    - have a nice day
-    - see you around
-    - bye bye
-    - see you later
+  - intent: goodbye
+    examples: |
+      - see you
+      - see you later
+      - good night
+      - bye
+      - goodbye
+      - have a nice day
+      - see you around
+      - bye bye
+      - see you later
 
-- intent: affirm
-  examples: |
-    - yes
-    - yes, please
-    - indeed
-    - of course
-    - that sounds good
-    - correct
+  - intent: affirm
+    examples: |
+      - yes
+      - yes, please
+      - indeed
+      - of course
+      - that sounds good
+      - correct
 
-- intent: deny
-  examples: |
-    - no
-    - no, don't
-    - nope
-    - never
-    - I don't think so
-    - no I don't want that
-    - don't like that
-    - no way
-    - not really
+  - intent: deny
+    examples: |
+      - no
+      - no, don't
+      - nope
+      - never
+      - I don't think so
+      - no I don't want that
+      - don't like that
+      - no way
+      - not really
 
-- intent: stop
-  examples: |
-    - stop
-    - cancel
-    - I don't want to book anymore
-    - I have changed my mind
+  - intent: stop
+    examples: |
+      - stop
+      - cancel
+      - I don't want to book anymore
+      - I have changed my mind
 
-# - intent: ask_price_range
-#   examples: |
-#     - I want to go to a cheap restaurant
-#     - I want to go to a expensive restaurant
-#     - I want to go to a mid range restaurant
+  # - intent: ask_price_range
+  #   examples: |
+  #     - I want to go to a cheap restaurant
+  #     - I want to go to a expensive restaurant
+  #     - I want to go to a mid range restaurant
 
-- intent: bot_challenge
-  examples: |
-    - are you a bot?
-    - are you a human?
-    - am I talking to a bot?
-    - am I talking to a human?
+  - intent: bot_challenge
+    examples: |
+      - are you a bot?
+      - are you a human?
+      - am I talking to a bot?
+      - am I talking to a human?
 
-- intent: restaurant_request
-  examples: |
-    - I want to eat
-    - I want to have dinner
-    - I want to have a meal
-    - I'm looking for a restaurant
-    - I'm looking for a place to eat
-    - Suggest a restaurant
-    - Can you suggest a restaurant?
-    - Where should I go for dinner?
-    - Recommend a restaurant
-    - I want to book a table for [2](num_of_guests) people on [Friday](day_of_booking) at [7:00 PM](time_of_booking)
-    - Can I book a table for [4](num_of_guests) tomorrow at [6 PM](time_of_booking)?
-    - I'd like to reserve for [3](num_of_guests) people on [Saturday](day_of_booking) evening at [8:00 PM](time_of_booking)
-    - I want to eat [Italian](cuisine) food
-    - Can you suggest a good [Mexican](cuisine) restaurant?
-    - I am craving [Japanese](cuisine) cuisine
-    - Where can I find a nice [Indian](cuisine) place?
-    - Do you know a good [Chinese](cuisine) restaurant around here?
-    - I’d like to book a table at a [French](cuisine) restaurant
-    - I am looking for a [vegan](dietary_preference) restaurant
-    - Do you have any [vegetarian](dietary_preference) options?
-    - I need a [gluten-free](dietary_preference) friendly place
-    - I prefer a [halal](dietary_preference) restaurant
-    - Can you recommend a good [kosher](dietary_preference) place?
-    - I want a [dairy-free](dietary_preference) meal
+  - intent: restaurant_request
+    examples: |
+      - I want to eat
+      - I want to have dinner
+      - I want to have a meal
+      - I'm looking for a restaurant
+      - I'm looking for a place to eat
+      - Suggest a restaurant
+      - Can you suggest a restaurant?
+      - Where should I go for dinner?
+      - Recommend a restaurant
+      - I want to book a table for [2](num_of_guests) people on [Friday](day_of_booking) at [7:00 PM](time_of_booking)
+      - Can I book a table for [4](num_of_guests) tomorrow at [6 PM](time_of_booking)?
+      - I'd like to reserve for [3](num_of_guests) people on [Saturday](day_of_booking) evening at [8:00 PM](time_of_booking)
+      - I want to eat [Italian](cuisine) food
+      - Can you suggest a good [Mexican](cuisine) restaurant?
+      - I am craving [Japanese](cuisine) cuisine
+      - Where can I find a nice [Indian](cuisine) place?
+      - Do you know a good [Chinese](cuisine) restaurant around here?
+      - I’d like to book a table at a [French](cuisine) restaurant
+      - I am looking for a [vegan](dietary_preferences) restaurant
+      - Do you have any [vegetarian](dietary_preferences) options?
+      - I need a [gluten-free](dietary_preferences) friendly place
+      - I prefer a [halal](dietary_preferences) restaurant
+      - Can you recommend a good [kosher](dietary_preferences) place?
+      - I want a [dairy-free](dietary_preferences) meal
+      - I eat [plant-based](dietary_preferences)
+      - I want to book a table for [2](num_of_guests) people on [Friday](day_of_booking) at [7:00 PM](time_of_booking)
+      - Can I book a table for [4](num_of_guests) tomorrow at [6 PM](time_of_booking)?
+      - I'd like to reserve for [3](num_of_guests) people on [Saturday](day_of_booking) evening at [8:00 PM](time_of_booking)
+      - I want to eat at [7 o'clock](time_of_booking)
+      - Can I book for [next Monday](day_of_booking) at [noon](time_of_booking)?
+      - I’d like to make a reservation for [7:30 PM](time_of_booking) this [Wednesday](day_of_booking)
+      - I am looking for a restaurant this [afternoon](time_of_booking)
+      - Book a table for [tomorrow](day_of_booking) at [5 PM](time_of_booking)
+      - I am [vegetarian](dietary_preferences) and looking for a [Mexican](cuisine) restaurant
 
+
+regex:
+  - name: "time_of_booking"
+    pattern: "(?:[01]?[0-9]|2[0-3]):[0-5][0-9](?:[ ]?[APap][Mm])?"  # regex for time (e.g., 7:00 PM)
+  - name: "day_of_booking"
+    pattern: "(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)"
 
 # - intent: past_bookings ## where?
 #   examples: |
@@ -106,7 +122,7 @@ nlu:
 #     - Yes, I have a past reservation
 #     - No, this will be my first time booking
 
-# - intent: dietary_preferences
+# - intent: dietary_preferencess
 #   examples: |
 #     - I am vegetarian
 #     - I have a gluten allergy

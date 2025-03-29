@@ -2,11 +2,9 @@ from flask import Flask, request, jsonify, send_from_directory, render_template
 import requests
 from kokoro import KPipeline
 import soundfile as sf
-from flask_cors import CORS
 import numpy as np
 
 app = Flask(__name__)
-CORS(app)  # This will allow all domains to make requests
 
 # Initialize the TTS pipeline globally
 pipeline = KPipeline(lang_code='a')  # 'a' corresponds to American English 
@@ -91,4 +89,4 @@ def generate_tts_audio(text):
 #     return send_from_directory('static', filename)
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8000)
+    app.run(debug=True, port=5000)

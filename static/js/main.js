@@ -1,3 +1,4 @@
+
 // Check if the browser supports the Web Speech API
 const SpeechRecognition =
     window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -6,10 +7,13 @@ if (!SpeechRecognition) {
       'Your browser does not support Speech Recognition. Please use Chrome or Edge.');
 } else {
   const recognition = new SpeechRecognition();
+  // let isRecognizing = false;  // State of recognition
+
+  // Initialize SpeechRecognition only when needed
   recognition.lang = 'en-US';
-  recognition.interimResults = false;  // return only final results
-  recognition.maxAlternatives =
-      1;  // nr of alternative matches that should be returned
+  recognition.interimResults = false;  // Return only final results
+  recognition.maxAlternatives = 1;  // Number of alternative matches to return
+
 
   // Triggered when the speech recognition service returns a result.
   // Sends the text to the Rasa server via the /process endpoint.
@@ -19,59 +23,63 @@ if (!SpeechRecognition) {
     addChatMessage('You:', transcript);
     sendTextToBackend(transcript);
 
-    // After processing, continue listening automatically
-    recognition.start();  // Restart listening for the next input
+    // // Restart listening only if it's not already recognizing
+    // if (!isRecognizing) {
+    //   isRecognizing = true;
+    // recognition.start();  // Restart listening for the next input
   };
+
 
   recognition.onerror = (event) => {
     console.error('Speech recognition error:', event.error);
     console.log('Restarting speech recognition...');
-    recognition.start();  // Restart on error
+    // isRecognizing = false;
+    recognition.stop();  // Restart on error
   };
 
   // Triggered when speech recognition ends (e.g., user stops talking)
   recognition.onspeechend = () => {
-    recognition.stop();   // Stop the recognition, then restart
-    recognition.start();  // Automatically start listening again
+    recognition.stop();  // Stop the recognition, then restart
+    console.log('Speech recognition has stopped.');
+    // isRecognizing = false;
+    // recognition.start();  // Automatically start listening again
   };
 
   // Start SpeechRecognition if button is clicked
   document.getElementById('record-btn').addEventListener('click', () => {
-    recognition.start();
+    // if (!isRecognizing) {
+    //   if (!recognition) {
+    //     initRecognition();  // Initialize recognition if not already done
+    //   }
+    recognition.start();  // Start recognizing only if not already started
+    // isRecognizing = true;  // Update recognition state to 'recognizing'
+    //}
   });
 }
 
-document.getElementById('stop-btn').addEventListener('click', () => {
-  recognition.stop();  // Stop the recognition
-  console.log('Speech recognition stopped.');
-});
-
-
-recognition.onspeechend = () => {
-  recognition.stop();
-  console.log('Speech recognition has stopped.');
-};
-
 // Send recognized text to the Flask backend
-function sendTextToBackend(text) {
-  fetch(' http://127.0.0.1:5000/process', {
-    // http://127.0.0.1:5000/process
-    method: 'POST',  // send data to server
-    headers: {
-      'Content-Type': 'application/json'
-    },                                  // request body contains JSOn data
-    body: JSON.stringify({text: text})  // convert text to JSON string
-  })
-      .then(response => response.json())  // handling response from backend;
-                                          // parsed into JS object
-      .then(data => {  // handles processed data from the server
-        addChatMessage('Alice:', data.response);
-        if (data.audioUrl) {
-          playAudio(data.audioUrl);
-        }
-      })
-      .catch(error => console.error('Error:', error));
+// Function to send recognized text to the backend
+async function sendTextToBackend(text) {
+  try {
+    const response = await fetch('http://127.0.0.1:5000/process', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({text: text})
+    });
+
+    const data = await response.json();
+    addChatMessage('Alice:', data.response);
+
+    if (data.audioUrl) {
+      playAudio(data.audioUrl);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
 }
+
 
 // Add messages to the chat box
 // TODO Left & right aligned Bot/user
@@ -92,9 +100,4 @@ function playAudio(url) {
   audio.play().catch(
       error => console.error(
           'Audio playback error:', error));  // handle autoplay restrictions
-
-  //  // Try playing again on user interaction
-  //  document.body.addEventListener('click', () => {
-  //   audio.play().catch(err => console.error('Audio playback error:', err));
-  // }, { once: true });
 }

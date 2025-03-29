@@ -48,7 +48,7 @@ responses:
   - text: "Have you had any past bookings?"
 
   utter_ask_dietary_preferences:
-  - text: "Do you have any dietary preferences?"
+  - text: "Do you have any dietary preferences? For example, vegetarian or vegan?"
 
   utter_ask_cuisine_preferences:
   - text: "What kind of cuisine would you like?"
@@ -123,7 +123,7 @@ slots:
     mappings:
       - type: from_entity
         entity: time_of_booking
-      - type: from_text
+      # - type: from_text
 
 
   day_of_booking:
@@ -132,7 +132,7 @@ slots:
     mappings:
       - type: from_entity
         entity: day_of_booking
-      - type: from_text
+      # - type: from_text
 
   num_of_guests:
     type: float

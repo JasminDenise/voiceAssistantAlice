@@ -16,17 +16,12 @@ pipeline:
 # See https://rasa.com/docs/rasa/tuning-your-model for more information.
   - name: WhitespaceTokenizer
   - name: RegexFeaturizer
+    # alias: "regex"
   - name: LexicalSyntacticFeaturizer
-  - name: CountVectorsFeaturizer
-  - name: CountVectorsFeaturizer
-    analyzer: char_wb
-    min_ngram: 1
-    max_ngram: 4
-  #- name: DucklingEntityExtractor
-  #  dimensions: ["time", "date"]
-  #- name: RegexEntityExtractor
-  #- name: SklearnIntentClassifier
+  - name: CountVectorsFeaturizer  # Use just one CountVectorsFeaturizer for word-level features
   - name: DIETClassifier
+    intent_classification: true
+    entity_recognition: true
     epochs: 100
     constrain_similarities: true
   - name: EntitySynonymMapper
