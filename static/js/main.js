@@ -32,6 +32,10 @@ if (!SpeechRecognition) {
 
   recognition.onerror = (event) => {
     console.error('Speech recognition error:', event.error);
+    // if (event.error === 'no-speech') {
+    //   // Optionally restart recognition after a short delay
+    //   setTimeout(() => recognition.start(), 1000);
+    // }
     console.log('Restarting speech recognition...');
     // isRecognizing = false;
     recognition.stop();  // Restart on error
