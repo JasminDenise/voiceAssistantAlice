@@ -6,58 +6,220 @@ version: "3.1"
 # memorization policy
 
 stories:
-  - story: restaurant booking process with turn tracking
+  - story: rebooking with known restaurant
     steps:
-      - intent: greet
-      - action: utter_greet
-      - action: action_track_turns  # Track first turn
-      - action: action_listen
-      - intent: restaurant_request
-      - action: restaurant_form  # Starts the restaurant booking form
-      - active_loop: restaurant_form  # Form is active, it will ask for each slot
-      - slot_was_set:
-          - past_bookings: "yes I booked before at the restaurant 'La Bella Italia'"
-      - action: action_track_turns  # Track turn after past_bookings
-      - slot_was_set:
-          - dietary_preferences: "vegetarian"
-      - action: action_track_turns  # Track turn after dietary_preferences
-      - slot_was_set:
-          - cuisine_preferences: "italian"
-      - action: action_track_turns  # Track turn after cuisine_preferences
-      - slot_was_set:
-          - time_of_booking: "7:00 PM"
-      - action: action_track_turns  # Track turn after time_of_booking
-      - slot_was_set:
-          - day_of_booking: "Friday"
-      - action: action_track_turns  # Track turn after day_of_booking
-      - slot_was_set:
-          - num_of_guests: 4
-      - action: action_track_turns  # Track turn after num_of_guests
-      - action: utter_booking_slots  # After all slots are filled, confirm the details
-      - action: action_track_turns  # Track turn after utter_booking_slots
-      - action: utter_confirm_booking  # Confirm the booking
-      - intent: affirm
-      - action: utter_submit
-      - action: action_track_turns  # Track turn after confirmation
+        - intent: greet
+        - action: utter_greet
+        - intent: inform_booking_details
+        - action: restaurant_form
+        - active_loop: restaurant_form
+        - slot_was_set:
+            - past_bookings: true
+        - slot_was_set:
+            - past_restaurant_name: "La Bella Italia"
+        - slot_was_set:
+            - rebook: true
+        - action: restaurant_form
+        - active_loop: null  # <-- End restaurant form cleanly
+        - action: rebook_form
+        - active_loop: rebook_form
 
-  - story: restaurant booking process with misunderstanding handling
+  - story: rebooking with unknown restaurant
+    steps:
+        - intent: greet
+        - action: utter_greet
+        - intent: inform_booking_details
+        - action: restaurant_form
+        - active_loop: restaurant_form
+        - slot_was_set:
+            - past_bookings: true
+        - slot_was_set:
+            - past_restaurant_name: null
+        - slot_was_set:
+            - past_restaurant_name: "Casa Mexicana"
+        - slot_was_set:
+            - rebook: true
+        - action: restaurant_form
+        - active_loop: null  # <-- End restaurant form
+        - action: rebook_form
+        - active_loop: rebook_form
+
+  - story: booking new restaurant after past visit
     steps:
       - intent: greet
       - action: utter_greet
-      - action: action_track_turns  # Track first turn
-      - action: action_listen
-      - intent: restaurant_request
-      - action: restaurant_form  # Start the restaurant form
-      - active_loop: restaurant_form  # Form will be active, and ask for missing slots
-      - action: action_track_turns  # Track after starting the form
-      - action: action_listen
-      - intent: inform
-      - action: action_default_fallback  # Bot doesn't understand user input
-      - action: utter_default  # Bot asks user to rephrase
-      - action: action_track_turns  # Track turn after fallback
-      - action: utter_ask_past_bookings  # If the previous response was unclear, ask again
-      - intent: past_bookings
+      - intent: inform_booking_details
+      - action: restaurant_form
+      - active_loop: restaurant_form
       - slot_was_set:
-          - past_bookings: "yes"
-      - action: action_track_turns  # Track turn after asking about past bookings
-      - action: action_listen
+          - past_bookings: true
+      - slot_was_set:
+          - rebook: false
+      # restaurant_form will continue after rebook = false is set
+
+  - story: new booking, no past bookings
+    steps:
+      - intent: greet
+      - action: utter_greet
+      - intent: inform_booking_details
+      - action: restaurant_form
+      - active_loop: restaurant_form
+      - slot_was_set:
+          - past_bookings: false
+
+  - story: fallback and clarification
+    steps:
+      - intent: greet
+      - action: utter_greet
+      - intent: inform_booking_details
+      - action: restaurant_form
+      - active_loop: restaurant_form
+      - intent: inform_fallback
+      - action: action_default_fallback
+      - action: utter_default
+
+# stories:
+#   # User has booked before and names a known restaurant -> only asked for time, day, guests
+#   - story: restaurant booking with rebooking path and known restaurant
+#     steps:
+#       - intent: greet
+#       - action: utter_greet
+#       - intent: inform_booking_details
+#       - action: restaurant_form
+#       - active_loop: restaurant_form
+#       - slot_was_set:
+#           - past_bookings: true
+#       - slot_was_set:
+#           - past_restaurant_name: "La Bella Italia"
+#       - action: action_ask_if_rebook
+#       - intent: rebook_yes
+#       - slot_was_set:
+#           - time_of_booking: "7:00 PM"
+#       - action: action_track_turn_count
+#       - slot_was_set:
+#           - day_of_booking: "Friday"
+#       - action: action_track_turn_count
+#       - slot_was_set:
+#           - num_of_guests: 4
+#       - action: action_track_turn_count
+#       - action: action_suggest_restaurant
+#       - action: utter_booking_slots
+#       - action: utter_confirm_booking
+#       - intent: affirm
+#       - action: utter_submit
+
+#   # User has booked before but doesn't provide restaurant immediately -> bot asks
+#   - story: restaurant booking with rebooking path and unknown restaurant
+#     steps:
+#       - intent: greet
+#       - action: utter_greet
+#       - intent: inform_booking_details
+#       - action: restaurant_form
+#       - active_loop: restaurant_form
+#       - slot_was_set:
+#           - past_bookings: true
+#       - slot_was_set:
+#           - past_restaurant_name: null
+#       - action: utter_ask_past_restaurant_name
+#       - intent: inform_past_booking
+#       - slot_was_set:
+#           - past_restaurant_name: "Casa Mexicana"
+#       - action: action_ask_if_rebook
+#       - intent: rebook_yes
+#       - slot_was_set:
+#           - time_of_booking: "6:00 PM"
+#       - action: action_track_turn_count
+#       - slot_was_set:
+#           - day_of_booking: "Thursday"
+#       - action: action_track_turn_count
+#       - slot_was_set:
+#           - num_of_guests: 3
+#       - action: action_track_turn_count
+#       - action: action_suggest_restaurant
+#       - action: utter_booking_slots
+#       - action: utter_confirm_booking
+#       - intent: affirm
+#       - action: utter_submit
+
+#   # User has booked before but doesn't want to rebook -> full new booking flow
+#   - story: restaurant booking with new place path
+#     steps:
+#       - intent: greet
+#       - action: utter_greet
+#       - intent: inform_booking_details
+#       - action: restaurant_form
+#       - active_loop: restaurant_form
+#       - slot_was_set:
+#           - past_bookings: true
+#       - action: action_ask_if_rebook
+#       - intent: rebook_no
+#       - action: restaurant_form
+#       - active_loop: restaurant_form
+#       - slot_was_set:
+#           - dietary_preferences: "vegetarian"
+#       - action: action_track_turn_count
+#       - slot_was_set:
+#           - cuisine_preferences: "italian"
+#       - action: action_track_turn_count
+#       - slot_was_set:
+#           - time_of_booking: "7:00 PM"
+#       - action: action_track_turn_count
+#       - slot_was_set:
+#           - day_of_booking: "Friday"
+#       - action: action_track_turn_count
+#       - slot_was_set:
+#           - num_of_guests: 4
+#       - action: action_track_turn_count
+#       - action: action_suggest_restaurant
+#       - action: utter_booking_slots
+#       - action: utter_confirm_booking
+#       - intent: affirm
+#       - action: utter_submit
+
+#   # First time booking user -> normal form flow with all preferences
+#   - story: booking without past bookings
+#     steps:
+#       - intent: greet
+#       - action: utter_greet
+#       - intent: inform_booking_details
+#       - action: restaurant_form
+#       - active_loop: restaurant_form
+#       - slot_was_set:
+#           - past_bookings: false
+#       - slot_was_set:
+#           - dietary_preferences: "vegan"
+#       - action: action_track_turn_count
+#       - slot_was_set:
+#           - cuisine_preferences: "indian"
+#       - action: action_track_turn_count
+#       - slot_was_set:
+#           - time_of_booking: "8:00 PM"
+#       - action: action_track_turn_count
+#       - slot_was_set:
+#           - day_of_booking: "Saturday"
+#       - action: action_track_turn_count
+#       - slot_was_set:
+#           - num_of_guests: 2
+#       - action: action_track_turn_count
+#       - action: action_suggest_restaurant
+#       - action: utter_booking_slots
+#       - action: utter_confirm_booking
+#       - intent: affirm
+#       - action: utter_submit
+
+#   # Fallback scenario when user input isn't understood
+#   - story: misunderstanding with fallback
+#     steps:
+#       - intent: greet
+#       - action: utter_greet
+#       - intent: inform_booking_details
+#       - action: restaurant_form
+#       - active_loop: restaurant_form
+#       - intent: inform_fallback
+#       - action: action_default_fallback
+#       - action: utter_default
+#       - action: utter_ask_past_bookings
+#       - intent: inform_past_booking
+#       - slot_was_set:
+#           - past_bookings: "yes"
+#       - action: action_track_turn_count

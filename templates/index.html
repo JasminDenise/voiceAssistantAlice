@@ -1,28 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title class="poppins-semibold">Voice Assistant Alice</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <!-- Font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <!-- Icons -->
-    <script src="https://kit.fontawesome.com/fb25c25d2f.js" crossorigin="anonymous"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title class="poppins-semibold">Voice Assistant Alice</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
+  <!-- Icons -->
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+  <script src="https://kit.fontawesome.com/fb25c25d2f.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <center>
+
+  <center>
     <h1><i class="fa-solid fa-robot"></i> Voice Assistant Alice</h1>
     <h2>Hi, I'm Alice! How can I help you?</h2>
+
     <div id="chat-box"></div>
-    <button id="record-btn" class="poppins-medium"><i class="fa-solid fa-circle-play"></i> Start conversation</button>
-    <!-- <button id="stop-btn"class="poppins-medium"><i class="fa-solid fa-circle-stop"></i> Stop conversation</button> -->
 
-    </center>
+    <button id="record-btn" class="poppins-medium">
+      <i class="fa-solid fa-circle-play"></i> Start conversation
+    </button>
+  </center>
 
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>

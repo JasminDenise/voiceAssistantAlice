@@ -1,9 +1,7 @@
 version: "3.1"
 
-# NLU training data, possible user input
-# Training examples grouped by user intent e.g. optionally with annotated entities
-# Synonyms, reg. expressions or lookup tables
 nlu:
+  # --- Greeting & Goodbye Intents ---
   - intent: greet
     examples: |
       - hey
@@ -29,8 +27,8 @@ nlu:
       - have a nice day
       - see you around
       - bye bye
-      - see you later
 
+  # --- Confirmation Intents ---
   - intent: affirm
     examples: |
       - yes
@@ -43,14 +41,14 @@ nlu:
   - intent: deny
     examples: |
       - no
-      - no, don't
       - nope
       - never
       - I don't think so
       - no I don't want that
-      - don't like that
-      - no way
       - not really
+      - no no
+      - no thanks
+      - not this time
 
   - intent: stop
     examples: |
@@ -59,12 +57,6 @@ nlu:
       - I don't want to book anymore
       - I have changed my mind
 
-  # - intent: ask_price_range
-  #   examples: |
-  #     - I want to go to a cheap restaurant
-  #     - I want to go to a expensive restaurant
-  #     - I want to go to a mid range restaurant
-
   - intent: bot_challenge
     examples: |
       - are you a bot?
@@ -72,90 +64,121 @@ nlu:
       - am I talking to a bot?
       - am I talking to a human?
 
-  - intent: restaurant_request
+  # --- Booking Intent covering all details ---
+  - intent: inform_booking_details
     examples: |
       - I want to eat
-      - I want to have dinner
-      - I want to have a meal
       - I'm looking for a restaurant
-      - I'm looking for a place to eat
-      - Suggest a restaurant
-      - Can you suggest a restaurant?
-      - Where should I go for dinner?
-      - Recommend a restaurant
-      - I want to book a table for [2](num_of_guests) people on [Friday](day_of_booking) at [7:00 PM](time_of_booking)
-      - Can I book a table for [4](num_of_guests) tomorrow at [6 PM](time_of_booking)?
-      - I'd like to reserve for [3](num_of_guests) people on [Saturday](day_of_booking) evening at [8:00 PM](time_of_booking)
-      - I want to eat [Italian](cuisine) food
-      - Can you suggest a good [Mexican](cuisine) restaurant?
-      - I am craving [Japanese](cuisine) cuisine
-      - Where can I find a nice [Indian](cuisine) place?
-      - Do you know a good [Chinese](cuisine) restaurant around here?
-      - I’d like to book a table at a [French](cuisine) restaurant
-      - I am looking for a [vegan](dietary_preferences) restaurant
-      - Do you have any [vegetarian](dietary_preferences) options?
-      - I need a [gluten-free](dietary_preferences) friendly place
-      - I prefer a [halal](dietary_preferences) restaurant
-      - Can you recommend a good [kosher](dietary_preferences) place?
-      - I want a [dairy-free](dietary_preferences) meal
-      - I eat [plant-based](dietary_preferences)
-      - I want to book a table for [2](num_of_guests) people on [Friday](day_of_booking) at [7:00 PM](time_of_booking)
-      - Can I book a table for [4](num_of_guests) tomorrow at [6 PM](time_of_booking)?
-      - I'd like to reserve for [3](num_of_guests) people on [Saturday](day_of_booking) evening at [8:00 PM](time_of_booking)
-      - I want to eat at [7 o'clock](time_of_booking)
-      - Can I book for [next Monday](day_of_booking) at [noon](time_of_booking)?
-      - I’d like to make a reservation for [7:30 PM](time_of_booking) this [Wednesday](day_of_booking)
-      - I am looking for a restaurant this [afternoon](time_of_booking)
-      - Book a table for [tomorrow](day_of_booking) at [5 PM](time_of_booking)
-      - I am [vegetarian](dietary_preferences) and looking for a [Mexican](cuisine) restaurant
-      - I booked before at [La Bella Italia](past_restaurant_name)
-      - I had a reservation at [Casa Mexicana](past_restaurant_name)
-      - I reserved a table at [Dragon Wok](past_restaurant_name)
+      - I want to make a restaurant booking
+      - I want to reserve a table
+      - I want [Italian](cuisine_preferences) food
+      - Let's go with [Mexican](cuisine_preferences)
+      - [Japanese](cuisine_preferences) sounds good
+      - [Indian](cuisine_preferences) is my favorite
+      - [Chinese](cuisine_preferences) please
+      - How about [French](cuisine_preferences)?
+      - I'm [vegetarian](dietary_preferences)
+      - I need [gluten-free](dietary_preferences) food
+      - [vegan](dietary_preferences), please
+      - [halal](dietary_preferences)
+      - I follow a [kosher](dietary_preferences) diet
+      - [lactose-free](dietary_preferences)
+      - [Friday](day_of_booking)
+      - I'd like to go [tomorrow](day_of_booking)
+      - [next Monday](day_of_booking) is good
+      - Can I book for [Saturday](day_of_booking)?
+      - [7:00 PM](time_of_booking)
+      - At [8 PM](time_of_booking)
+      - [6:30 PM](time_of_booking), please
+      - I'd like it at [noon](time_of_booking)
+      - For [2](num_of_guests) guests
+      - [4](num_of_guests) people
+      - Just [1](num_of_guests) person
+      - We're [5](num_of_guests) people together
+      - I want to book a table I previously booked at [La Bella Italia](past_restaurant_name)
+      - I previously booked at [Casa Mexicana](past_restaurant_name), can I go again?
+      - I want to eat at [La Bella Italia](past_restaurant_name) again
+      - I have books before at [La Bella Italia](past_restaurant_name)
+      - I spoke before at [La Bella Italia](past_restaurant_name)
+      - a previously booked at [La Bella Italia](past_restaurant_name)
+      - My past booking was [La Bella Italia](past_restaurant_name)
+      - I have been to [Tokyo Sushi](past_restaurant_name)
+      - I used to go to [La Bella Italia](past_restaurant_name)
 
+  # --- Past Booking Intent (used for conditional logic) ---
+  - intent: inform_past_booking
+    examples: |
+      - I’ve booked before at [La Bella Italia](past_restaurant_name)
+      - Yes, I had a reservation
+      - I booked at [Casa Mexicana](past_restaurant_name)
+      - No, this is my first booking
 
+  # --- Rebooking Confirmation ---
+  - intent: rebook_yes
+    examples: |
+      - yes
+      - same place please
+      - book it again
+      - yes, I'd like the same restaurant
+
+  - intent: rebook_no
+    examples: |
+      - no
+      - not this time
+      - I want to try something else
+      - a different place please
+
+# --- Regex Entities for time & day ---
 regex:
   - name: "time_of_booking"
-    pattern: "(?:[01]?[0-9]|2[0-3]):[0-5][0-9](?:[ ]?[AaPp][Mm])?"  # regex for time (e.g., 7:00 PM)
+    pattern: "([0-9]{1,2})(:[0-9]{2})?\s?(AM|PM|am|pm)?"
   - name: "day_of_booking"
     pattern: "(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)"
 
-# - intent: past_bookings ## where?
-#   examples: |
-#     - I’ve booked a place before
-#     - Yes, I have a past reservation
-#     - No, this will be my first time booking
+# --- Synonyms for fuzzy matching ---
+synonyms:
+  vegan:
+    - plant-based
+    - strictly vegan
+    - only plants
+  vegetarian:
+    - veggie
+    - veg
+    - meat-free
+  gluten-free:
+    - gluten free
+    - no gluten
+  halal:
+    - islamic food
+  kosher:
+    - jewish food
+  lactose-free:
+    - no dairy
+    - dairy-free
+    - milk-free
+  pescatarian:
+    - fish only
+    - I eat fish but no meat
+  omnivore:
+    - anything
+    - no restrictions
+    - everything is fine
+  La Bella Italia:
+    - labella italia
+    - bella italia
+    - la bella
+    - never Italia
 
-# - intent: dietary_preferencess
-#   examples: |
-#     - I am vegetarian
-#     - I have a gluten allergy
-#     - I'm allergic to nuts
-#     - I'm lactose intolerant
-#     - I prefer vegan options 
-
-# - intent: cuisine_preferences
-#   examples: |
-#     - I want Italian food
-#     - Let’s go for Mexican cuisine
-#     - Chinese sounds good
-
-# - intent: time_of_booking
-#   examples: |
-#     - I want to book it for [7 PM](time_of_booking)
-#     - Let's book it [at 8 in the evening](time_of_booking)
-#     - Book a table for [9 o'clock](time_of_booking)
-#     - I want to book in the morning
-
-# - intent: day_of_booking
-#   examples: |
-#     - I want to book it for [next Friday](day_of_booking)
-#     - Can I book for [this Saturday](day_of_booking)?
-#     - I’d like to go [tomorrow](day_of_booking)
-#     - I want a table for [today](day_of_booking)
-
-# - intent: num_of_guests
-#   examples: |
-#     - There will be [4](num_of_guests) of us
-#     - I am bringing [6](num_of_guests) people
-#     - Just [2](num_of_guests) guests
-#     - Only [1](num_of_guests) person
+# --- Lookup table for cuisines ---
+lookup: cuisine
+examples: |
+  - Italian
+  - Mexican
+  - Japanese
+  - Indian
+  - Chinese
+  - French
+  - Fusion
+  - Thai
+  - Korean
+  - German
