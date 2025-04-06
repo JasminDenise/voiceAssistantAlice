@@ -3,13 +3,16 @@ import requests
 from kokoro import KPipeline
 import soundfile as sf
 import numpy as np
+import os
+os.environ['SQLALCHEMY_SILENCE_UBER_WARNING'] = '1' # ignore sqlalchemy warnings
+
 
 app = Flask(__name__)
 
-# Initialize the TTS pipeline globally
-pipeline = KPipeline(lang_code='a')  # 'a' corresponds to American English 
+# Initialize TTS pipeline globally
+pipeline = KPipeline(lang_code='a')  # 'a' = American English 
 
-# Define a route for the home page that renders index.html
+# Rendering index.html
 @app.route('/')
 def home():
     return render_template('index.html')
@@ -24,7 +27,12 @@ def process_request():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500 # if not successful
 
+
+# Receives a JSON file containing user text from the client
+# Sends user text to the Rasa  and extracts the response text
+# Generates TTS audio using Kokoro and returns the response (text & audio)
 def process_input():
+  
     data = request.get_json() # reads incoming JSON data
     user_text = data.get('text', '') # extract test of user
     
@@ -36,11 +44,11 @@ def process_input():
 
     print(f"Rasa response: {rasa_response}")  # Log the response for debugging
 
-    if rasa_response:
-            # Extract the 'text' field from the first response
-            response_text = rasa_response[0].get('text', 'Sorry, I did not understand that.')
+    if not rasa_response or not rasa_response[0].get('text'):
+        response_text = 'Sorry, I did not understand that.'  # Fallback for empty or invaöld response from Rasa
     else:
-            response_text = 'Sorry, I did not understand that.'
+        response_text = rasa_response[0].get('text')
+        
     # For simplicity, pick the first text response from Rasa
     #response_text = rasa_response[0].get('text', 'Sorry, I did not understand that.') 
     # Extract all text responses from Rasa; if response is empty, default to "Sorry, I didn't understand that."
@@ -62,7 +70,7 @@ def generate_tts_audio(text):
     """
     try:
         # Generate audio from text using Kokoro TTS
-        generator = pipeline(text, voice='af_heart', speed=1)
+        generator = pipeline(text, voice='af_heart', speed=0.9)
 
         audio_filename = 'static/response.wav'
         all_audio = []  # Store all chunks
@@ -76,6 +84,8 @@ def generate_tts_audio(text):
             full_audio = np.concatenate(all_audio)
             sf.write(audio_filename, full_audio, 24000)
             return '/static/response.wav'
+        #You might instead write each chunk directly to disk 
+        #(if your TTS engine supports streaming or if you can process data in chunks), reducing peak memory usage.
         else:
             print("No audio generated.")
             return None  # Handle case where no audio is generated
@@ -83,10 +93,6 @@ def generate_tts_audio(text):
     except Exception as e:
         print(f"Error generating audio: {e}")
         return None  # Return None if TTS fails
-
-# @app.route('/static/<path:filename>')
-# def serve_static_files(filename):
-#     return send_from_directory('static', filename)
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

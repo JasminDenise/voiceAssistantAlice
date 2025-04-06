@@ -10,13 +10,9 @@ intents:
   - stop # stop booking process
   - bot_challenge
   - restaurant_request # trigger the restaurant form
-  # - ask_price_range
-  # - past_bookings
-  # - cuisine_preferences
-  # - dietary_preferences
-  # - time_of_booking
-  # - day_of_booking
-  # - num_of_guests
+  - inform
+  - past_bookings
+
 
  # pieces of info extracted form incoming text
 entities:
@@ -26,6 +22,7 @@ entities:
   - num_of_guests
   - cuisine_preferences
   - dietary_preferences
+  - past_restaurant_name
 
 # assistant responses
 # can include mutliple possible responses -> rasa randomly select one 
@@ -40,9 +37,6 @@ responses:
 
   utter_iamabot:
   - text: "I am a bot, powered by Rasa."
-
-  #utter_suggest_restaurant: 
-  #- text: "I recommend the {restaurant}. It is a {cuisine} restaurant."
  
   utter_ask_past_bookings:
   - text: "Have you had any past bookings?"
@@ -61,9 +55,6 @@ responses:
 
   utter_ask_num_of_guests:
   - text: "How many guests will be joining you?"
-
-  # utter_price_range:
-  # - text: "The price range for {restaurant} is {price_range}."
 
   utter_confirm_booking:
   - text: "Is this okay?"
@@ -90,13 +81,15 @@ responses:
   utter_ask_continue:
   - text: "Are you sure you want to stop the form?"
 
+  utter_default:
+    - text: "I'm sorry, I didn't quite understand that. Could you please rephrase?"
 
 
-#storing information, variables rememberes over the course of a conversation
+
+# storing information, variables remembered over the course of a conversation
 slots:
   past_bookings:
     type: bool
-    #influence_conversation: true #TODO presence or not influence conversation
     mappings:
       - type: from_intent
         intent: affirm
@@ -104,6 +97,13 @@ slots:
       - type: from_intent
         intent: deny
         value: false
+
+  past_restaurant_name:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_entity
+        entity: past_restaurant_name  # Extract restaurant name from user's input
 
   dietary_preferences:
     type: text
@@ -118,13 +118,11 @@ slots:
         entity: cuisine_preferences
 
   time_of_booking:
-    type: text  #  Use 'text' if storing a time string (e.g., "6:00 PM")
+    type: text
     influence_conversation: true
     mappings:
       - type: from_entity
         entity: time_of_booking
-      # - type: from_text
-
 
   day_of_booking:
     type: text
@@ -132,7 +130,6 @@ slots:
     mappings:
       - type: from_entity
         entity: day_of_booking
-      # - type: from_text
 
   num_of_guests:
     type: float
@@ -143,6 +140,11 @@ slots:
       - type: from_entity
         entity: num_of_guests
 
+  # conversation_turn:
+  #   type: float
+  #   initial_value: 0
+  #   influence_conversation: false
+  #   mappimgs: []
 
 # business logic, mandatory information
 forms:
@@ -159,6 +161,8 @@ forms:
 # also responses?? custom actions (run any code you want, including API calls, database queries etc.): https://rasa.com/docs/rasa/custom-actions/
 actions:
  - action_suggest_restaurant
+ - action_track_turns
+ - action_default_fallback
  #- action_validate_time_and_day
 
 

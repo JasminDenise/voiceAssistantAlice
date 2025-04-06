@@ -47,3 +47,21 @@ policies: null
 #     max_history: 5
 #     epochs: 100
 #     constrain_similarities: true
+  # - name: FallbackPolicy
+  #   fallback_action_name: "action_default_fallback"
+  #   core_threshold: 0.3 # determines how confident the model must be in predicting the next action
+  #                       # If the confidence score is lower than this threshold, it will trigger the fallback action
+  #   nlu_threshold: 0.3 # applies to the NLU model, controlling how confident the model must be in recognizing the intent
+
+# # No configuration for policies was provided. The following default policies were used to train your model.
+# # If you'd like to customize them, uncomment and adjust the policies.
+# # See https://rasa.com/docs/rasa/policies for more information.
+#   - name: MemoizationPolicy
+#   - name: RulePolicy
+#   - name: UnexpecTEDIntentPolicy
+#     max_history: 5
+#     epochs: 100
+#   - name: TEDPolicy
+#     max_history: 5
+#     epochs: 100
+#     constrain_similarities: true

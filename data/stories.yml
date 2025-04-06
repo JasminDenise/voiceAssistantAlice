@@ -6,172 +6,58 @@ version: "3.1"
 # memorization policy
 
 stories:
-
-#general
-# - story: greet path
-#   steps:
-#   - intent: greet
-#   - action: utter_greet # response
-
-  - story: restaurant booking process # happy path
+  - story: restaurant booking process with turn tracking
     steps:
       - intent: greet
       - action: utter_greet
+      - action: action_track_turns  # Track first turn
+      - action: action_listen
       - intent: restaurant_request
-      - action: restaurant_form  # Start the restaurant booking form
-      - active_loop: restaurant_form  # The form is active, so it starts collecting required slots
+      - action: restaurant_form  # Starts the restaurant booking form
+      - active_loop: restaurant_form  # Form is active, it will ask for each slot
       - slot_was_set:
-          - past_bookings: "yes, I booked a restaurant before"
+          - past_bookings: "yes I booked before at the restaurant 'La Bella Italia'"
+      - action: action_track_turns  # Track turn after past_bookings
       - slot_was_set:
           - dietary_preferences: "vegetarian"
+      - action: action_track_turns  # Track turn after dietary_preferences
       - slot_was_set:
           - cuisine_preferences: "italian"
+      - action: action_track_turns  # Track turn after cuisine_preferences
       - slot_was_set:
           - time_of_booking: "7:00 PM"
+      - action: action_track_turns  # Track turn after time_of_booking
       - slot_was_set:
-          - day_of_booking: "tomorrow"
+          - day_of_booking: "Friday"
+      - action: action_track_turns  # Track turn after day_of_booking
       - slot_was_set:
           - num_of_guests: 4
-      - action: utter_booking_slots  # Confirm collected information
+      - action: action_track_turns  # Track turn after num_of_guests
+      - action: utter_booking_slots  # After all slots are filled, confirm the details
+      - action: action_track_turns  # Track turn after utter_booking_slots
       - action: utter_confirm_booking  # Confirm the booking
       - intent: affirm
       - action: utter_submit
+      - action: action_track_turns  # Track turn after confirmation
 
-
-
-  - story: User stops booking process
+  - story: restaurant booking process with misunderstanding handling
     steps:
       - intent: greet
       - action: utter_greet
+      - action: action_track_turns  # Track first turn
+      - action: action_listen
       - intent: restaurant_request
-      - action: restaurant_form  # Start the restaurant booking form
-      - active_loop: restaurant_form  # The form is active
-      - intent: stop
-      - action: utter_ask_continue 
-      - intent: deny
-      - action: utter_booking_canceled  # Confirm stopping the process
-      - action: utter_ask_for_other_options
-
-
-
-# - story: User asks for a restaurant recommendation
-#   steps:
-#   - intent: restaurant_request
-#   - action: restaurant_form
-#   - active_loop: restaurant_form
-
-# - story: User provides booking details
-#   steps:
-#   - intent: cuisine_preferences
-#     entities:
-#       - cuisine_preferences: "Italian"
-#   - slot_was_set:
-#       - cuisine_preferences: "Italian"
-#   - action: utter_ask_dietary_preferences
-
-# - story: User completes restaurant booking form
-#   steps:
-#   - intent: dietary_preferences
-#     entities:
-#       - dietary_preferences: "vegan"
-#   - slot_was_set:
-#       - dietary_preferences: "vegan"
-#   - action: utter_ask_time_of_booking
-#   - intent: time_of_booking
-#     entities:
-#       - time_of_booking: "7 PM"
-#   - slot_was_set:
-#       - time_of_booking: "7 PM"
-#   - action: utter_ask_day_of_booking
-#   - intent: day_of_booking
-#     entities:
-#       - day_of_booking: "Friday"
-#   - slot_was_set:
-#       - day_of_booking: "Friday"
-#   - action: utter_ask_num_of_guests
-#   - intent: num_of_guests
-#     entities:
-#       - num_of_guests: 4
-#   - slot_was_set:
-#       - num_of_guests: 4
-#   - action: utter_booking_slots
-#   - action: utter_confirm_booking
-
-# - story: User confirms the booking
-#   steps:
-#   - intent: affirm
-#   - action: action_suggest_restaurant
-
-# - story: User declines the booking
-#   steps:
-#   - intent: deny
-#   - action: utter_ask_for_other_options
-
-# - story: User cancels the booking process
-#   steps:
-#   - intent: stop
-#   - action: utter_ask_continue
-#   - intent: affirm
-#   - action: utter_goodbye
-
-
-### restaurant specific
-# - story: restaurant suggestion flow
-#   steps:
-#   - intent: restaurant_request
-#   - action: restaurant_form # Activate form
-#   - active_loop: restaurant_form # This form is currently active
-#   - active_loop: null # Form complete
-#   - action: action_suggest_restaurant
-#   - action: utter_suggest_restaurant
-
-
-# - story: user asks for a restaurant recommendation and follows up with a question
-#   steps:
-#     - intent: restaurant_request
-#     - action: restaurant_form
-#     - active_loop: restaurant_form
-#     - active_loop: null  # Form is completed
-#     - action: action_suggest_restaurant
-#     - intent: ask_price_range  # User asks about the price range
-#     - action: utter_price_range
-
-# - story: restaurant recommendation after greeting
-#   steps:
-#     - intent: greet
-#     - action: utter_greet
-#     - intent: restaurant_request
-#     - action: restaurant_form
-#     - active_loop: restaurant_form
-#     - active_loop: null
-#     - action: action_suggest_restaurant
-
-
-# - story: User confirms restaurant suggestion
-#   steps:
-#     - intent: restaurant_request
-#     - action: restaurant_form
-#     - active_loop: restaurant_form
-#     - active_loop: null  # Form is completed
-#     - action: action_suggest_restaurant
-#     - intent: affirm
-#     - action: utter_confirm_booking  # Example response when user agrees
-
-# - story: User declines restaurant suggestion
-#   steps:
-#     - intent: restaurant_request
-#     - action: restaurant_form
-#     - active_loop: restaurant_form
-#     - active_loop: null  # Form is completed
-#     - action: action_suggest_restaurant
-#     - intent: deny
-#     - action: utter_ask_for_other_options  # Example response when user says no
-
-# - story: restaurant with no past bookings
-#   steps:
-#     - intent: restaurant_request
-#     - action: restaurant_form
-#     - active_loop: restaurant_form
-#     - active_loop: null # Form complete
-#     - action: action_suggest_restaurant
-#     - action: utter_suggest_restaurant
+      - action: restaurant_form  # Start the restaurant form
+      - active_loop: restaurant_form  # Form will be active, and ask for missing slots
+      - action: action_track_turns  # Track after starting the form
+      - action: action_listen
+      - intent: inform
+      - action: action_default_fallback  # Bot doesn't understand user input
+      - action: utter_default  # Bot asks user to rephrase
+      - action: action_track_turns  # Track turn after fallback
+      - action: utter_ask_past_bookings  # If the previous response was unclear, ask again
+      - intent: past_bookings
+      - slot_was_set:
+          - past_bookings: "yes"
+      - action: action_track_turns  # Track turn after asking about past bookings
+      - action: action_listen

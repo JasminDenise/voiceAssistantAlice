@@ -3,6 +3,9 @@ body{
     background-color: rgb(242, 236, 248);
 }
 
+h1{
+    color: rebeccapurple;
+}
 /* Fonts */
 .poppins-regular {
     font-family: "Poppins", serif;

@@ -14,46 +14,9 @@ rules:
   - intent: bot_challenge
   - action: utter_iamabot
 
-# - rule: activate restaurant booking form
+# # Restriction of 10 turns, recommendation on the next message after the 10th
+# - rule: Recommend restaurant after 10 turns
 #   steps:
-#     - intent: restaurant_request
-#     - action: restaurant_form
-#     - active_loop: restaurant_form
-
-
-# - rule: ask for missing slots in the restaurant form
-#   condition:
-#   - active_loop: restaurant_form
-#   steps:
-#   - action: restaurant_form
-#   - active_loop: null
-#   - action: utter_booking_slots
-#   - action: utter_confirm_booking
-
-# - rule: handle stop intent
-#   steps:
-#   - intent: stop
-#   - action: utter_ask_continue
-#   - intent: deny
-#   - action: utter_booking_canceled
-#   - action: utter_ask_for_other_options
-
-# - rule: respond to price range query
-#   steps:
-#   - intent: ask_price_range
-#   - action: utter_price_range
-
-
-# - rule: activate restaurant form
-#   steps:
-#     - intent: restaurant_request
-#     - action: restaurant_form 
-#     - active_loop: restaurant_form
-
-# - rule: submit restaurant form
-#   condition:
-#   - active_loop: restaurant_form
-#   steps:
-#     - action: restaurant_form
-#     - active_loop: null # Form complete
+#     - slot_was_set:
+#         - conversation_turn: 10 # starting from 0
 #     - action: action_suggest_restaurant

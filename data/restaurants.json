@@ -1,26 +1,95 @@
-[
+[ 
     {
-        "name": "The Green Spoon",
-        "cuisine": "Vegetarian",
-        "dietary_options": ["Vegan", "Gluten-Free"],
-        "location": "Downtown",
-        "price_range": "$$",
-        "rating": 4.5
+      "name": "La Bella Italia",
+      "cuisine": "Italian",
+      "dietary_options": ["Vegetarian", "Gluten-Free", "Omnivore"],
+      "location": "Downtown",
+      "price_range": "$$",
+      "rating": 4.6,
+      "availability": {
+        "Friday": ["7:00 PM", "8:00 PM", "9:00 PM"],
+        "Saturday": ["6:00 PM", "8:00 PM"]
+      },
+      "max_guests": 6
     },
     {
-        "name": "Spicy Delight",
-        "cuisine": "Indian",
-        "dietary_options": ["Halal", "Vegetarian"],
-        "location": "Uptown",
-        "price_range": "$$",
-        "rating": 4.7
+      "name": "Casa Mexicana",
+      "cuisine": "Mexican",
+      "dietary_options": ["Vegan", "Halal", "Vegetarian", "Omnivore"],
+      "location": "Uptown",
+      "price_range": "$",
+      "rating": 4.4,
+      "availability": {
+        "Friday": ["6:00 PM", "7:00 PM"],
+        "Saturday": ["5:00 PM", "7:30 PM"]
+      },
+      "max_guests": 8
     },
     {
-        "name": "Sushi Express",
-        "cuisine": "Japanese",
-        "dietary_options": ["Pescatarian"],
-        "location": "Midtown",
-        "price_range": "$$$",
-        "rating": 4.8
+      "name": "Tokyo Table",
+      "cuisine": "Japanese",
+      "dietary_options": ["Pescatarian", "Gluten-Free", "Omnivore"],
+      "location": "Midtown",
+      "price_range": "$$$",
+      "rating": 4.8,
+      "availability": {
+        "Saturday": ["8:00 PM", "9:00 PM"],
+        "Sunday": ["6:00 PM", "7:00 PM"]
+      },
+      "max_guests": 4
+    },
+    {
+      "name": "Bollywood Spice",
+      "cuisine": "Indian",
+      "dietary_options": ["Halal", "Vegetarian", "Omnivore"],
+      "location": "Old Town",
+      "price_range": "$$",
+      "rating": 4.7,
+      "availability": {
+        "Friday": ["6:00 PM", "8:00 PM"],
+        "Monday": ["12:00 PM"]
+      },
+      "max_guests": 10
+    },
+    {
+      "name": "Dragon Wok",
+      "cuisine": "Chinese",
+      "dietary_options": ["Omnivore", "Vegetarian"],
+      "location": "Chinatown",
+      "price_range": "$$",
+      "rating": 4.3,
+      "availability": {
+        "Wednesday": ["12:00 PM", "6:00 PM"],
+        "Friday": ["5:00 PM", "7:00 PM"]
+      },
+      "max_guests": 5
+    },
+    {
+      "name": "Le Petit Gourmet",
+      "cuisine": "French",
+      "dietary_options": ["Vegetarian", "Lactose-Free", "Omnivore"],
+      "location": "West End",
+      "price_range": "$$$",
+      "rating": 4.5,
+      "availability": {
+        "Monday": ["12:00 PM", "6:00 PM"],
+        "Wednesday": ["7:30 PM"]
+      },
+      "max_guests": 6
+    },
+    {
+      "name": "Plant Kitchen",
+      "cuisine": "Fusion",
+      "dietary_options": ["Vegan", "Plant-Based", "Dairy-Free"],
+      "location": "Tech Hub",
+      "price_range": "$$",
+      "rating": 4.9,
+      "availability": {
+        "Tuesday": ["12:00 PM", "6:00 PM"],
+        "Wednesday": ["6:00 PM", "7:30 PM"]
+      },
+      "max_guests": 4
     }
-]
+  ]
+  
+

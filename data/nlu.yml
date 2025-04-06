@@ -108,11 +108,14 @@ nlu:
       - I am looking for a restaurant this [afternoon](time_of_booking)
       - Book a table for [tomorrow](day_of_booking) at [5 PM](time_of_booking)
       - I am [vegetarian](dietary_preferences) and looking for a [Mexican](cuisine) restaurant
+      - I booked before at [La Bella Italia](past_restaurant_name)
+      - I had a reservation at [Casa Mexicana](past_restaurant_name)
+      - I reserved a table at [Dragon Wok](past_restaurant_name)
 
 
 regex:
   - name: "time_of_booking"
-    pattern: "(?:[01]?[0-9]|2[0-3]):[0-5][0-9](?:[ ]?[APap][Mm])?"  # regex for time (e.g., 7:00 PM)
+    pattern: "(?:[01]?[0-9]|2[0-3]):[0-5][0-9](?:[ ]?[AaPp][Mm])?"  # regex for time (e.g., 7:00 PM)
   - name: "day_of_booking"
     pattern: "(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)"
 
