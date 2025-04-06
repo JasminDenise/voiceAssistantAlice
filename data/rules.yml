@@ -4,47 +4,43 @@ version: "3.1"
 # for one-off interactions
 
 rules:
-# General
-    # Greet the user
-  - rule: Greet user
-    steps:
-      - intent: greet
-      - action: utter_greet
 
-  # Handle goodbye
-  - rule: Say goodbye
-    steps:
-      - intent: goodbye
-      - action: utter_goodbye
+# --- General Interaction Rules ---
+- rule: Greet user
+  steps:
+    - intent: greet
+    - action: utter_greet
 
-  # Bot response to bot challenge
-  - rule: Handle bot challenge
-    steps:
-      - intent: bot_challenge
-      - action: utter_iamabot
+- rule: Say goodbye
+  steps:
+    - intent: goodbye
+    - action: utter_goodbye
 
-#Bookings
-   # Rule to start rebook_form
-  - rule: activate rebook form
-    steps:
-      - intent: rebook_yes
-      - action: rebook_form
-      - active_loop: rebook_form
+- rule: Handle bot challenge
+  steps:
+    - intent: bot_challenge
+    - action: utter_iamabot
 
-  # Rule to start restaurant_form
-  - rule: activate restaurant form
-    steps:
-      - intent: inform_booking_details
-      - action: restaurant_form
-      - active_loop: restaurant_form
+# --- Booking Flow Rules ---
+- rule: Activate restaurant form
+  steps:
+    - intent: inform_booking_details
+    - action: restaurant_form
+    - active_loop: restaurant_form
 
-  # Submit rebook_form
-  - rule: submit rebook form
-    condition:
-      - active_loop: rebook_form
-    steps:
-      - action: rebook_form
-      - active_loop: null
-      - action: action_suggest_restaurant
-      - action: utter_booking_slots
-      - action: utter_confirm_booking
+- rule: Submit restaurant form
+  condition:
+    - active_loop: restaurant_form
+  steps:
+    - action: restaurant_form
+    - active_loop: null
+    - action: action_suggest_restaurant
+    - action: utter_booking_slots
+    - action: utter_confirm_booking
+
+# --- Fallback Handling ---
+- rule: Handle fallback
+  steps:
+    - intent: inform_fallback
+    - action: action_default_fallback
+    - action: utter_default

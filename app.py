@@ -3,10 +3,6 @@ import requests
 from kokoro import KPipeline
 import soundfile as sf
 import numpy as np
-import os
-
-# Suppress SQLAlchemy warning (for future extensions if DB is added)
-os.environ['SQLALCHEMY_SILENCE_UBER_WARNING'] = '1'
 
 # Initialize Flask app
 app = Flask(__name__)

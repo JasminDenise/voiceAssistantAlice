@@ -28,35 +28,7 @@ nlu:
       - see you around
       - bye bye
 
-  # --- Confirmation Intents ---
-  - intent: affirm
-    examples: |
-      - yes
-      - yes, please
-      - indeed
-      - of course
-      - that sounds good
-      - correct
-
-  - intent: deny
-    examples: |
-      - no
-      - nope
-      - never
-      - I don't think so
-      - no I don't want that
-      - not really
-      - no no
-      - no thanks
-      - not this time
-
-  - intent: stop
-    examples: |
-      - stop
-      - cancel
-      - I don't want to book anymore
-      - I have changed my mind
-
+  # --- Bot Challenge Intent ---
   - intent: bot_challenge
     examples: |
       - are you a bot?
@@ -64,11 +36,14 @@ nlu:
       - am I talking to a bot?
       - am I talking to a human?
 
-  # --- Booking Intent covering all details ---
+  # --- Booking Intent ---
   - intent: inform_booking_details
     examples: |
       - I want to eat
+      - I want to have dinner
       - I'm looking for a restaurant
+      - Can you suggest a restaurant?
+      - Recommend a restaurant
       - I want to make a restaurant booking
       - I want to reserve a table
       - I want [Italian](cuisine_preferences) food
@@ -83,102 +58,120 @@ nlu:
       - [halal](dietary_preferences)
       - I follow a [kosher](dietary_preferences) diet
       - [lactose-free](dietary_preferences)
-      - [Friday](day_of_booking)
-      - I'd like to go [tomorrow](day_of_booking)
-      - [next Monday](day_of_booking) is good
-      - Can I book for [Saturday](day_of_booking)?
-      - [7:00 PM](time_of_booking)
-      - At [8 PM](time_of_booking)
-      - [6:30 PM](time_of_booking), please
-      - I'd like it at [noon](time_of_booking)
-      - For [2](num_of_guests) guests
-      - [4](num_of_guests) people
-      - Just [1](num_of_guests) person
-      - We're [5](num_of_guests) people together
+      - I previously booked at [La Bella Italia](past_restaurant_name)
+      - I want to go again to [Casa Mexicana](past_restaurant_name)
+      - Can I rebook [La Bella Italia](past_restaurant_name)?
+      - I'd like to eat at [La Bella Italia](past_restaurant_name) again
       - I want to book a table I previously booked at [La Bella Italia](past_restaurant_name)
-      - I previously booked at [Casa Mexicana](past_restaurant_name), can I go again?
-      - I want to eat at [La Bella Italia](past_restaurant_name) again
-      - I have books before at [La Bella Italia](past_restaurant_name)
-      - I spoke before at [La Bella Italia](past_restaurant_name)
-      - a previously booked at [La Bella Italia](past_restaurant_name)
-      - My past booking was [La Bella Italia](past_restaurant_name)
-      - I have been to [Tokyo Sushi](past_restaurant_name)
-      - I used to go to [La Bella Italia](past_restaurant_name)
+      - I want to eat at [7 PM](time)
+      - I need a table for [tomorrow](date)
+      - I will book a table for [5](number) people
+      - I want to eat at [10 am](time)
+      - I need a table on [April 6th](date)
+      - I want  a table for [2](number) people
 
-  # --- Past Booking Intent (used for conditional logic) ---
+  # --- Past Booking ---
   - intent: inform_past_booking
     examples: |
       - I’ve booked before at [La Bella Italia](past_restaurant_name)
       - Yes, I had a reservation
       - I booked at [Casa Mexicana](past_restaurant_name)
       - No, this is my first booking
+      
 
-  # --- Rebooking Confirmation ---
-  - intent: rebook_yes
+  # --- Fallback clarification ---
+  - intent: inform_fallback
+    examples: |
+      - sorry
+      - I don’t know
+      - I didn’t understand
+      - huh?
+      - what?
+
+  # --- Affirm / Deny ---
+  - intent: affirm
     examples: |
       - yes
+      - sure
+      - absolutely
+      - definitely
+      - of course
+
+  - intent: deny
+    examples: |
+      - no
+      - no thanks
+      - not really
+      - nope
+
+# --- Rebooking Confirmations ---
+  - intent: rebook_yes
+    examples: |
+      - yes, I'd like to rebook
       - same place please
       - book it again
       - yes, I'd like the same restaurant
 
   - intent: rebook_no
     examples: |
-      - no
+      - no, I don't want to rebook
       - not this time
       - I want to try something else
       - a different place please
 
-# --- Regex Entities for time & day ---
-regex:
-  - name: "time_of_booking"
-    pattern: "([0-9]{1,2})(:[0-9]{2})?\s?(AM|PM|am|pm)?"
-  - name: "day_of_booking"
-    pattern: "(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)"
+# --- Synonyms ---
+  - synonym: vegan
+    examples: |
+      - plant-based
+      - strictly vegan
+      - only plants
 
-# --- Synonyms for fuzzy matching ---
-synonyms:
-  vegan:
-    - plant-based
-    - strictly vegan
-    - only plants
-  vegetarian:
-    - veggie
-    - veg
-    - meat-free
-  gluten-free:
-    - gluten free
-    - no gluten
-  halal:
-    - islamic food
-  kosher:
-    - jewish food
-  lactose-free:
-    - no dairy
-    - dairy-free
-    - milk-free
-  pescatarian:
-    - fish only
-    - I eat fish but no meat
-  omnivore:
-    - anything
-    - no restrictions
-    - everything is fine
-  La Bella Italia:
-    - labella italia
-    - bella italia
-    - la bella
-    - never Italia
+  - synonym: vegetarian
+    examples: |
+      - veggie
+      - veg
+      - meat-free
 
-# --- Lookup table for cuisines ---
-lookup: cuisine
-examples: |
-  - Italian
-  - Mexican
-  - Japanese
-  - Indian
-  - Chinese
-  - French
-  - Fusion
-  - Thai
-  - Korean
-  - German
+  - synonym: gluten-free
+    examples: |
+      - gluten free
+      - no gluten
+
+  - synonym: halal
+    examples: |
+      - islamic food
+
+  - synonym: kosher
+    examples: |
+      - jewish food
+
+  - synonym: lactose-free
+    examples: |
+      - no dairy
+      - dairy-free
+      - milk-free
+
+  - synonym: pescatarian
+    examples: |
+      - fish only
+      - I eat fish but no meat
+
+  - synonym: omnivore
+    examples: |
+      - anything
+      - no restrictions
+      - everything is fine
+
+# --- Lookup Table ---
+  - lookup: cuisine_preferences
+    examples: |
+      - Italian
+      - Mexican
+      - Japanese
+      - Indian
+      - Chinese
+      - French
+      - Fusion
+      - Thai
+      - Korean
+      - German

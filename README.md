@@ -1,78 +1,159 @@
-# Rasa Voice Assistant
 
-This is a conversational voice assistant built using [Rasa](https://rasa.com/), which helps users book restaurant reservations, suggest restaurants based on preferences, and handle other booking-related tasks. The assistant also uses Docker for easy deployment and integration with Duckling for extracting date and time information.
+# Voice Assistant Bot
 
-## Table of Contents
-
-- [Features](#features)
-- [Project Structure](#project-structure)
-- [Prerequisites](#prerequisites)
-- [Setup](#setup)
-- [Running the Application](#running-the-application)
-- [Custom Actions](#custom-actions)
-- [Testing the Bot](#testing-the-bot)
-- [Contributing](#contributing)
-- [License](#license)
-
-## Features
-
-- **Intents**: The bot can understand various intents such as greetings, making bookings, asking for dietary preferences, and much more.
-- **Entity Extraction**: The bot uses Rasa's NLU pipeline and Duckling for extracting information like time, dates, and numbers.
-- **Dockerized Setup**: The project is fully Dockerized, which simplifies running the bot and related services like Duckling.
-
-## Project Structure
-
-Here is the directory structure of the project:
-
-VOICEASSISTANT/ ├── actions/ # Custom actions for the bot │ └── actions.py # Python file for custom actions ├── data/ # Training data (intents, stories, etc.) │ ├── nlu.yml # NLU training data │ ├── stories.yml # Dialogue stories │ └── rules.yml # Optional rules for stories ├── domain.yml # Rasa domain configuration ├── endpoints.yml # Configuration for external services (like Duckling) ├── config.yml # Rasa pipeline and policies configuration ├── requirements.txt # Python dependencies for the bot ├── Dockerfile # Dockerfile for building the bot image ├── docker-compose.yml # Docker Compose file to run the services └── README.md # Project documentation
-
+This project implements a restaurant booking bot built with **Rasa** and **Docker**. The bot interacts with users to make restaurant bookings, suggesting restaurants based on user preferences and booking history.
 
 ## Prerequisites
 
-Before running the project, make sure you have the following installed:
+Before you begin, ensure you have the following installed on your machine:
 
-- [Docker](https://www.docker.com/) (for building and running the bot in containers)
-- [Docker Compose](https://docs.docker.com/compose/) (for managing multi-container setups)
-- [Python 3.8 or higher](https://www.python.org/downloads/), if you plan to run the bot locally without Docker.
+- **Docker** (with Docker Compose)
+  - [Install Docker](https://docs.docker.com/get-docker/)
+  - [Install Docker Compose](https://docs.docker.com/compose/install/)
+
+- **Python 3.x** (for setting up the virtual environment)
+  - [Install Python](https://www.python.org/downloads/)
 
 ## Setup
 
-1. **Clone the repository**:
+### Clone the Repository
+First, clone this repository to your local machine.
+
+```bash
+git clone https://github.com/your-repository/voice-assistant.git
+cd voice-assistant
+```
+
+### Create a Virtual Environment (Optional)
+
+If you want to use a virtual environment for running Rasa locally:
+
+```bash
+python3 -m venv va_env
+source va_env/bin/activate  # For macOS/Linux
+# va_env\Scripts\activate  # For Windows
+```
+
+### Install Required Dependencies
+
+Install the necessary Python dependencies.
+
+```bash
+pip install -r requirements.txt
+```
+
+### Docker Setup
+
+This project uses **Docker** to simplify the setup and execution of the Rasa bot and related services.
+
+1. Ensure **Docker** and **Docker Compose** are properly installed and running.
+2. In the root directory of this project, create a `docker-compose.yml` file.
+
+#### docker-compose.yml
+```yaml
+version: "3.1"
+
+services:
+  rasa:
+    image: rasa/rasa:latest
+    command: run --enable-api --cors "*"
+    ports:
+      - "5005:5005"  # Rasa API will be on port 5005
+    volumes:
+      - ./voiceassistant:/app  # Mount the voiceassistant folder to /app in the container
+    depends_on:
+      - actions
+
+  actions:
+    build: .
+    volumes:
+      - ./actions:/actions  # Mount the actions folder to /actions in the container
+    command: rasa run actions --port 5055
+    ports:
+      - "5055:5055"  # Actions will be on port 5055
+
+  app:
+    build:
+      context: .  # Build from the current directory (root directory)
+    volumes:
+      - ./app.py:/app.py  # Mount app.py directly to the container
+    ports:
+      - "5000:5000"  # App will be on port 5000
+    depends_on:
+      - rasa
+      - actions
+```
+
+### Start the Bot Using Docker
+
+1. **Build and start the bot**:
+
+   Run the following command to start the Rasa bot, actions, and app container.
 
    ```bash
-   git clone https://github.com/your-username/voice-assistant.git
-   cd voice-assistant
+   docker-compose up --build
+   ```
 
-Install the required dependencies:
+2. **Access the services**:
+   - Rasa API will be running on **port 5005**.
+   - Actions will be running on **port 5055**.
+   - The app will be running on **port 5000**.
 
-If you're not using Docker, you can install the dependencies directly on your system using pip.
+3. **You can now interact with the app** by sending requests to `http://localhost:5000`.
 
-pip install -r requirements.txt
+### Running Locally (Optional)
+If you prefer to run Rasa locally without Docker, you can do so by following these steps:
 
-Running the Application
-To run the bot in Docker, follow these steps:
+1. **Activate the virtual environment** (if using one):
+   ```bash
+   source va_env/bin/activate  # For macOS/Linux
+   # va_env\Scripts\activate  # For Windows
+   ```
 
-Build the Docker containers:
-docker-compose build
-Start the services:
-docker-compose up
+2. **Start Rasa server** (for API):
+   ```bash
+   rasa run --enable-api --cors "*"
+   ```
 
-This will start the Rasa bot container and the Duckling container.
+3. **Start the actions server**:
+   ```bash
+   rasa run actions --port 5055
+   ```
 
-Open a new terminal and test the bot:
-docker-compose exec rasa rasa shell
+4. **Start the app** (replace `app.py` with your actual app entry point):
+   ```bash
+   python app.py
+   ```
 
-You can now interact with the bot directly in the terminal.
+## How to Interact with the Bot
 
-Custom Actions
-In this project, we have implemented custom actions to perform actions like restaurant suggestions, sending booking details, and more. These actions are defined in the actions/actions.py file.
+1. **Access the Bot via HTTP**:
+   Once the services are running, you can interact with the bot by making HTTP requests to `http://localhost:5000`.
 
-Adding New Custom Actions
-Create a new Python function inside actions.py.
-Ensure that the function inherits from Action (Rasa's base class for custom actions).
-Update domain.yml to include any new actions or responses.
-Add necessary logic for the action (e.g., API calls, database queries, etc.).
-Testing the Bot
-To test the bot:
+2. **App Functionality**:
+   - The bot will ask for **past restaurant bookings**, **dietary preferences**, **cuisine preferences**, **time** and **day** of booking, and **number of guests**.
+   - The bot will suggest restaurants based on these preferences.
+   - If the user has previously made a booking, they can rebook their favorite restaurant or try a new one.
 
-Run the bot interactively using rasa shell:
+## Common Issues & Troubleshooting
+
+### 1. Docker Errors
+If you encounter errors related to Docker, ensure the following:
+- Docker is running and properly configured on your machine.
+- If you see permission issues, you may need to use `sudo` with Docker commands (on Linux).
+
+### 2. Service Not Starting
+If a service doesn’t start, check the logs for errors. You can use `docker-compose logs` to get more information about what's going wrong.
+
+```bash
+docker-compose logs
+```
+
+### 3. Python Errors
+If you're using a virtual environment and run into Python-related issues, make sure that all dependencies are installed via `pip install -r requirements.txt`.
+
+---
+
+Now you have a working environment to run your Rasa-based voice assistant with minimal terminal commands and a single Docker Compose command.
+
+Happy Booking! 🎉
