@@ -1,81 +1,60 @@
 version: "3.1"
 
 # ML policies: training data to teach assistant what to do next
-# conversation training data /potential conversation flow
+# conversation training data/potential conversation flow
 # actual user conversations, small stories, not full conversations
 # memorization policy
 
 stories:
 
-- story: start booking form
-  steps:
-    - intent: inform_booking_details
-    - action: restaurant_form
-    - active_loop: restaurant_form
-
-- story: rebooking with known restaurant
+# Happy Path: User wants to book a specific restaurant (past bookings not relevant, restaurant name known)
+- story: Book a specific restaurant
   steps:
     - intent: greet
     - action: utter_greet
     - intent: inform_booking_details
-    - action: restaurant_form
-    - active_loop: restaurant_form
     - slot_was_set:
-        - past_bookings: true
+        - past_restaurant_name: La Bella Italia  # Known restaurant name
+    - action: known_restaurant_form
+    - active_loop: known_restaurant_form
+    - action: action_suggest_restaurant
+    - action: utter_submit
+
+# Happy Path: User wants a suggestion with a past booking and wants to rebook
+- story: Rebook with past restaurant
+  steps:
+    - intent: greet
+    - action: utter_greet
+    - intent: inform_booking_details
     - slot_was_set:
-        - past_restaurant_name: "La Bella Italia"
-    - slot_was_set:
+        - past_restaurant_name: La Bella Italia # Known restaurant from past booking
         - rebook: true
-    # The form continues and asks for time, day, and guests
+    - action: known_restaurant_form
+    - active_loop: known_restaurant_form
+    - action: action_suggest_restaurant
+    - action: utter_submit
 
-- story: rebooking with unknown restaurant
+# Happy Path: User wants a suggestion without past bookings, general suggestion
+- story: Suggest restaurant without past bookings #conflict 
   steps:
     - intent: greet
     - action: utter_greet
     - intent: inform_booking_details
     - action: restaurant_form
     - active_loop: restaurant_form
-    - slot_was_set:
-        - past_bookings: true
-    - slot_was_set:
-        - past_restaurant_name: null
-    - slot_was_set:
-        - past_restaurant_name: "Casa Mexicana"
-    - slot_was_set:
-        - rebook: true
-    # The form continues and asks for time, day, and guests
+    - action: action_suggest_restaurant
+    - action: utter_submit
 
-- story: booking new restaurant after past visit
+# Happy Path: User wants a suggestion for a different restaurant than a past booking
+- story: Suggest different restaurant than past booking
   steps:
     - intent: greet
     - action: utter_greet
     - intent: inform_booking_details
-    - action: restaurant_form
-    - active_loop: restaurant_form
     - slot_was_set:
-        - past_bookings: true
-    - slot_was_set:
+        - past_restaurant_name: "La Bella Italia"  # Past restaurant provided
         - rebook: false
-    # The form continues to ask full preferences
-
-- story: new booking, no past bookings
-  steps:
-    - intent: greet
-    - action: utter_greet
-    - intent: inform_booking_details
     - action: restaurant_form
     - active_loop: restaurant_form
-    - slot_was_set:
-        - past_bookings: false
-    # The form continues to ask full preferences
-
-- story: fallback and clarification
-  steps:
-    - intent: greet
-    - action: utter_greet
-    - intent: inform_booking_details
-    - action: restaurant_form
-    - active_loop: restaurant_form
-    - intent: inform_fallback
-    - action: action_default_fallback
-    - action: utter_default
+    - action: action_suggest_restaurant
+    - action: utter_submit

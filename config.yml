@@ -24,10 +24,12 @@ pipeline:
     constrain_similarities: true
     epochs: 100
   - name: EntitySynonymMapper
+  - name: FallbackClassifier # the intent nlu_fallback will be predicted when all other intent predictions fall below the configured confidence threshold
+    threshold: 0.7
   - name: RegexEntityExtractor
   - name: DucklingEntityExtractor
     url: http://localhost:8000
-    dimensions: ["time", "date","number"]
+    dimensions: ["time","number"]
     locale: en_US
     timezone: Europe/Luxembourg
     timeout: 3.0
@@ -36,7 +38,8 @@ policies:
   - name: RulePolicy
     core_fallback_threshold: 0.3
     core_fallback_action_name: "action_default_fallback"
-    enable_fallback_prediction: True
+    enable_fallback_prediction: true
+    check_for_contradictions: true # make sure that slots and active loops set by actions are defined consistently for all rules
   - name: MemoizationPolicy
   - name: TEDPolicy
     max_history: 5

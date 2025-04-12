@@ -5,14 +5,13 @@ nlu:
   - intent: greet
     examples: |
       - hey
-      - hello, my name is [Jasmin](name)
-      - hi, I am [Jasmin](name)
+      - hi
       - hello there
       - good morning
       - good evening
       - moin
       - hey there
-      - hey alice
+      - hey Alice
       - goodmorning
       - goodevening
       - good afternoon
@@ -27,6 +26,13 @@ nlu:
       - have a nice day
       - see you around
       - bye bye
+
+  - intent: thank_you
+    examples: |
+      - thanks  
+      - thank you      
+      - thanks a lot
+      - great, thanks
 
   # --- Bot Challenge Intent ---
   - intent: bot_challenge
@@ -64,33 +70,32 @@ nlu:
       - I'd like to eat at [La Bella Italia](past_restaurant_name) again
       - I want to book a table I previously booked at [La Bella Italia](past_restaurant_name)
       - I want to eat at [7 PM](time)
-      - I need a table for [tomorrow](date)
+      - I need a table for [tomorrow](time)
       - I will book a table for [5](number) people
       - I want to eat at [10 am](time)
-      - I need a table on [April 6th](date)
+      - I need a table on [April 6th](time)
       - I want  a table for [2](number) people
+      - I want to book a table for [two](number) people
 
-  # --- Past Booking ---
-  - intent: inform_past_booking
+# --- Out of Scope (Unintended User Input) ---
+  - intent: out_of_scope
     examples: |
-      - I’ve booked before at [La Bella Italia](past_restaurant_name)
-      - Yes, I had a reservation
-      - I booked at [Casa Mexicana](past_restaurant_name)
-      - No, this is my first booking
-      
+      - Who is your boss?
+      - Who designed you?
+      - How are you?
+      - What's the weather like?
+      - What is 2+2?
+      - What is the meaning of life?
+      - What is a cat?
+      - What is a dog?
 
-  # --- Fallback clarification ---
-  - intent: inform_fallback
-    examples: |
-      - sorry
-      - I don’t know
-      - I didn’t understand
-      - huh?
-      - what?
-
-  # --- Affirm / Deny ---
+# --- Rebooking Confirmations ---
   - intent: affirm
     examples: |
+      - yes, I'd like to rebook
+      - same place please
+      - book it again
+      - yes, I'd like the same restaurant
       - yes
       - sure
       - absolutely
@@ -99,27 +104,23 @@ nlu:
 
   - intent: deny
     examples: |
+      - no, I don't want to rebook
+      - not this time
+      - I want to try something else
+      - a different place please
       - no
       - no thanks
       - not really
       - nope
 
-# --- Rebooking Confirmations ---
-  - intent: rebook_yes
+  - intent: cancel
     examples: |
-      - yes, I'd like to rebook
-      - same place please
-      - book it again
-      - yes, I'd like the same restaurant
+      - I want to cancel    
+      - I don't want to book anymore
+      - I want to cancel the process
 
-  - intent: rebook_no
-    examples: |
-      - no, I don't want to rebook
-      - not this time
-      - I want to try something else
-      - a different place please
 
-# --- Synonyms ---
+# --- Synonyms: Mapping an extracted entity to a value other than the literal text extracted ---
   - synonym: vegan
     examples: |
       - plant-based
@@ -162,7 +163,8 @@ nlu:
       - no restrictions
       - everything is fine
 
-# --- Lookup Table ---
+# --- Lookup Table: Case-insensitive regular expression patterns ---
+#      These can be used either with the RegexFeaturizer or with the RegexEntityExtractor
   - lookup: cuisine_preferences
     examples: |
       - Italian

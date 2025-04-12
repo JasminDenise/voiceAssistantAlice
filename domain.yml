@@ -8,16 +8,16 @@ intents:
   - goodbye
   - bot_challenge
   - inform_booking_details
-  - inform_past_booking
-  - inform_fallback
-  - rebook_yes
-  - rebook_no
   - affirm
   - deny
+  - cancel
+  - out_of_scope
+  - thank_you
+
 
 entities:
   - past_bookings
-  - time                  # Duckling-extracted (covers day & time)
+  - time                  # Duckling-extracted  (date+ time)
   - number                # Duckling-extracted (covers guests)
   - cuisine_preferences
   - dietary_preferences
@@ -25,57 +25,83 @@ entities:
 
 responses:
   utter_greet:
-    - text: "Hey! How are you?"
-    - text: "Hello there :-)"
-    - text: "Hi! How can I help you today?"
-    - text: "Hi! Let's book you a restaurant."
+    - text: Hey! Do you want to book a restaurant?
+    - text: Hello there :-)
+    - text: Hi! How can I help you today?
+    - text: Hi! Let's book you a restaurant.
 
   utter_goodbye:
-    - text: "Bye"
-    - text: "Goodbye! Have a great day."
+    - text: Bye
+    - text: Goodbye! Have a great day.
 
   utter_iamabot:
-    - text: "I’m Alice, your restaurant assistant bot."
+    - text: I’m Alice, your restaurant assistant bot.
 
   utter_ask_past_bookings:
-    - text: "Have you had any past bookings?"
-    - text: "Have you booked with us before?"
+    - text: Have you had any past bookings?
+    - text: Have you booked with me before?
 
   utter_ask_past_restaurant_name:
-    - text: "What was the name of the restaurant you booked before?"
-    - text: "Can you tell me the name of the restaurant you previously visited?"
+    - text: What was the name of the restaurant you booked before?
+    - text: Can you tell me the name of the restaurant you previously visited?
 
   utter_ask_dietary_preferences:
-    - text: "Do you have any dietary preferences? For example, vegetarian or vegan?"
-    - text: "Do you have any dietary preferences or restrictions?"
+    - text: Do you have any dietary preferences? For example, vegetarian or vegan?
+    - text: Do you have any dietary preferences or restrictions?
 
   utter_ask_cuisine_preferences:
-    - text: "What kind of cuisine would you like?"
-    - text: "What kind of cuisine do you prefer?"
+    - text: What kind of cuisine would you like?
+    - text: What kind of cuisine do you prefer?
 
-  utter_confirm_booking:
-    - text: "Is this okay?"
-    - text: "Yes, that's perfect. Is this okay?"
+  utter_ask_date_and_time:
+    - text: When would you like to eat?
+    - text: What day and time would you like to eat?
 
-  utter_ask_for_other_options:
-    - text: "Do you have any other preferences?"
+  # utter_ask_day_of_booking:
+  #   - text: What day would you like to eat?
+  #   - text: When would you like the reservation?
+
+  # utter_ask_time_of_booking:
+  #   - text: What time would you like to eat?
+  #   - text: When would you like to eat?
+
+  utter_ask_num_of_guests:
+    - text: How many people will be joining?
+    - text: How many guests?
+
+  utter_ask_rebook:
+    - text: Do you want to rebook the same restaurant?
+    - text: Would you like to continue with this restaurant?
+
+  # utter_affirm_booking:
+  #   - text: Is this okay?
+  #   - text: Yes, that's perfect. Is this okay?
+
+  # utter_ask_for_other_options:
+  #   - text: Do you have any other preferences?
 
   utter_booking_canceled:
-    - text: "Okay, I have cancelled your booking request."
+    - text: Okay, I have cancelled your booking request. Maybe next time. Have a nice day!
 
-  utter_booking_slots:
-    - text: "So you're booking a {cuisine_preferences} restaurant for {number} guests at {time}, with dietary preference: {dietary_preferences}."
+  
+  # utter_ask_continue:
+  #   - text: Are you sure you want to stop the form?
+
+  # utter_booking_slots:
+  #   - text: So you're booking a {cuisine_preferences} restaurant for {number} guests at {time}, with dietary preference: {dietary_preferences}.
 
   utter_submit:
-    - text: "All done. I hope you enjoy your meal!"
-    - text: "Great! I’ve recorded your booking. Enjoy your meal!"
+    - text: All done. I hope you enjoy your meal!
+    - text: Great! I’ve recorded your booking. Enjoy your meal!
 
-  utter_ask_continue:
-    - text: "Are you sure you want to stop the form?"
+  utter_default: 
+    - text: I'm sorry, I didn't quite understand that. Could you please rephrase?
 
-  utter_default:
-    - text: "I'm sorry, I didn't quite understand that. Could you please rephrase?"
+  out_of_scope:
+    - text: Sorry, I can't handle that request.
 
+
+# --- Define Form to Collect Information of User ---
 slots:
   past_bookings:
     type: bool
@@ -91,30 +117,30 @@ slots:
     type: bool
     mappings:
       - type: from_intent
-        intent: rebook_yes
+        intent: affirm
         value: true
       - type: from_intent
-        intent: rebook_no
+        intent: deny
         value: false
 
   past_restaurant_name:
     type: text
-    influence_conversation: false
+    influence_conversation: true
     mappings:
       - type: from_entity
         entity: past_restaurant_name
 
-  time_of_booking:
+  date_and_time:
     type: any
     mappings:
       - type: from_entity
         entity: time
 
-  day_of_booking:
-    type: any
-    mappings:
-      - type: from_entity
-        entity: date
+  # day_of_booking:
+  #   type: any
+  #   mappings:
+  #     - type: from_entity
+  #       entity: date
 
   num_of_guests:
     type: any
@@ -134,12 +160,12 @@ slots:
       - type: from_entity
         entity: cuisine_preferences
 
-  conversation_turn:
-    type: float
-    initial_value: 0
-    influence_conversation: false
-    mappings:
-      - type: custom
+  # conversation_turn:
+  #   type: float
+  #   initial_value: 0
+  #   influence_conversation: false
+  #   mappings:
+  #     - type: custom
 
 forms:
   restaurant_form:
@@ -147,16 +173,26 @@ forms:
       - past_bookings
       - cuisine_preferences
       - dietary_preferences
-      - time_of_booking
-      - day_of_booking
+      - date_and_time
+      # - day_of_booking
+      # - time_of_booking
       - num_of_guests
+
+  known_restaurant_form:
+    required_slots:
+      - past_restaurant_name
+      - date_and_time
+      # - day_of_booking
+      # - time_of_booking
+      - num_of_guests
+
 
 actions:
   - action_suggest_restaurant
-  - action_track_turn_count
-  - action_default_fallback
-  - action_ask_if_rebook
-  - validate_restaurant_form
+  # - action_track_turn_count
+  # - action_default_fallback
+  # - action_ask_if_rebook
+  # - validate_restaurant_form
 
 session_config:
   session_expiration_time: 60
