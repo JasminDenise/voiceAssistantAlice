@@ -15,6 +15,7 @@ rules:
   steps:
     - intent: goodbye
     - action: utter_goodbye
+    - action: action_stop
 
 - rule: Handle bot challenge
   steps:
@@ -26,12 +27,14 @@ rules:
     - action: utter_booking_confirmation
     - intent: confirm_booking
     - action: utter_submit
+    - action: action_stop
 
 - rule: Ask for Confirmation - User Denies
   steps:
     - action: utter_booking_confirmation
     - intent: deny_booking
     - action: utter_booking_canceled
+    - action: action_stop
 
 
 # # --- Restaurant Booking Rules ---

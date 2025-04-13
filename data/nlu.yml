@@ -29,7 +29,7 @@ nlu:
     - thank you
     - thanks a lot
     - great, thanks
-    - [Thank you](thank_you). [Bye](goodbye)
+    - Thank you. Bye.
 - intent: bot_challenge
   examples: |
     - are you a bot?
@@ -83,6 +83,9 @@ nlu:
     - hi Alice, I want to book a table on friday at 7pm for [2](number) people
     - I like [indian][{"entity": "cuisine_preferences", "value": "Indian"}, {"entity": "cuisine_preferences"}] and [mexican][{"entity": "cuisine_preferences", "value": "Mexican"}, {"entity": "cuisine_preferences"}] food
     - I am [vegetarian](dietary_preferences)
+    - hi, i want a table for six people on saturday evening at 7pm
+    - [italian][{"entity": "cuisine_preferences", "value": "Italian"}, {"entity": "cuisine_preferences"}] but also [mexican][{"entity": "cuisine_preferences", "value": "Mexican"}, {"entity": "cuisine_preferences"}] food
+    - i have [no restrictions](dietary_preferences) I can eat everything
 - intent: out_of_scope
   examples: |
     - Who is your boss?
@@ -100,6 +103,7 @@ nlu:
     - I'll book it there
     - yes please
     - yes please book it
+    - yes please book it for me
 - intent: deny_booking
   examples: |
     - no, I don't want to book it there
@@ -135,6 +139,12 @@ nlu:
 - synonym: Italian
   examples: |
     - italian
+- synonym: Indian
+  examples: |
+    - indian
+- synonym: Mexican
+  examples: |
+    - mexican
 - synonym: vegan
   examples: |
     - plant-based

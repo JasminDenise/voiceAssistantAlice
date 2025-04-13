@@ -13,8 +13,6 @@ intents:
 - thank_you
 entities:
 - dietary_preferences
-- goodbye
-- thank_you
 - number
 - cuisine_preferences
 - past_bookings
@@ -125,8 +123,8 @@ forms:
     - num_of_guests
 actions:
 - action_suggest_restaurant
-- utter_submit
-- utter_booking_confirmation
+- action_stop
+
 session_config:
   session_expiration_time: 60
   carry_over_slots_to_new_session: true

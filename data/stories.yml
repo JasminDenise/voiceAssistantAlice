@@ -109,7 +109,7 @@ stories:
     - requested_slot: null
   - active_loop: null
   - action: action_suggest_restaurant
-  - intent: inform_booking_details
+  - action: utter_booking_confirmation
 
 
 - story: interactive_story_2
@@ -168,8 +168,53 @@ stories:
   - action: utter_booking_confirmation
   - intent: confirm_booking
   - action: utter_submit
-  - intent: nlu_fallback
-  - intent: thank_you
+  - action: action_stop
+
+- story: interactive_story_3
+  steps:
+  - intent: inform_booking_details
     entities:
-    - thank_you: Thank you
-    - goodbye: Bye
+    - number: 6
+    - time: '2025-04-19T19:00:00.000+02:00'
+  - slot_was_set:
+    - date_and_time: '2025-04-19T19:00:00.000+02:00'
+  - slot_was_set:
+    - num_of_guests: 6
+  - action: restaurant_form
+  - active_loop: restaurant_form
+  - slot_was_set:
+    - date_and_time: '2025-04-19T19:00:00.000+02:00'
+  - slot_was_set:
+    - num_of_guests: 6
+  - slot_was_set:
+    - requested_slot: past_bookings
+  - intent: deny
+  - slot_was_set:
+    - past_bookings: false
+  - slot_was_set:
+    - rebook: false
+  - action: restaurant_form
+  - slot_was_set:
+    - requested_slot: cuisine_preferences
+  - intent: inform_booking_details
+    entities:
+    - cuisine_preferences: Italian
+    - cuisine_preferences: Mexican
+  - slot_was_set:
+    - cuisine_preferences:
+      - Italian
+      - Mexican
+  - action: restaurant_form
+  - slot_was_set:
+    - requested_slot: dietary_preferences
+  - intent: inform_booking_details
+  - intent: inform_booking_details
+    entities:
+    - dietary_preferences: no restrictions
+  - action: utter_booking_confirmation
+  - action: action_suggest_restaurant
+  - action: utter_booking_confirmation
+  - intent: confirm_booking
+  - action: utter_submit
+  - action: action_stop
+ 

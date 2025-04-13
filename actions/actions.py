@@ -58,7 +58,7 @@ class ActionSuggestRestaurant(Action):
         if all_matches and all_matches[0][1] > 0.2:
             best = all_matches[0][0]
             response = (
-                f"Based on your preferences, I recommend **{best['name']}**, which serves {best['cuisine']} cuisine. "
+                f"Based on your preferences, I recommend {best['name']}, which serves {best['cuisine']} cuisine. "
                 f"It offers {', '.join(best['dietary_options'])} options and has a rating of {best['rating']}."
             )
         else:
