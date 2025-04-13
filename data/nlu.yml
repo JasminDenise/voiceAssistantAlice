@@ -1,179 +1,183 @@
 version: "3.1"
-
 nlu:
-  # --- Greeting & Goodbye Intents ---
-  - intent: greet
-    examples: |
-      - hey
-      - hi
-      - hello there
-      - good morning
-      - good evening
-      - moin
-      - hey there
-      - hey Alice
-      - goodmorning
-      - goodevening
-      - good afternoon
-
-  - intent: goodbye
-    examples: |
-      - see you
-      - see you later
-      - good night
-      - bye
-      - goodbye
-      - have a nice day
-      - see you around
-      - bye bye
-
-  - intent: thank_you
-    examples: |
-      - thanks  
-      - thank you      
-      - thanks a lot
-      - great, thanks
-
-  # --- Bot Challenge Intent ---
-  - intent: bot_challenge
-    examples: |
-      - are you a bot?
-      - are you a human?
-      - am I talking to a bot?
-      - am I talking to a human?
-
-  # --- Booking Intent ---
-  - intent: inform_booking_details
-    examples: |
-      - I want to eat
-      - I want to have dinner
-      - I'm looking for a restaurant
-      - Can you suggest a restaurant?
-      - Recommend a restaurant
-      - I want to make a restaurant booking
-      - I want to reserve a table
-      - I want [Italian](cuisine_preferences) food
-      - Let's go with [Mexican](cuisine_preferences)
-      - [Japanese](cuisine_preferences) sounds good
-      - [Indian](cuisine_preferences) is my favorite
-      - [Chinese](cuisine_preferences) please
-      - How about [French](cuisine_preferences)?
-      - I'm [vegetarian](dietary_preferences)
-      - I need [gluten-free](dietary_preferences) food
-      - [vegan](dietary_preferences), please
-      - [halal](dietary_preferences)
-      - I follow a [kosher](dietary_preferences) diet
-      - [lactose-free](dietary_preferences)
-      - I previously booked at [La Bella Italia](past_restaurant_name)
-      - I want to go again to [Casa Mexicana](past_restaurant_name)
-      - Can I rebook [La Bella Italia](past_restaurant_name)?
-      - I'd like to eat at [La Bella Italia](past_restaurant_name) again
-      - I want to book a table I previously booked at [La Bella Italia](past_restaurant_name)
-      - I want to eat at [7 PM](time)
-      - I need a table for [tomorrow](time)
-      - I will book a table for [5](number) people
-      - I want to eat at [10 am](time)
-      - I need a table on [April 6th](time)
-      - I want  a table for [2](number) people
-      - I want to book a table for [two](number) people
-
-# --- Out of Scope (Unintended User Input) ---
-  - intent: out_of_scope
-    examples: |
-      - Who is your boss?
-      - Who designed you?
-      - How are you?
-      - What's the weather like?
-      - What is 2+2?
-      - What is the meaning of life?
-      - What is a cat?
-      - What is a dog?
-
-# --- Rebooking Confirmations ---
-  - intent: affirm
-    examples: |
-      - yes, I'd like to rebook
-      - same place please
-      - book it again
-      - yes, I'd like the same restaurant
-      - yes
-      - sure
-      - absolutely
-      - definitely
-      - of course
-
-  - intent: deny
-    examples: |
-      - no, I don't want to rebook
-      - not this time
-      - I want to try something else
-      - a different place please
-      - no
-      - no thanks
-      - not really
-      - nope
-
-  - intent: cancel
-    examples: |
-      - I want to cancel    
-      - I don't want to book anymore
-      - I want to cancel the process
-
-
-# --- Synonyms: Mapping an extracted entity to a value other than the literal text extracted ---
-  - synonym: vegan
-    examples: |
-      - plant-based
-      - strictly vegan
-      - only plants
-
-  - synonym: vegetarian
-    examples: |
-      - veggie
-      - veg
-      - meat-free
-
-  - synonym: gluten-free
-    examples: |
-      - gluten free
-      - no gluten
-
-  - synonym: halal
-    examples: |
-      - islamic food
-
-  - synonym: kosher
-    examples: |
-      - jewish food
-
-  - synonym: lactose-free
-    examples: |
-      - no dairy
-      - dairy-free
-      - milk-free
-
-  - synonym: pescatarian
-    examples: |
-      - fish only
-      - I eat fish but no meat
-
-  - synonym: omnivore
-    examples: |
-      - anything
-      - no restrictions
-      - everything is fine
-
-# --- Lookup Table: Case-insensitive regular expression patterns ---
-#      These can be used either with the RegexFeaturizer or with the RegexEntityExtractor
-  - lookup: cuisine_preferences
-    examples: |
-      - Italian
-      - Mexican
-      - Japanese
-      - Indian
-      - Chinese
-      - French
-      - Fusion
-      - Thai
-      - Korean
-      - German
+- intent: greet
+  examples: |
+    - hey
+    - hi
+    - hello there
+    - good morning
+    - good evening
+    - moin
+    - hey there
+    - hey Alice
+    - goodmorning
+    - goodevening
+    - good afternoon
+- intent: goodbye
+  examples: |
+    - see you
+    - see you later
+    - good night
+    - bye
+    - goodbye
+    - have a nice day
+    - see you around
+    - bye bye
+- intent: thank_you
+  examples: |
+    - thanks
+    - thank you
+    - thanks a lot
+    - great, thanks
+    - [Thank you](thank_you). [Bye](goodbye)
+- intent: bot_challenge
+  examples: |
+    - are you a bot?
+    - are you a human?
+    - am I talking to a bot?
+    - am I talking to a human?
+- intent: inform_booking_details
+  examples: |
+    - I want to eat
+    - I want to have dinner
+    - I'm looking for a restaurant
+    - Can you suggest a restaurant?
+    - Recommend a restaurant
+    - I want to make a restaurant booking
+    - I want to reserve a table
+    - I want [Italian](cuisine_preferences) food
+    - Let's go with [Mexican](cuisine_preferences)
+    - [Japanese](cuisine_preferences) sounds good
+    - [Indian](cuisine_preferences) is my favorite
+    - [Chinese](cuisine_preferences) please
+    - How about [French](cuisine_preferences)?
+    - I'm [vegetarian](dietary_preferences)
+    - I need [gluten-free](dietary_preferences) food
+    - [vegan](dietary_preferences), please
+    - [halal](dietary_preferences)
+    - I follow a [kosher](dietary_preferences) diet
+    - [lactose-free](dietary_preferences)
+    - I previously booked at [La Bella Italia](past_restaurant_name)
+    - I want to go again to [Casa Mexicana](past_restaurant_name)
+    - Can I rebook [La Bella Italia](past_restaurant_name)?
+    - I'd like to eat at [La Bella Italia](past_restaurant_name) again
+    - I want to book a table I previously booked at [La Bella Italia](past_restaurant_name)
+    - I want to eat at [7 PM](time)
+    - I need a table for [tomorrow](time)
+    - I will book a table for [5](number) people
+    - I want to eat at [10 am](time)
+    - I need a table on [April 6th](time)
+    - I want  a table for [2](number) people
+    - I want to book a table for [two](number) people
+    - i want to book a table for [2](number) people
+    - i prefer [italian][{"entity": "cuisine_preferences", "value": "Italian"}, {"entity": "cuisine_preferences"}] cuisine
+    - yes, I'm [vegetarian](dietary_preferences)
+    - I need a [vegetarian](dietary_preferences) and a [gluten-free](dietary_preferences) place
+    - I’m looking for a [lactose-free](dietary_preferences) and [vegan](dietary_preferences) option
+    - I want to eat on friday at 7pm
+    - [Yes](affirm), i booked before at "[La Bella Italia](past_restaurant_name)"
+    - [Sure](affirm), I have been to "[La Bella Italia](past_restaurant_name)"
+    - I want [Italian](cuisine_preferences) and [Mexican](cuisine_preferences)
+    - I'd like [Japanese](cuisine_preferences) and [Indian](cuisine_preferences)
+    - [Chinese](cuisine_preferences) and [Thai](cuisine_preferences) for sure
+    - hi Alice, I want to book a table on friday at 7pm for [2](number) people
+    - I like [indian][{"entity": "cuisine_preferences", "value": "Indian"}, {"entity": "cuisine_preferences"}] and [mexican][{"entity": "cuisine_preferences", "value": "Mexican"}, {"entity": "cuisine_preferences"}] food
+    - I am [vegetarian](dietary_preferences)
+- intent: out_of_scope
+  examples: |
+    - Who is your boss?
+    - Who designed you?
+    - How are you?
+    - What's the weather like?
+    - What is 2+2?
+    - What is the meaning of life?
+    - What is a cat?
+    - What is a dog?
+- intent: confirm_booking
+  examples: |
+    - yes, please book it there
+    - Sounds good. Please book the table there.
+    - I'll book it there
+    - yes please
+    - yes please book it
+- intent: deny_booking
+  examples: |
+    - no, I don't want to book it there
+    - no, I don't want to book it
+    - no, I don't want to book that restaurant
+- intent: affirm
+  examples: |
+    - yes, I'd like to rebook
+    - same place please
+    - book it again
+    - yes, I'd like the same restaurant
+    - yes
+    - sure
+    - absolutely
+    - definitely
+    - of course
+- intent: deny
+  examples: |
+    - no, I don't want to rebook
+    - not this time
+    - I want to try something else
+    - a different place please
+    - no
+    - no thanks
+    - not really
+    - nope
+    - no not yet
+- intent: cancel
+  examples: |
+    - I want to cancel
+    - I don't want to book anymore
+    - I want to cancel the process
+- synonym: Italian
+  examples: |
+    - italian
+- synonym: vegan
+  examples: |
+    - plant-based
+    - strictly vegan
+    - only plants
+- synonym: vegetarian
+  examples: |
+    - veggie
+    - veg
+    - meat-free
+- synonym: gluten-free
+  examples: |
+    - gluten free
+    - no gluten
+- synonym: halal
+  examples: |
+    - islamic food
+- synonym: kosher
+  examples: |
+    - jewish food
+- synonym: lactose-free
+  examples: |
+    - no dairy
+    - dairy-free
+    - milk-free
+- synonym: pescatarian
+  examples: |
+    - fish only
+    - I eat fish but no meat
+- synonym: omnivore
+  examples: |
+    - anything
+    - no restrictions
+    - everything is fine
+- lookup: cuisine_preferences
+  examples: |
+    - Italian
+    - Mexican
+    - Japanese
+    - Indian
+    - Chinese
+    - French
+    - Fusion
+    - Thai
+    - Korean
+    - German

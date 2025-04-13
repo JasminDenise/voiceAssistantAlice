@@ -21,6 +21,18 @@ rules:
     - intent: bot_challenge
     - action: utter_iamabot
 
+- rule: Ask for Confirmation - User confirms
+  steps:
+    - action: utter_booking_confirmation
+    - intent: confirm_booking
+    - action: utter_submit
+
+- rule: Ask for Confirmation - User Denies
+  steps:
+    - action: utter_booking_confirmation
+    - intent: deny_booking
+    - action: utter_booking_canceled
+
 
 # # --- Restaurant Booking Rules ---
 # # Rule for when a known restaurant is provided (skip asking for dietary and cuisine preferences)

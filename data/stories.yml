@@ -18,7 +18,8 @@ stories:
     - action: known_restaurant_form
     - active_loop: known_restaurant_form
     - action: action_suggest_restaurant
-    - action: utter_submit
+    - action: utter_booking_confirmation
+
 
 # Happy Path: User wants a suggestion with a past booking and wants to rebook
 - story: Rebook with past restaurant
@@ -32,7 +33,7 @@ stories:
     - action: known_restaurant_form
     - active_loop: known_restaurant_form
     - action: action_suggest_restaurant
-    - action: utter_submit
+    - action: utter_booking_confirmation
 
 # Happy Path: User wants a suggestion without past bookings, general suggestion
 - story: Suggest restaurant without past bookings #conflict 
@@ -43,7 +44,7 @@ stories:
     - action: restaurant_form
     - active_loop: restaurant_form
     - action: action_suggest_restaurant
-    - action: utter_submit
+    - action: utter_booking_confirmation
 
 # Happy Path: User wants a suggestion for a different restaurant than a past booking
 - story: Suggest different restaurant than past booking
@@ -57,4 +58,118 @@ stories:
     - action: restaurant_form
     - active_loop: restaurant_form
     - action: action_suggest_restaurant
-    - action: utter_submit
+    - action: utter_booking_confirmation
+
+- story: interactive_story_1
+  steps:
+  - intent: inform_booking_details
+    entities:
+    - number: '2'
+    - number: 2
+  - slot_was_set:
+    - num_of_guests: 2
+  - action: restaurant_form
+  - active_loop: restaurant_form
+  - slot_was_set:
+    - num_of_guests: 2
+  - slot_was_set:
+    - requested_slot: past_bookings
+  - intent: deny
+  - slot_was_set:
+    - past_bookings: false
+  - slot_was_set:
+    - rebook: false
+  - action: restaurant_form
+  - slot_was_set:
+    - requested_slot: cuisine_preferences
+  - intent: inform_booking_details
+    entities:
+    - cuisine_preferences: Italian
+    - cuisine_preferences: italian
+  - slot_was_set:
+    - cuisine_preferences: italian
+  - action: restaurant_form
+  - slot_was_set:
+    - requested_slot: dietary_preferences
+  - intent: inform_booking_details
+    entities:
+    - dietary_preferences: vegetarian
+  - slot_was_set:
+    - dietary_preferences: vegetarian
+  - action: restaurant_form
+  - slot_was_set:
+    - requested_slot: date_and_time
+  - intent: inform_booking_details
+    entities:
+    - time: '2025-04-18T19:00:00.000+02:00'
+  - slot_was_set:
+    - date_and_time: '2025-04-18T19:00:00.000+02:00'
+  - action: restaurant_form
+  - slot_was_set:
+    - requested_slot: null
+  - active_loop: null
+  - action: action_suggest_restaurant
+  - intent: inform_booking_details
+
+
+- story: interactive_story_2
+  steps:
+  - intent: inform_booking_details
+    entities:
+    - number: '2'
+    - time: '2025-04-18T19:00:00.000+02:00'
+    - number: 2
+  - slot_was_set:
+    - date_and_time: '2025-04-18T19:00:00.000+02:00'
+  - slot_was_set:
+    - num_of_guests: 2
+  - action: restaurant_form
+  - active_loop: restaurant_form
+  - slot_was_set:
+    - date_and_time: '2025-04-18T19:00:00.000+02:00'
+  - slot_was_set:
+    - num_of_guests: 2
+  - slot_was_set:
+    - requested_slot: past_bookings
+  - intent: deny
+  - slot_was_set:
+    - past_bookings: false
+  - slot_was_set:
+    - rebook: false
+  - action: restaurant_form
+  - slot_was_set:
+    - requested_slot: cuisine_preferences
+  - intent: inform_booking_details
+    entities:
+    - cuisine_preferences: Indian
+    - cuisine_preferences: Mexican
+    - cuisine_preferences: indian
+    - cuisine_preferences: mexican
+  - slot_was_set:
+    - cuisine_preferences:
+      - Indian
+      - Mexican
+      - indian
+      - mexican
+  - action: restaurant_form
+  - slot_was_set:
+    - requested_slot: dietary_preferences
+  - intent: inform_booking_details
+    entities:
+    - dietary_preferences: vegetarian
+  - slot_was_set:
+    - dietary_preferences:
+      - vegetarian
+  - action: restaurant_form
+  - slot_was_set:
+    - requested_slot: null
+  - active_loop: null
+  - action: action_suggest_restaurant
+  - action: utter_booking_confirmation
+  - intent: confirm_booking
+  - action: utter_submit
+  - intent: nlu_fallback
+  - intent: thank_you
+    entities:
+    - thank_you: Thank you
+    - goodbye: Bye

@@ -15,9 +15,9 @@ class ActionSuggestRestaurant(Action):
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         
-        # Extract slots
-        cuisine_pref = tracker.get_slot("cuisine_preferences") or ""
-        dietary_pref = tracker.get_slot("dietary_preferences") or ""
+        # Extract user preferences
+        cuisine_pref = tracker.get_slot("cuisine_preferences") or []  # This is now a list
+        dietary_pref = tracker.get_slot("dietary_preferences") or []  # This is now a list
         num_of_guests = tracker.get_slot("num_of_guests") or 1  # Default to 1 guest if not provided
         date_and_time = tracker.get_slot("date_and_time") or ""  # Date and time combined slot
         
@@ -34,7 +34,7 @@ class ActionSuggestRestaurant(Action):
                 return []
 
         # Combine preferences into a single search string for similarity comparison
-        user_pref = f"{cuisine_pref} {dietary_pref}".strip()
+        user_pref = " ".join(cuisine_pref) + " " + " ".join(dietary_pref)  # Combine multiple cuisines and dietary preferences
 
         # Load restaurant data from local JSON file
         with open("data/restaurants.json", "r") as file:
@@ -58,7 +58,7 @@ class ActionSuggestRestaurant(Action):
         if all_matches and all_matches[0][1] > 0.2:
             best = all_matches[0][0]
             response = (
-                f"I recommend **{best['name']}**, which serves {best['cuisine']} cuisine. "
+                f"Based on your preferences, I recommend **{best['name']}**, which serves {best['cuisine']} cuisine. "
                 f"It offers {', '.join(best['dietary_options'])} options and has a rating of {best['rating']}."
             )
         else:
@@ -72,15 +72,18 @@ class ActionSuggestRestaurant(Action):
         dispatcher.utter_message(text=response)
         return []
 
-    def suggest_fallback(self, dietary_pref: str, num_of_guests: int, restaurants: List[Dict[Text, Any]], time_of_booking: str, day_of_booking: str) -> Dict[Text, Any]:
-        """Suggest a fallback restaurant based on dietary preference, number of guests, time, and date."""
+    def suggest_fallback(self, dietary_pref: List[str], num_of_guests: int, restaurants: List[Dict[Text, Any]], time_of_booking: str, day_of_booking: str) -> Dict[Text, Any]:
+        """Suggest a fallback restaurant based on dietary preference, number of guests, time and date."""
         
         # Filter restaurants by dietary preferences first
-        filtered_restaurants = [r for r in restaurants if dietary_pref.lower() in [option.lower() for option in r.get("dietary_options", [])]]
+        filtered_restaurants = [
+            r for r in restaurants if all(d.lower() in [option.lower() for option in r.get("dietary_options", [])] for d in dietary_pref)
+        ]
         
-        # If no match found based on dietary preference, pick any restaurant
+        # If no match found based on dietary preference, send a fallback message
         if not filtered_restaurants:
-            filtered_restaurants = restaurants
+            # No restaurant matching all dietary preferences
+            return {"name": "No restaurant found", "cuisine": "N/A", "dietary_options": ["N/A"], "rating": "N/A"}
 
         # Further filter based on time, date, and number of guests (if available)
         if time_of_booking and day_of_booking and num_of_guests:
