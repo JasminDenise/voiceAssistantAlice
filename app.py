@@ -3,9 +3,11 @@ import requests
 from kokoro import KPipeline
 import soundfile as sf
 import numpy as np
+from flask_cors import CORS
 
 # Initialize Flask app
 app = Flask(__name__)
+CORS(app) # Allow all origins
 
 # Initialize Kokoro Text-to-Speech pipeline (American English)
 pipeline = KPipeline(lang_code='a')  # 'a' = American English voice model
@@ -60,12 +62,12 @@ def process_input():
 
     # Fallback if Rasa does not return a valid text response
     if not rasa_response or not rasa_response[0].get('text'):
-        response_text = 'Sorry, I did not understand that.'
+        response_text = 'Sorry, I did not understand that. What did you say?'
     else:
         # Take the first valid text response from Rasa
         response_text = rasa_response[0].get('text')
 
-    print(f"Rasa response: {response_text}")  # For debugging
+    print(f"Rasa response: {response_text}")  # For debugging 
 
     # Convert response text to speech (TTS) using Kokoro
     audio_url = generate_tts_audio(response_text)
@@ -92,7 +94,7 @@ def generate_tts_audio(text):
         for _, _, audio in generator:
             all_audio_chunks.append(audio)
 
-        # Combine all chunks into one WAV file
+        # Combine all chunks into one wav file
         if all_audio_chunks:
             full_audio = np.concatenate(all_audio_chunks)
             sf.write(audio_filename, full_audio, 24000)  # Save with 24kHz sample rate

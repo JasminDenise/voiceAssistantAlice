@@ -38,39 +38,42 @@ h2 {
     font-style: italic;
 }
 
-/* Chat Box Styling */
+/* ChatBox Styling */
 #chat-box {
     border: 1px solid #ccc;
     background-color: white;
-    height: 500px;
-    width: 70vwx; /* 70 % of viewport */
+    height: 30vw;
+    width: 60vw; /* 70 % of viewport */
     max-width: 100%; /* Ensure it doesn't go beyond the viewport */
     overflow-y: auto;
-    padding: 10px 20px;
+    padding: 24px 24px;
     border-radius: 8px;
     margin-bottom: 16px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    align-items: center;
 }
 
 /* Chat message wrapper */
 .chat-message {
     display: flex;
-    margin: 10px 0;
+    margin: 4px 0;
     max-width: 70%;
 }
 
 /* Bot messages */
 .bot-message {
     justify-content: flex-start;
+    margin-right: auto;
 }
 
 .bot-message p {
     background-color: #f1f1f1;
     color: #333;
-    padding: 10px 14px;
+    padding: 4px 8px;
     border-radius: 12px;
     border-top-left-radius: 0;
     text-align: left;
+    margin: 0;
 }
 
 /* User messages */
@@ -83,10 +86,11 @@ h2 {
 .user-message p {
     background-color: #e6dcf5;
     color: #333;
-    padding: 10px 14px;
+    padding: 4px 8px;
     border-radius: 12px;
     border-top-right-radius: 0;
     text-align: right;
+    margin: 0;
 }
 
 /* Button Styling */

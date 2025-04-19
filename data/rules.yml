@@ -15,46 +15,67 @@ rules:
   steps:
     - intent: goodbye
     - action: utter_goodbye
-    - action: action_stop
 
 - rule: Handle bot challenge
   steps:
     - intent: bot_challenge
     - action: utter_iamabot
 
+# - rule: Set past_bookings to true
+#   condition:
+#   - active_loop: restaurant_form
+#   steps:
+#     - action: restaurant_form
+#     - active_loop: restaurant_form
+#     - action: utter_ask_past_bookings
+#     - intent: affirm
+#     - slot_was_set:
+#         - past_bookings: true 
+        
+# - rule: Set past_bookings to false
+#   condition:
+#   - active_loop: restaurant_form
+#   steps:
+#     - action: restaurant_form
+#     - active_loop: restaurant_form
+#     - action: utter_ask_past_bookings
+#     - intent: deny
+#     - slot_was_set:
+#         - past_bookings: false
+
+
+# --- Confirmation Rules ---
+
 - rule: Ask for Confirmation - User confirms
   steps:
-    - action: utter_booking_confirmation
+    - action: action_suggest_restaurant
     - intent: confirm_booking
     - action: utter_submit
-    - action: action_stop
+    - action: action_clear_slots
 
 - rule: Ask for Confirmation - User Denies
   steps:
-    - action: utter_booking_confirmation
+    - action: action_suggest_restaurant
     - intent: deny_booking
     - action: utter_booking_canceled
-    - action: action_stop
+    - action: action_clear_slots
 
-
-# # --- Restaurant Booking Rules ---
-# # Rule for when a known restaurant is provided (skip asking for dietary and cuisine preferences)
-# - rule: Known restaurant booking
+# --- Form Rules ---
+# - rule: Activate Form
 #   steps:
 #     - intent: inform_booking_details
-#     - slot_was_set:
-#         - past_restaurant_name: "La Bella Italia"  # Example past restaurant
-#     - action: known_restaurant_form
-#     - active_loop: known_restaurant_form
-
-# # Rule for new restaurant booking (ask for all preferences)
-# - rule: New restaurant booking
-#   steps:
-#     - intent: inform_booking_details
-#     - slot_was_set:
-#         - past_restaurant_name: null
 #     - action: restaurant_form
 #     - active_loop: restaurant_form
+
+- rule: Submit Form
+  condition:
+  - active_loop: restaurant_form
+  steps:
+    - action: restaurant_form
+    - active_loop: null
+    - slot_was_set:
+        - requested_slot: null # form is done
+    - action: action_suggest_restaurant
 
 # Rule for fallback when the bot doesn't understand the user input
 - rule: Out of Scope
@@ -67,3 +88,4 @@ rules:
   steps:
     - intent: cancel
     - action: utter_booking_canceled
+    - action: action_clear_slots

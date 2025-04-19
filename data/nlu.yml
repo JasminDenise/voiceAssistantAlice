@@ -13,6 +13,8 @@ nlu:
     - goodmorning
     - goodevening
     - good afternoon
+    - Hi Alice
+    - Hi
 - intent: goodbye
   examples: |
     - see you
@@ -30,6 +32,7 @@ nlu:
     - thanks a lot
     - great, thanks
     - Thank you. Bye.
+    - yes, thank you
 - intent: bot_challenge
   examples: |
     - are you a bot?
@@ -54,9 +57,12 @@ nlu:
     - I'm [vegetarian](dietary_preferences)
     - I need [gluten-free](dietary_preferences) food
     - [vegan](dietary_preferences), please
+    - I can eat [anything](dietary_preferences)
     - [halal](dietary_preferences)
     - I follow a [kosher](dietary_preferences) diet
     - [lactose-free](dietary_preferences)
+    - I'm an [omnivore](dietary_preferences)
+    - I [don't have any dietary restrictions](dietary_preferences)
     - I previously booked at [La Bella Italia](past_restaurant_name)
     - I want to go again to [Casa Mexicana](past_restaurant_name)
     - Can I rebook [La Bella Italia](past_restaurant_name)?
@@ -74,18 +80,58 @@ nlu:
     - yes, I'm [vegetarian](dietary_preferences)
     - I need a [vegetarian](dietary_preferences) and a [gluten-free](dietary_preferences) place
     - I’m looking for a [lactose-free](dietary_preferences) and [vegan](dietary_preferences) option
-    - I want to eat on friday at 7pm
+    - I want to eat on friday at [7 PM](time)
     - [Yes](affirm), i booked before at "[La Bella Italia](past_restaurant_name)"
     - [Sure](affirm), I have been to "[La Bella Italia](past_restaurant_name)"
     - I want [Italian](cuisine_preferences) and [Mexican](cuisine_preferences)
     - I'd like [Japanese](cuisine_preferences) and [Indian](cuisine_preferences)
     - [Chinese](cuisine_preferences) and [Thai](cuisine_preferences) for sure
-    - hi Alice, I want to book a table on friday at 7pm for [2](number) people
+    - hi Alice, I want to book a table on friday at [7 PM](time) for [2](number) people
     - I like [indian][{"entity": "cuisine_preferences", "value": "Indian"}, {"entity": "cuisine_preferences"}] and [mexican][{"entity": "cuisine_preferences", "value": "Mexican"}, {"entity": "cuisine_preferences"}] food
     - I am [vegetarian](dietary_preferences)
-    - hi, i want a table for six people on saturday evening at 7pm
+    - hi, i want a table for six people on saturday evening at [7 PM](time)
     - [italian][{"entity": "cuisine_preferences", "value": "Italian"}, {"entity": "cuisine_preferences"}] but also [mexican][{"entity": "cuisine_preferences", "value": "Mexican"}, {"entity": "cuisine_preferences"}] food
     - i have [no restrictions](dietary_preferences) I can eat everything
+    - I like [italian][{"entity": "cuisine_preferences", "value": "Italian"}, {"entity": "cuisine_preferences"}] and [french][{"entity": "cuisine_preferences", "value": "French"}, {"entity": "cuisine_preferences"}] food
+    - No I can eat [anything]{"entity": "dietary_preferences", "value": "omnivore"}
+    - No I eat [everything]{"entity": "dietary_preferences", "value": "omnivore"}
+    - [No I haven't any dietary restrictions]{"entity": "dietary_preferences", "value": "omnivore"}
+    - I would like to book a table for today
+    - We are [five](number) people
+    - I want to eat at [7 PM](time) if possible
+    - I want to book a table for today
+    - I like [Italian][{"entity": "cuisine_preferences"}, {"entity": "cuisine_preferences"}] and [French][{"entity": "cuisine_preferences"}, {"entity": "cuisine_preferences"}] food
+    - no I eat [everything]{"entity": "dietary_preferences", "value": "omnivore"}
+    - we are [three](number)
+    - we are [two](number)
+    - no I can eat [everything]{"entity": "dietary_preferences", "value": "omnivore"}
+    - I want to book for [5 PM](time)
+    - hi i want to book a restaurant
+    - No i can eat [everything]{"entity": "dietary_preferences", "value": "omnivore"}
+    - I would like to eat today at [7pm](time)
+    - we are [three](number) people
+    - Can I book a table for today?
+    - [Yes](affirm) it was [la bella italia]{"entity": "past_restaurant_name", "value": "La Bella Italia"}
+    - I think we are four people
+    - I would like to book for [7pm](time)
+    - I want to book a restaurant
+    - I prefer [italian][{"entity": "cuisine_preferences", "value": "Italian"}, {"entity": "cuisine_preferences"}] food
+    - No I have [no restrictions]{"entity": "dietary_preferences", "value": "omnivore"}
+    - I would like to book a table on Friday at [6pm](time)
+    - We are four people
+    - I want to book a table for today please
+    - I think it was [Viva Mexico](past_restaurant_name)
+    - Only [two](number)
+    - and what about [7:30 pm](time)?
+    - Hi I want to book a table for today at [7pm](time)
+    - [italian][{"entity": "cuisine_preferences", "value": "Italian"}, {"entity": "cuisine_preferences"}] and [german](cuisine_preferences)
+    - No I can eat [everything]{"entity": "dietary_preferences", "value": "omnivore"}
+    - we are only [two](number)
+    - [Yes](affirm) I want to book again at [Bella Roma][{"entity": "past_restaurant_name"}, {"entity": "past_restaurant_name"}] if possible
+    - Hi I want to book again at [Bella Roma][{"entity": "past_restaurant_name"}, {"entity": "past_restaurant_name"}]
+    - Today
+    - Sorry I want to eat at [8:30 PM](time)
+    - [three](number) people
 - intent: out_of_scope
   examples: |
     - Who is your boss?
@@ -104,6 +150,8 @@ nlu:
     - yes please
     - yes please book it
     - yes please book it for me
+    - Yes please book it for me
+    - [yes please!](confirm_booking)
 - intent: deny_booking
   examples: |
     - no, I don't want to book it there
@@ -120,6 +168,9 @@ nlu:
     - absolutely
     - definitely
     - of course
+    - yes, please
+    - yes, I want to rebook
+    - Yes, I'd like to book again
 - intent: deny
   examples: |
     - no, I don't want to rebook
@@ -131,6 +182,11 @@ nlu:
     - not really
     - nope
     - no not yet
+    - No I haven't
+    - No I haven't booke dbefore with you
+    - No, I haven't
+    - I want to book it on a different time at [7pm](time)
+    - No
 - intent: cancel
   examples: |
     - I want to cancel
@@ -145,6 +201,22 @@ nlu:
 - synonym: Mexican
   examples: |
     - mexican
+- synonym: French
+  examples: |
+    - french
+- synonym: omnivore
+  examples: |
+    - anything
+    - everything
+    - No I haven't any dietary restrictions
+    - no restrictions
+    - everything is fine
+- synonym: La Bella Italia
+  examples: |
+    - la bella italia
+- synonym: 7 PM
+  examples: |
+    - 7 pm
 - synonym: vegan
   examples: |
     - plant-based
@@ -174,11 +246,6 @@ nlu:
   examples: |
     - fish only
     - I eat fish but no meat
-- synonym: omnivore
-  examples: |
-    - anything
-    - no restrictions
-    - everything is fine
 - lookup: cuisine_preferences
   examples: |
     - Italian
@@ -191,3 +258,18 @@ nlu:
     - Thai
     - Korean
     - German
+- lookup: past_restaurant_name
+  examples: |
+    - La Bella Italia
+    - Casa Mexicana
+    - Tokyo Table
+    - Viva Mexico
+    - Sushi Harmony
+    - Bollywood Spice
+    - Dragon Wok
+    - Le Petit Gourmet
+    - Plant Kitchen
+    - Tandoori Tales
+    - Bella Roma
+    - Zen Garden
+    - Bavarian Bites

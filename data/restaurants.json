@@ -1,95 +1,184 @@
-[ 
-    {
-      "name": "La Bella Italia",
-      "cuisine": "Italian",
-      "dietary_options": ["Vegetarian", "Gluten-Free", "Omnivore"],
-      "location": "Downtown",
-      "price_range": "$$",
-      "rating": 4.6,
-      "availability": {
-        "Friday": ["7:00 PM", "8:00 PM", "9:00 PM"],
-        "Saturday": ["6:00 PM", "8:00 PM"]
-      },
-      "max_guests": 6
+[
+  {
+    "name": "La Bella Italia",
+    "cuisine": "Italian",
+    "dietary_options": ["Vegetarian", "Gluten-Free", "Omnivore"],
+    "location": "Downtown",
+    "price_range": "$$",
+    "rating": 4.6,
+    "availability": {
+      "Friday": ["6:00 PM", "7:00 PM", "8:00 PM", "9:00 PM", "10:00 PM"],
+      "Saturday": ["6:00 PM", "7:30 PM", "8:00 PM", "9:00 PM", "10:00 PM"]
     },
-    {
-      "name": "Casa Mexicana",
-      "cuisine": "Mexican",
-      "dietary_options": ["Vegan", "Halal", "Vegetarian", "Omnivore"],
-      "location": "Uptown",
-      "price_range": "$",
-      "rating": 4.4,
-      "availability": {
-        "Friday": ["6:00 PM", "7:00 PM"],
-        "Saturday": ["5:00 PM", "7:30 PM"]
-      },
-      "max_guests": 8
+    "max_guests": 6
+  },
+  {
+    "name": "Casa Mexicana",
+    "cuisine": "Mexican",
+    "dietary_options": ["Vegan", "Halal", "Vegetarian", "Omnivore"],
+    "location": "Uptown",
+    "price_range": "$",
+    "rating": 4.4,
+    "availability": {
+      "Friday": ["5:00 PM", "6:00 PM", "7:00 PM", "8:00 PM"],
+      "Saturday": ["5:00 PM", "6:30 PM", "7:30 PM", "9:00 PM"]
     },
-    {
-      "name": "Tokyo Table",
-      "cuisine": "Japanese",
-      "dietary_options": ["Pescatarian", "Gluten-Free", "Omnivore"],
-      "location": "Midtown",
-      "price_range": "$$$",
-      "rating": 4.8,
-      "availability": {
-        "Saturday": ["8:00 PM", "9:00 PM"],
-        "Sunday": ["6:00 PM", "7:00 PM"]
-      },
-      "max_guests": 4
+    "max_guests": 8
+  },
+  {
+    "name": "Tokyo Table",
+    "cuisine": "Japanese",
+    "dietary_options": ["Pescatarian", "Gluten-Free", "Omnivore"],
+    "location": "Midtown",
+    "price_range": "$$$",
+    "rating": 4.8,
+    "availability": {
+      "Saturday": ["6:00 PM", "7:30 PM", "8:00 PM", "9:00 PM"],
+      "Sunday": ["6:00 PM", "7:00 PM", "8:30 PM"]
     },
-    {
-      "name": "Bollywood Spice",
-      "cuisine": "Indian",
-      "dietary_options": ["Halal", "Vegetarian", "Omnivore"],
-      "location": "Old Town",
-      "price_range": "$$",
-      "rating": 4.7,
-      "availability": {
-        "Friday": ["6:00 PM", "8:00 PM"],
-        "Monday": ["12:00 PM"]
-      },
-      "max_guests": 10
+    "max_guests": 4
+  },
+  {
+    "name": "Bollywood Spice",
+    "cuisine": "Indian",
+    "dietary_options": ["Halal", "Vegetarian", "Omnivore"],
+    "location": "Old Town",
+    "price_range": "$$",
+    "rating": 4.7,
+    "availability": {
+      "Friday": ["5:00 PM", "6:00 PM", "8:00 PM", "9:00 PM"],
+      "Monday": ["12:00 PM", "1:30 PM"]
     },
-    {
-      "name": "Dragon Wok",
-      "cuisine": "Chinese",
-      "dietary_options": ["Omnivore", "Vegetarian"],
-      "location": "Chinatown",
-      "price_range": "$$",
-      "rating": 4.3,
-      "availability": {
-        "Wednesday": ["12:00 PM", "6:00 PM"],
-        "Friday": ["5:00 PM", "7:00 PM"]
-      },
-      "max_guests": 5
+    "max_guests": 10
+  },
+  {
+    "name": "Dragon Wok",
+    "cuisine": "Chinese",
+    "dietary_options": ["Omnivore", "Vegetarian"],
+    "location": "Chinatown",
+    "price_range": "$$",
+    "rating": 4.3,
+    "availability": {
+      "Wednesday": ["12:00 PM", "1:00 PM", "6:00 PM"],
+      "Friday": ["5:00 PM", "7:00 PM", "8:00 PM"]
     },
-    {
-      "name": "Le Petit Gourmet",
-      "cuisine": "French",
-      "dietary_options": ["Vegetarian", "Lactose-Free", "Omnivore"],
-      "location": "West End",
-      "price_range": "$$$",
-      "rating": 4.5,
-      "availability": {
-        "Monday": ["12:00 PM", "6:00 PM"],
-        "Wednesday": ["7:30 PM"]
-      },
-      "max_guests": 6
+    "max_guests": 5
+  },
+  {
+    "name": "Le Petit Gourmet",
+    "cuisine": "French",
+    "dietary_options": ["Vegetarian", "Lactose-Free", "Omnivore"],
+    "location": "West End",
+    "price_range": "$$$",
+    "rating": 4.5,
+    "availability": {
+      "Monday": ["12:00 PM", "1:30 PM", "6:00 PM", "7:30 PM"],
+      "Wednesday": ["7:30 PM", "8:30 PM"]
     },
-    {
-      "name": "Plant Kitchen",
-      "cuisine": "Fusion",
-      "dietary_options": ["Vegan", "Plant-Based", "Dairy-Free"],
-      "location": "Tech Hub",
-      "price_range": "$$",
-      "rating": 4.9,
-      "availability": {
-        "Tuesday": ["12:00 PM", "6:00 PM"],
-        "Wednesday": ["6:00 PM", "7:30 PM"]
-      },
-      "max_guests": 4
-    }
-  ]
-  
-
+    "max_guests": 6
+  },
+  {
+    "name": "Plant Kitchen",
+    "cuisine": "Fusion",
+    "dietary_options": ["Vegan", "Plant-Based", "Dairy-Free"],
+    "location": "Tech Hub",
+    "price_range": "$$",
+    "rating": 4.9,
+    "availability": {
+      "Tuesday": ["12:00 PM", "1:30 PM", "6:00 PM", "7:30 PM"],
+      "Wednesday": ["6:00 PM", "7:30 PM", "9:00 PM"]
+    },
+    "max_guests": 4
+  },
+  {
+    "name": "Spicy Lotus",
+    "cuisine": "Thai",
+    "dietary_options": ["Vegan", "Gluten-Free", "Lactose-Free", "Omnivore"],
+    "location": "City Center",
+    "price_range": "$$",
+    "rating": 4.5,
+    "availability": {
+      "Friday": ["5:30 PM", "6:00 PM", "7:00 PM", "8:00 PM", "9:00 PM"],
+      "Saturday": ["5:00 PM", "7:30 PM", "9:00 PM", "10:00 PM"]
+    },
+    "max_guests": 4
+  },
+  {
+    "name": "Tandoori Tales",
+    "cuisine": "Indian",
+    "dietary_options": ["Halal", "Vegetarian", "Vegan", "Gluten-Free", "Omnivore"],
+    "location": "West End",
+    "price_range": "$$",
+    "rating": 4.7,
+    "availability": {
+      "Friday": ["5:30 PM", "6:30 PM", "7:00 PM", "8:00 PM", "9:30 PM"],
+      "Saturday": ["6:00 PM", "7:00 PM", "8:30 PM"]
+    },
+    "max_guests": 6
+  },
+  {
+    "name": "Sushi Harmony",
+    "cuisine": "Japanese",
+    "dietary_options": ["Pescatarian", "Gluten-Free", "Lactose-Free", "Omnivore"],
+    "location": "Downtown",
+    "price_range": "$$$",
+    "rating": 4.8,
+    "availability": {
+      "Friday": ["6:30 PM", "7:00 PM", "9:00 PM", "10:00 PM"],
+      "Saturday": ["6:00 PM", "7:30 PM", "9:00 PM"]
+    },
+    "max_guests": 2
+  },
+  {
+    "name": "Viva Mexico",
+    "cuisine": "Mexican",
+    "dietary_options": ["Vegetarian", "Vegan", "Lactose-Free", "Omnivore"],
+    "location": "Old Town",
+    "price_range": "$$",
+    "rating": 4.3,
+    "availability": {
+      "Friday": ["5:00 PM", "6:00 PM", "7:00 PM", "9:00 PM"],
+      "Saturday": ["5:00 PM", "6:30 PM", "8:00 PM", "8:30 PM"]
+    },
+    "max_guests": 5
+  },
+  {
+    "name": "Bella Roma",
+    "cuisine": "Italian",
+    "dietary_options": ["Vegetarian", "Gluten-Free", "Omnivore"],
+    "location": "City Square",
+    "price_range": "$$",
+    "rating": 4.4,
+    "availability": {
+      "Friday": ["5:00 PM", "6:00 PM", "7:00 PM", "8:00 PM"],
+      "Saturday": ["5:30 PM", "7:00 PM", "7:30 PM", "8:30 PM"]
+    },
+    "max_guests": 6
+  },
+  {
+    "name": "Zen Garden",
+    "cuisine": "Fusion",
+    "dietary_options": ["Vegan", "Pescatarian", "Kosher", "Omnivore"],
+    "location": "Riverside",
+    "price_range": "$$$",
+    "rating": 4.6,
+    "availability": {
+      "Friday": ["6:00 PM", "7:00 PM", "9:00 PM", "10:00 PM"],
+      "Saturday": ["6:00 PM", "7:30 PM", "9:00 PM", "10:30 PM"]
+    },
+    "max_guests": 4
+  },
+  {
+    "name": "Bavarian Bites",
+    "cuisine": "German",
+    "dietary_options": ["Omnivore", "Lactose-Free", "Gluten-Free"],
+    "location": "Market Street",
+    "price_range": "$$",
+    "rating": 4.2,
+    "availability": {
+      "Friday": ["5:30 PM", "6:00 PM", "7:00 PM", "8:00 PM"],
+      "Saturday": ["7:00 PM", "7:30 PM", "9:00 PM"]
+    },
+    "max_guests": 8
+  }
+]

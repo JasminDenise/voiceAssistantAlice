@@ -7,214 +7,218 @@ version: "3.1"
 
 stories:
 
-# Happy Path: User wants to book a specific restaurant (past bookings not relevant, restaurant name known)
-- story: Book a specific restaurant
-  steps:
-    - intent: greet
-    - action: utter_greet
-    - intent: inform_booking_details
-    - slot_was_set:
-        - past_restaurant_name: La Bella Italia  # Known restaurant name
-    - action: known_restaurant_form
-    - active_loop: known_restaurant_form
-    - action: action_suggest_restaurant
-    - action: utter_booking_confirmation
-
-
-# Happy Path: User wants a suggestion with a past booking and wants to rebook
-- story: Rebook with past restaurant
-  steps:
-    - intent: greet
-    - action: utter_greet
-    - intent: inform_booking_details
-    - slot_was_set:
-        - past_restaurant_name: La Bella Italia # Known restaurant from past booking
-        - rebook: true
-    - action: known_restaurant_form
-    - active_loop: known_restaurant_form
-    - action: action_suggest_restaurant
-    - action: utter_booking_confirmation
-
-# Happy Path: User wants a suggestion without past bookings, general suggestion
-- story: Suggest restaurant without past bookings #conflict 
+# User wants to book or rebook a past restaurant 
+- story: User wants to book a restaurant
   steps:
     - intent: greet
     - action: utter_greet
     - intent: inform_booking_details
     - action: restaurant_form
     - active_loop: restaurant_form
-    - action: action_suggest_restaurant
-    - action: utter_booking_confirmation
 
-# Happy Path: User wants a suggestion for a different restaurant than a past booking
-- story: Suggest different restaurant than past booking
+- story: User wants to rebook past restaurant
   steps:
     - intent: greet
     - action: utter_greet
     - intent: inform_booking_details
-    - slot_was_set:
-        - past_restaurant_name: "La Bella Italia"  # Past restaurant provided
-        - rebook: false
     - action: restaurant_form
     - active_loop: restaurant_form
-    - action: action_suggest_restaurant
-    - action: utter_booking_confirmation
+    - slot_was_set:
+        - requested_slot: past_bookings
+    - intent: affirm
+    - slot_was_set:
+        - past_bookings: true
+
+
+
+- story: User doesn't want to rebook past restaurant
+  steps:
+    - intent: greet
+    - action: utter_greet
+    - intent: inform_booking_details
+    - action: restaurant_form
+    - active_loop: restaurant_form
+    - slot_was_set:
+        - requested_slot: past_bookings
+    - intent: deny
+    - slot_was_set:
+        - past_bookings: false
+
 
 - story: interactive_story_1
   steps:
   - intent: inform_booking_details
     entities:
-    - number: '2'
-    - number: 2
+    - time: 7pm
+    - time: '2025-04-19T19:00:00.000+02:00'
   - slot_was_set:
-    - num_of_guests: 2
+    - date_and_time: '2025-04-19T19:00:00.000+02:00'
   - action: restaurant_form
   - active_loop: restaurant_form
   - slot_was_set:
-    - num_of_guests: 2
-  - slot_was_set:
     - requested_slot: past_bookings
+  - slot_was_set:
+    - date_and_time: '2025-04-19T19:00:00.000+02:00'
   - intent: deny
   - slot_was_set:
     - past_bookings: false
-  - slot_was_set:
-    - rebook: false
   - action: restaurant_form
+  - slot_was_set:
+    - past_bookings: false
   - slot_was_set:
     - requested_slot: cuisine_preferences
   - intent: inform_booking_details
     entities:
     - cuisine_preferences: Italian
     - cuisine_preferences: italian
+    - cuisine_preferences: german
   - slot_was_set:
-    - cuisine_preferences: italian
+    - cuisine_preferences:
+      - Italian
+      - italian
+      - german
   - action: restaurant_form
+  - slot_was_set:
+    - cuisine_preferences:
+      - Italian
+      - italian
+      - german
   - slot_was_set:
     - requested_slot: dietary_preferences
   - intent: inform_booking_details
     entities:
-    - dietary_preferences: vegetarian
+    - dietary_preferences: omnivore
   - slot_was_set:
-    - dietary_preferences: vegetarian
+    - dietary_preferences:
+      - omnivore
   - action: restaurant_form
   - slot_was_set:
-    - requested_slot: date_and_time
+    - dietary_preferences:
+      - omnivore
+  - slot_was_set:
+    - requested_slot: num_of_guests
   - intent: inform_booking_details
     entities:
-    - time: '2025-04-18T19:00:00.000+02:00'
+    - number: two
+    - number: 2
   - slot_was_set:
-    - date_and_time: '2025-04-18T19:00:00.000+02:00'
+    - num_of_guests: 2
   - action: restaurant_form
+  - slot_was_set:
+    - num_of_guests: 2
+  - slot_was_set:
+    - requested_slot: null
   - slot_was_set:
     - requested_slot: null
   - active_loop: null
   - action: action_suggest_restaurant
-  - action: utter_booking_confirmation
-
+  - intent: confirm_booking
+  - action: utter_submit
+  - action: action_clear_slots
 
 - story: interactive_story_2
   steps:
   - intent: inform_booking_details
-    entities:
-    - number: '2'
-    - time: '2025-04-18T19:00:00.000+02:00'
-    - number: 2
-  - slot_was_set:
-    - date_and_time: '2025-04-18T19:00:00.000+02:00'
-  - slot_was_set:
-    - num_of_guests: 2
   - action: restaurant_form
   - active_loop: restaurant_form
   - slot_was_set:
-    - date_and_time: '2025-04-18T19:00:00.000+02:00'
-  - slot_was_set:
-    - num_of_guests: 2
-  - slot_was_set:
     - requested_slot: past_bookings
-  - intent: deny
-  - slot_was_set:
-    - past_bookings: false
-  - slot_was_set:
-    - rebook: false
-  - action: restaurant_form
-  - slot_was_set:
-    - requested_slot: cuisine_preferences
   - intent: inform_booking_details
     entities:
-    - cuisine_preferences: Indian
-    - cuisine_preferences: Mexican
-    - cuisine_preferences: indian
-    - cuisine_preferences: mexican
+    - affirm: Yes
+    - past_restaurant_name: Bella Roma
+    - past_restaurant_name: Bella Roma
   - slot_was_set:
-    - cuisine_preferences:
-      - Indian
-      - Mexican
-      - indian
-      - mexican
-  - action: restaurant_form
-  - slot_was_set:
-    - requested_slot: dietary_preferences
+    - past_restaurant_name: Bella Roma
   - intent: inform_booking_details
     entities:
-    - dietary_preferences: vegetarian
+    - affirm: Yes
+  - intent: inform_booking_details
+    entities:
+    - affirm: Yes
+    - past_restaurant_name: la bella
+    - time: roma
+    - past_restaurant_name: bella roma
   - slot_was_set:
-    - dietary_preferences:
-      - vegetarian
-  - action: restaurant_form
+    - past_restaurant_name: bella roma
   - slot_was_set:
-    - requested_slot: null
-  - active_loop: null
-  - action: action_suggest_restaurant
-  - action: utter_booking_confirmation
-  - intent: confirm_booking
-  - action: utter_submit
-  - action: action_stop
+    - date_and_time: roma
+  - intent: inform_booking_details
+    entities:
+    - affirm: Yes
+    - past_restaurant_name: Bella Roma
+    - past_restaurant_name: Bella Roma
+  - slot_was_set:
+    - past_restaurant_name: Bella Roma
+  - intent: inform_booking_details
+    entities:
+    - affirm: Yes
+    - past_restaurant_name: Bella Roma
+    - past_restaurant_name: Bella Roma
+  - slot_was_set:
+    - past_restaurant_name: Bella Roma
 
 - story: interactive_story_3
   steps:
   - intent: inform_booking_details
     entities:
-    - number: 6
-    - time: '2025-04-19T19:00:00.000+02:00'
+    - past_restaurant_name: Bella Roma
   - slot_was_set:
-    - date_and_time: '2025-04-19T19:00:00.000+02:00'
-  - slot_was_set:
-    - num_of_guests: 6
+    - past_restaurant_name: Bella Roma
   - action: restaurant_form
   - active_loop: restaurant_form
   - slot_was_set:
-    - date_and_time: '2025-04-19T19:00:00.000+02:00'
-  - slot_was_set:
-    - num_of_guests: 6
-  - slot_was_set:
     - requested_slot: past_bookings
-  - intent: deny
   - slot_was_set:
-    - past_bookings: false
+    - past_restaurant_name: Bella Roma
+  - intent: affirm
   - slot_was_set:
-    - rebook: false
+    - past_bookings: true
   - action: restaurant_form
   - slot_was_set:
-    - requested_slot: cuisine_preferences
+    - past_bookings: true
+  - slot_was_set:
+    - requested_slot: date_and_time
   - intent: inform_booking_details
     entities:
-    - cuisine_preferences: Italian
-    - cuisine_preferences: Mexican
+    - time: '2025-04-19T00:00:00.000+02:00'
   - slot_was_set:
-    - cuisine_preferences:
-      - Italian
-      - Mexican
+    - date_and_time: '2025-04-19T00:00:00.000+02:00'
   - action: restaurant_form
   - slot_was_set:
-    - requested_slot: dietary_preferences
-  - intent: inform_booking_details
+    - date_and_time: null
+  - slot_was_set:
+    - requested_slot: date_and_time
   - intent: inform_booking_details
     entities:
-    - dietary_preferences: no restrictions
-  - action: utter_booking_confirmation
+    - time: 8:30 PM
+    - time: '2025-04-19T20:30:00.000+02:00'
+  - slot_was_set:
+    - date_and_time: '2025-04-19T20:30:00.000+02:00'
+  - action: restaurant_form
+  - slot_was_set:
+    - date_and_time: '2025-04-19T20:30:00.000+02:00'
+  - slot_was_set:
+    - requested_slot: num_of_guests
+  - intent: inform_booking_details
+    entities:
+    - number: three
+    - number: 3
+  - slot_was_set:
+    - num_of_guests: 3
+  - action: restaurant_form
+  - slot_was_set:
+    - num_of_guests: 3
+  - slot_was_set:
+    - requested_slot: null
+  - slot_was_set:
+    - requested_slot: null
+  - active_loop: null
   - action: action_suggest_restaurant
-  - action: utter_booking_confirmation
+  - intent: nlu_fallback
+  - intent: nlu_fallback
   - intent: confirm_booking
+    entities:
+    - confirm_booking: yes please!
   - action: utter_submit
-  - action: action_stop
- 
+  - action: action_clear_slots

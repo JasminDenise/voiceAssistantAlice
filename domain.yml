@@ -12,32 +12,33 @@ intents:
 - out_of_scope
 - thank_you
 entities:
-- dietary_preferences
-- number
-- cuisine_preferences
-- past_bookings
+- affirm
 - time
+- confirm_booking
+- number
 - past_restaurant_name
+- cuisine_preferences
+- dietary_preferences
+- past_bookings
 responses:
   utter_greet:
-  - text: Hey! Do you want to book a restaurant?
-  - text: Hello there :-)
-  - text: Hi! How can I help you today?
-  - text: Hi! Let's book you a restaurant.
+  - text: Hello there. What can I do for you? :-)
+  - text: Hey, how can I help you today? :-)
+  - text: Hi! What can I do for you? :-)
   utter_goodbye:
   - text: Bye
   - text: Goodbye! Have a great day.
   utter_iamabot:
   - text: I’m Alice, your restaurant assistant bot.
   utter_ask_past_bookings:
-  - text: Have you had any past bookings?
-  - text: Have you booked with me before?
+  - text: Have you had any past bookings and want to rebook?
+  - text: Have you booked with me before and want to rebook a past restaurant?
   utter_ask_past_restaurant_name:
   - text: What was the name of the restaurant you booked before?
   - text: Can you tell me the name of the restaurant you previously visited?
   utter_ask_dietary_preferences:
   - text: Do you have any dietary preferences? For example, vegetarian or vegan?
-  - text: Do you have any dietary preferences or restrictions?
+  - text: Do you have any dietary preferences or restrictions like vegetarian or vegan?
   utter_ask_cuisine_preferences:
   - text: What kind of cuisine would you like?
   - text: What kind of cuisine do you prefer?
@@ -47,9 +48,6 @@ responses:
   utter_ask_num_of_guests:
   - text: How many people will be joining?
   - text: How many guests?
-  utter_ask_rebook:
-  - text: Do you want to rebook the same restaurant?
-  - text: Would you like to continue with this restaurant?
   utter_booking_canceled:
   - text: Okay, I have cancelled your booking request. Maybe next time. Have a nice day!
   utter_booking_confirmation:
@@ -61,7 +59,7 @@ responses:
   utter_default:
   - text: I'm sorry, I didn't quite understand that. Could you please rephrase?
   out_of_scope:
-  - text: Sorry, I can't handle that request.
+  - text: Sorry, I can't handle that request. I'm only here to help you booking a restaurant.
 slots:
   past_bookings:
     type: bool
@@ -73,18 +71,9 @@ slots:
     - type: from_intent
       intent: deny
       value: false
-  rebook:
-    type: bool
-    mappings:
-    - type: from_intent
-      intent: affirm
-      value: true
-    - type: from_intent
-      intent: deny
-      value: false
+    - type: custom
   past_restaurant_name:
     type: text
-    influence_conversation: true
     mappings:
     - type: from_entity
       entity: past_restaurant_name
@@ -94,7 +83,7 @@ slots:
     - type: from_entity
       entity: time
   num_of_guests:
-    type: any
+    type: float
     mappings:
     - type: from_entity
       entity: number
@@ -112,19 +101,12 @@ forms:
   restaurant_form:
     required_slots:
     - past_bookings
-    - cuisine_preferences
-    - dietary_preferences
-    - date_and_time
-    - num_of_guests
-  known_restaurant_form:
-    required_slots:
-    - past_restaurant_name
     - date_and_time
     - num_of_guests
 actions:
 - action_suggest_restaurant
-- action_stop
-
+- validate_restaurant_form
+- action_clear_slots
 session_config:
   session_expiration_time: 60
   carry_over_slots_to_new_session: true
