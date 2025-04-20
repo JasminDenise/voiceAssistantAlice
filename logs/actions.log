@@ -1,0 +1,33 @@
+/Users/jasmin/Desktop/Master Applied Artificial Intelligence/Kurse/06 Voice Assistants/VoiceAssistant/va_env/lib/python3.10/site-packages/rasa/core/tracker_store.py:1044: MovedIn20Warning: Deprecated API features detected! These feature(s) are not compatible with SQLAlchemy 2.0. To prevent incompatible upgrades prior to updating applications, ensure requirements files are pinned to "sqlalchemy<2.0". Set environment variable SQLALCHEMY_WARN_20=1 to show all deprecation warnings.  Set environment variable SQLALCHEMY_SILENCE_UBER_WARNING=1 to silence this message. (Background on SQLAlchemy 2.0 at: https://sqlalche.me/e/b8d9)
+  Base: DeclarativeMeta = declarative_base()
+/Users/jasmin/Desktop/Master Applied Artificial Intelligence/Kurse/06 Voice Assistants/VoiceAssistant/va_env/lib/python3.10/site-packages/rasa/shared/utils/validation.py:134: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  import pkg_resources
+/Users/jasmin/Desktop/Master Applied Artificial Intelligence/Kurse/06 Voice Assistants/VoiceAssistant/va_env/lib/python3.10/site-packages/pkg_resources/__init__.py:3117: DeprecationWarning: Deprecated call to `pkg_resources.declare_namespace('mpl_toolkits')`.
+Implementing implicit namespace packages (as specified in PEP 420) is preferred to `pkg_resources.declare_namespace`. See https://setuptools.pypa.io/en/latest/references/keywords.html#keyword-namespace-packages
+  declare_namespace(pkg)
+/Users/jasmin/Desktop/Master Applied Artificial Intelligence/Kurse/06 Voice Assistants/VoiceAssistant/va_env/lib/python3.10/site-packages/pkg_resources/__init__.py:3117: DeprecationWarning: Deprecated call to `pkg_resources.declare_namespace('ruamel')`.
+Implementing implicit namespace packages (as specified in PEP 420) is preferred to `pkg_resources.declare_namespace`. See https://setuptools.pypa.io/en/latest/references/keywords.html#keyword-namespace-packages
+  declare_namespace(pkg)
+/Users/jasmin/Desktop/Master Applied Artificial Intelligence/Kurse/06 Voice Assistants/VoiceAssistant/va_env/lib/python3.10/site-packages/sanic_cors/extension.py:39: DeprecationWarning: distutils Version classes are deprecated. Use packaging.version instead.
+  SANIC_VERSION = LooseVersion(sanic_version)
+2025-04-20 21:01:29 INFO     rasa_sdk.endpoint  - Starting action endpoint server...
+2025-04-20 21:01:30 INFO     rasa_sdk.executor  - Registered function for 'action_suggest_restaurant'.
+2025-04-20 21:01:30 INFO     rasa_sdk.executor  - Registered function for 'action_clear_slots'.
+2025-04-20 21:01:30 INFO     rasa_sdk.executor  - Registered function for 'validate_restaurant_form'.
+2025-04-20 21:01:30 INFO     rasa_sdk.endpoint  - Starting plugins...
+2025-04-20 21:01:30 INFO     rasa_sdk.endpoint  - Action endpoint is up and running on http://0.0.0.0:5055
+/Users/jasmin/Desktop/Master Applied Artificial Intelligence/Kurse/06 Voice Assistants/VoiceAssistant/va_env/lib/python3.10/site-packages/rasa_sdk/forms.py:228: UserWarning: No method 'extract_cuisine_preferences' found for slot 'cuisine_preferences'. Skipping extraction for this slot.
+  warnings.warn(
+/Users/jasmin/Desktop/Master Applied Artificial Intelligence/Kurse/06 Voice Assistants/VoiceAssistant/va_env/lib/python3.10/site-packages/rasa_sdk/forms.py:228: UserWarning: No method 'extract_dietary_preferences' found for slot 'dietary_preferences'. Skipping extraction for this slot.
+  warnings.warn(
+2025-04-20 21:04:50 ERROR    rasa_sdk.endpoint  - Exception occurred during execution of request <Request: POST /webhook>
+Traceback (most recent call last):
+  File "handle_request", line 83, in handle_request
+    )
+  File "/Users/jasmin/Desktop/Master Applied Artificial Intelligence/Kurse/06 Voice Assistants/VoiceAssistant/va_env/lib/python3.10/site-packages/rasa_sdk/endpoint.py", line 113, in webhook
+    result = await executor.run(action_call)
+  File "/Users/jasmin/Desktop/Master Applied Artificial Intelligence/Kurse/06 Voice Assistants/VoiceAssistant/va_env/lib/python3.10/site-packages/rasa_sdk/executor.py", line 399, in run
+    action(dispatcher, tracker, domain)
+  File "/Users/jasmin/Desktop/Master Applied Artificial Intelligence/Kurse/06 Voice Assistants/VoiceAssistant/actions/actions.py", line 226, in run
+    dt_obj = datetime.fromisoformat(dt_iso)
+TypeError: fromisoformat: argument must be str

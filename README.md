@@ -1,159 +1,138 @@
+# VoiceAssistantAlice
 
-# Voice Assistant Bot
+**Master’s Project: A Rasa‑Based Voice Assistant for Restaurant Reservations**
 
-This project implements a restaurant booking bot built with **Rasa** and **Docker**. The bot interacts with users to make restaurant bookings, suggesting restaurants based on user preferences and booking history.
-
-## Prerequisites
-
-Before you begin, ensure you have the following installed on your machine:
-
-- **Docker** (with Docker Compose)
-  - [Install Docker](https://docs.docker.com/get-docker/)
-  - [Install Docker Compose](https://docs.docker.com/compose/install/)
-
-- **Python 3.x** (for setting up the virtual environment)
-  - [Install Python](https://www.python.org/downloads/)
-
-## Setup
-
-### Clone the Repository
-First, clone this repository to your local machine.
-
-```bash
-git clone https://github.com/your-repository/voice-assistant.git
-cd voice-assistant
-```
-
-### Create a Virtual Environment (Optional)
-
-If you want to use a virtual environment for running Rasa locally:
-
-```bash
-python3 -m venv va_env
-source va_env/bin/activate  # For macOS/Linux
-# va_env\Scripts\activate  # For Windows
-```
-
-### Install Required Dependencies
-
-Install the necessary Python dependencies.
-
-```bash
-pip install -r requirements.txt
-```
-
-### Docker Setup
-
-This project uses **Docker** to simplify the setup and execution of the Rasa bot and related services.
-
-1. Ensure **Docker** and **Docker Compose** are properly installed and running.
-2. In the root directory of this project, create a `docker-compose.yml` file.
-
-#### docker-compose.yml
-```yaml
-version: "3.1"
-
-services:
-  rasa:
-    image: rasa/rasa:latest
-    command: run --enable-api --cors "*"
-    ports:
-      - "5005:5005"  # Rasa API will be on port 5005
-    volumes:
-      - ./voiceassistant:/app  # Mount the voiceassistant folder to /app in the container
-    depends_on:
-      - actions
-
-  actions:
-    build: .
-    volumes:
-      - ./actions:/actions  # Mount the actions folder to /actions in the container
-    command: rasa run actions --port 5055
-    ports:
-      - "5055:5055"  # Actions will be on port 5055
-
-  app:
-    build:
-      context: .  # Build from the current directory (root directory)
-    volumes:
-      - ./app.py:/app.py  # Mount app.py directly to the container
-    ports:
-      - "5000:5000"  # App will be on port 5000
-    depends_on:
-      - rasa
-      - actions
-```
-
-### Start the Bot Using Docker
-
-1. **Build and start the bot**:
-
-   Run the following command to start the Rasa bot, actions, and app container.
-
-   ```bash
-   docker-compose up --build
-   ```
-
-2. **Access the services**:
-   - Rasa API will be running on **port 5005**.
-   - Actions will be running on **port 5055**.
-   - The app will be running on **port 5000**.
-
-3. **You can now interact with the app** by sending requests to `http://localhost:5000`.
-
-### Running Locally (Optional)
-If you prefer to run Rasa locally without Docker, you can do so by following these steps:
-
-1. **Activate the virtual environment** (if using one):
-   ```bash
-   source va_env/bin/activate  # For macOS/Linux
-   # va_env\Scripts\activate  # For Windows
-   ```
-
-2. **Start Rasa server** (for API):
-   ```bash
-   rasa run --enable-api --cors "*"
-   ```
-
-3. **Start the actions server**:
-   ```bash
-   rasa run actions --port 5055
-   ```
-
-4. **Start the app** (replace `app.py` with your actual app entry point):
-   ```bash
-   python app.py
-   ```
-
-## How to Interact with the Bot
-
-1. **Access the Bot via HTTP**:
-   Once the services are running, you can interact with the bot by making HTTP requests to `http://localhost:5000`.
-
-2. **App Functionality**:
-   - The bot will ask for **past restaurant bookings**, **dietary preferences**, **cuisine preferences**, **time** and **day** of booking, and **number of guests**.
-   - The bot will suggest restaurants based on these preferences.
-   - If the user has previously made a booking, they can rebook their favorite restaurant or try a new one.
-
-## Common Issues & Troubleshooting
-
-### 1. Docker Errors
-If you encounter errors related to Docker, ensure the following:
-- Docker is running and properly configured on your machine.
-- If you see permission issues, you may need to use `sudo` with Docker commands (on Linux).
-
-### 2. Service Not Starting
-If a service doesn’t start, check the logs for errors. You can use `docker-compose logs` to get more information about what's going wrong.
-
-```bash
-docker-compose logs
-```
-
-### 3. Python Errors
-If you're using a virtual environment and run into Python-related issues, make sure that all dependencies are installed via `pip install -r requirements.txt`.
+This repository contains all components for a prototype voice assistant—VoiceAssistantAlice—that recommends and books restaurants based on user preferences, leveraging TF–IDF content filtering, Duckling for date/time parsing, and a Flask (or other) frontend for demonstration.
 
 ---
 
-Now you have a working environment to run your Rasa-based voice assistant with minimal terminal commands and a single Docker Compose command.
+##  Overview
 
-Happy Booking! 🎉
+VoiceAssistantAlice demonstrates an end-to-end conversational AI system built on Rasa. It includes:
+
+- **Custom Form Validation** (`ValidateRestaurantForm`) to collect and validate user slots (cuisine, dietary restrictions, date/time, number of guests, past bookings).
+- **Recommendation Engine** (`ActionSuggestRestaurant`) that:
+  - Precomputes TF–IDF vectors for each restaurant description.
+  - Uses cosine similarity to match user preferences (dietary > cuisine).
+  - Checks real-time availability based on Duckling‑parsed date/time and guest count.
+- **Duckling Integration** for robust natural language date/time & number of guests understanding.
+- **Flask App** (`app.py`) as a minimal web interface to demonstrate interactions.
+- **Interactive Rasa Shell** for story creation and testing via `rasa interactive`.
+- **Automated Preprocessing Script** (`actions/preprocess.py`) to generate and serialize TF–IDF models for fast startup.
+
+All services can be launched via a single orchestrator script or manually per platform instructions.
+
+---
+
+## ⚙️ Architecture & Key Components
+
+```plaintext
+┌─────────┐    ┌────────────┐    ┌────────┐    ┌───────────┐
+│   User  │ ↔︎ │  Frontend  │ ↔︎ │ Rasa   │ ↔︎ │ Duckling  │
+└─────────┘    └────────────┘    └────────┘    └───────────┘
+                       │
+                       ▼
+                ┌──────────────────┐
+                │ Action Server    │
+                │ - TF–IDF models  │
+                │ - Recommendation │
+                └──────────────────┘
+```
+
+1. **Frontend** (Flask or custom `app.py`): Captures voice/text input and displays bot replies.  
+2. **Rasa Core & NLU**: Manages dialog and extracts intents/entities.  
+3. **Duckling**: Parses date/time expressions into structured slots.  
+4. **Action Server**:  
+   - **FormValidationAction**: Validates collected slots.  
+   - **ActionSuggestRestaurant**: Filters and ranks restaurants.  
+5. **Data**:  
+   - `data/restaurants.json`: Restaurant metadata (cuisine, dietary options, availability).  
+   - `vectorizer/`: Serialized TF–IDF vectorizer and restaurant vectors.  
+
+---
+
+## 🚀 Setup & Usage (Master’s Student Guide)
+
+### 1. Clone & Navigate  
+```bash
+git clone https://github.com/<your-username>/VoiceAssistantAlice.git
+cd VoiceAssistantAlice
+```
+
+### 2. Create Virtual Environment & Install Dependencies  
+```bash
+python3.10 -m venv va_env
+# macOS/Linux
+source va_env/bin/activate
+# Windows (PowerShell)
+.\va_env\Scripts\Activate.ps1
+pip install -r requirements.txt
+```
+
+### 3. Build & Run Duckling  
+Duckling is required for date/time parsing.  
+```bash
+cd duckling
+stack build
+stack exec duckling-example-exe > ../logs/duckling.log 2>&1 &
+cd ..
+```
+
+### 4. Preprocess Restaurant Data  
+Whenever you update `data/restaurants.json`, regenerate TF–IDF artifacts:  
+```bash
+python preprocess.py
+```
+
+### 5. Launch All Services  
+#### macOS/Linux  
+```bash
+chmod +x actions/start_bot.sh
+./actions/start_bot.sh
+```
+
+#### Windows (PowerShell)  
+```powershell
+# Activate venv
+.\va_env\Scripts\Activate.ps1
+# Start Duckling
+cd duckling; stack exec duckling-example-exe > ..\logs\duckling.log 2>&1 ; cd ..
+# Start Rasa server
+rasa run --enable-api --cors "*" > logs\rasa.log 2>&1 &
+# Start action server
+rasa run actions > logs\actions.log 2>&1 &
+# Run Flask app
+gunicorn -b 127.0.0.1:5000 app:app > logs\app.log 2>&1 &
+```
+
+Open your browser at `http://localhost:5000`.
+
+---
+
+## 📝 Demonstration & Evaluation
+
+1. **Web UI / Flask App**: Interact at `app.py`’s address.  
+2. **Rasa Interactive**: Create/refine stories:  
+```bash
+# Unix
+rasa interactive
+# Windows
+rasa interactive --endpoints endpoints.yml
+```
+3. **Shell Testing**:  
+```bash
+rasa shell --endpoints endpoints.yml
+```
+4. **Logs**: Check `logs/actions.log` for action outputs and slot values.
+
+Evaluate: slot flows, dietary-first recommendations, and error handling when no matches exist.
+
+---
+
+## 🔄 Extensibility & Future Work
+
+- **Large catalog**: Integrate ANN libraries (Faiss, Annoy).  
+- **Dynamic data**: Use a database instead of JSON.  
+- **Enhanced UX**: Add automatic voice recognition (Hey Alice) or customize front-end (Loading spinner and so on).
+
+

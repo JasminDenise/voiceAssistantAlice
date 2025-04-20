@@ -16,76 +16,141 @@ rules:
     - intent: goodbye
     - action: utter_goodbye
 
+- rules: Thank you
+  steps:
+    - intent: thank_you
+    - action: utter_no_problem
+
 - rule: Handle bot challenge
   steps:
     - intent: bot_challenge
     - action: utter_iamabot
 
-# - rule: Set past_bookings to true
-#   condition:
-#   - active_loop: restaurant_form
-#   steps:
-#     - action: restaurant_form
-#     - active_loop: restaurant_form
-#     - action: utter_ask_past_bookings
-#     - intent: affirm
-#     - slot_was_set:
-#         - past_bookings: true 
-        
-# - rule: Set past_bookings to false
-#   condition:
-#   - active_loop: restaurant_form
-#   steps:
-#     - action: restaurant_form
-#     - active_loop: restaurant_form
-#     - action: utter_ask_past_bookings
-#     - intent: deny
-#     - slot_was_set:
-#         - past_bookings: false
+- rule: Out of Scope
+  steps:
+    - intent: out_of_scope
+    - action: utter_default
 
+
+# --- Form Rules ---
+# - rule: Activate restaurant_form on booking request
+#   steps:
+#     - intent: inform_booking_details
+#     - action: restaurant_form
+#     - active_loop: restaurant_form
+
+
+- rule: Submit restaurant_form
+  condition:
+    - active_loop: restaurant_form
+  steps:
+    - action: restaurant_form
+    - active_loop: null
+    - slot_was_set:
+        - requested_slot: null
+    - action: action_suggest_restaurant
 
 # --- Confirmation Rules ---
-
-- rule: Ask for Confirmation - User confirms
+- rule: User confirms booking
   steps:
     - action: action_suggest_restaurant
     - intent: confirm_booking
     - action: utter_submit
     - action: action_clear_slots
 
-- rule: Ask for Confirmation - User Denies
+- rule: User cancels booking after suggestion
   steps:
     - action: action_suggest_restaurant
     - intent: deny_booking
     - action: utter_booking_canceled
     - action: action_clear_slots
 
-# --- Form Rules ---
-# - rule: Activate Form
-#   steps:
-#     - intent: inform_booking_details
-#     - action: restaurant_form
-#     - active_loop: restaurant_form
-
-- rule: Submit Form
-  condition:
-  - active_loop: restaurant_form
-  steps:
-    - action: restaurant_form
-    - active_loop: null
-    - slot_was_set:
-        - requested_slot: null # form is done
-    - action: action_suggest_restaurant
-
-# Rule for fallback when the bot doesn't understand the user input
-- rule: Out of Scope
-  steps:
-    - intent: out_of_scope
-    - action: utter_default
-
-# Rule for when the user wants to stop the form and cancel the booking
-- rule: Cancel booking
+- rule: Cancel booking 
   steps:
     - intent: cancel
     - action: utter_booking_canceled
     - action: action_clear_slots
+# # --- General Interaction Rules ---
+# - rule: Greet user
+#   steps:
+#     - intent: greet
+#     - action: utter_greet
+
+# - rule: Say goodbye
+#   steps:
+#     - intent: goodbye
+#     - action: utter_goodbye
+
+# - rule: Handle bot challenge
+#   steps:
+#     - intent: bot_challenge
+#     - action: utter_iamabot
+
+# # - rule: Set past_bookings to true
+# #   condition:
+# #   - active_loop: restaurant_form
+# #   steps:
+# #     - action: restaurant_form
+# #     - active_loop: restaurant_form
+# #     - action: utter_ask_past_bookings
+# #     - intent: affirm
+# #     - slot_was_set:
+# #         - past_bookings: true 
+        
+# # - rule: Set past_bookings to false
+# #   condition:
+# #   - active_loop: restaurant_form
+# #   steps:
+# #     - action: restaurant_form
+# #     - active_loop: restaurant_form
+# #     - action: utter_ask_past_bookings
+# #     - intent: deny
+# #     - slot_was_set:
+# #         - past_bookings: false
+
+
+# # --- Confirmation Rules ---
+
+# - rule: Ask for Confirmation - User confirms
+#   steps:
+#     - action: action_suggest_restaurant
+#     - intent: confirm_booking
+#     - action: utter_submit
+#     - action: action_clear_slots
+
+# - rule: Ask for Confirmation - User Denies
+#   steps:
+#     - action: action_suggest_restaurant
+#     - intent: deny_booking
+#     - action: utter_booking_canceled
+#     - action: action_clear_slots
+
+# # --- Form Rules ---
+# # - rule: Activate Form
+# #   steps:
+# #     - intent: inform_booking_details
+# #     - action: restaurant_form
+# #     - active_loop: restaurant_form
+
+# - rule: Submit Form
+#   condition:
+#   - active_loop: restaurant_form
+#   steps:
+#     - action: restaurant_form
+#     - active_loop: null
+#     - slot_was_set:
+#         - requested_slot: null # form is done
+#     - action: action_suggest_restaurant
+
+# # Rule for fallback when the bot doesn't understand the user input
+# - rule: Out of Scope
+#   steps:
+#     - intent: out_of_scope
+#     - action: utter_default
+
+# # Rule for when the user wants to stop the form and cancel the booking
+# - rule: Cancel booking
+#   steps:
+#     - intent: cancel
+#     - action: utter_booking_canceled
+#     - action: action_clear_slots

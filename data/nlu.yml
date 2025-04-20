@@ -151,7 +151,6 @@ nlu:
     - yes please book it
     - yes please book it for me
     - Yes please book it for me
-    - [yes please!](confirm_booking)
 - intent: deny_booking
   examples: |
     - no, I don't want to book it there

@@ -60,6 +60,9 @@ responses:
   - text: I'm sorry, I didn't quite understand that. Could you please rephrase?
   out_of_scope:
   - text: Sorry, I can't handle that request. I'm only here to help you booking a restaurant.
+  utter_no_problem: 
+  - text: No problem!
+  - text: That's fine.
 slots:
   past_bookings:
     type: bool
