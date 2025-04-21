@@ -25,7 +25,7 @@ pipeline:
     epochs: 100
   - name: EntitySynonymMapper
   - name: FallbackClassifier # the intent nlu_fallback will be predicted when all other intent predictions fall below the configured confidence threshold
-    threshold: 0.7
+    threshold: 0.6
   - name: RegexEntityExtractor
   - name: DucklingEntityExtractor
     url: http://localhost:8000

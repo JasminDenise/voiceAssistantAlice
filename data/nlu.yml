@@ -174,7 +174,8 @@ nlu:
     - yes, please
     - yes, I want to rebook
     - Yes, I'd like to book again
-    - [Yes please](affirm)
+    - Yes please book it 
+    - please go ahead
 - intent: deny
   examples: |
     - no, I don't want to rebook

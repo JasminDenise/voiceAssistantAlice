@@ -17,11 +17,15 @@ if (!SpeechRecognition) {
   recognition.interimResults =
       false;  // Only return final results (not halfway guesses)
   recognition.maxAlternatives = 1;  // Return only one best match
+  recognition.continuous = false;   // make sure each session only fires once
 
   // This function runs when speech is successfully recognized
   recognition.onresult = (event) => {
     // Get the text version of the spoken words
-    const transcript = event.results[0][0].transcript;
+    // const transcript = event.results[0][0].transcript;
+    // get only the newly finalized result
+    const idx = event.resultIndex;
+    const transcript = event.results[idx][0].transcript.trim();
 
     // Show the user's message in the chat
     addChatMessage('You:', transcript);
@@ -78,7 +82,7 @@ async function sendTextToBackend(text) {
       playAudio(data.audioUrl);
     } else {
       // If there's no audio, start listening again
-      recognition.start();
+      if (!isRecognizing) recognition.start();
     }
   } catch (error) {
     console.error('Error sending text to backend:', error);
@@ -126,12 +130,12 @@ function playAudio(url) {
       .then(() => {
         // When the audio finishes playing, restart listening
         audio.onended = () => {
-          recognition.start();
+          if (!isRecognizing) recognition.start();
         };
       })
       .catch(error => {
         // If there's an error playing the audio, log it and restart listening
         console.error('Audio playback error:', error);
-        recognition.start();
+        if (!isRecognizing) recognition.start();
       });
 }

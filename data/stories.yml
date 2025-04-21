@@ -144,125 +144,40 @@ stories:
   - action: utter_booking_canceled
   - action: action_clear_slots
 
-- story: interactive_story_4 - User wants to rebook in first message
+- story: interactive_story_4 - Rebook in first message
   steps:
-  - intent: inform_booking_details
-    entities:
-    - past_restaurant_name: La Bella Italia
-  - slot_was_set:
-    - past_restaurant_name: La Bella Italia
-  - intent: inform_booking_details
-    entities:
-    - past_restaurant_name: La Bella Italia
-  - slot_was_set:
-    - past_restaurant_name: La Bella Italia
-  - action: restaurant_form
-  - active_loop: restaurant_form
-  - slot_was_set:
-    - requested_slot: date_and_time
-  - slot_was_set:
-    - past_restaurant_name: La Bella Italia
-  - intent: inform_booking_details
-    entities:
-    - time: 10pm
-    - time: '2025-04-25T22:00:00.000+02:00'
-  - slot_was_set:
-    - date_and_time: '2025-04-25T22:00:00.000+02:00'
-  - action: restaurant_form
-  - slot_was_set:
-    - date_and_time: '2025-04-25T22:00:00.000+02:00'
-  - slot_was_set:
-    - requested_slot: num_of_guests
-  - intent: inform_booking_details
-    entities:
-    - number: two
-    - number: '2'
-  - slot_was_set:
-    - num_of_guests: '2'
-  - action: restaurant_form
-  - slot_was_set:
-    - num_of_guests: 2
-  - slot_was_set:
-    - requested_slot: null
-  - active_loop: null
-  - action: action_suggest_restaurant
-  - intent: affirm
-  - slot_was_set:
-    - past_bookings: true
-  - action: utter_submit
-  - action: action_clear_slots
+    # 1) User says “I previously booked at La Bella Italia”
+    - intent: inform_booking_details
+      entities:
+      - past_restaurant_name: "La Bella Italia"
 
-- story: interactive_story_1
-  steps:
-  - intent: inform_booking_details
-  - action: restaurant_form
-  - active_loop: restaurant_form
-  - slot_was_set:
-    - requested_slot: past_bookings
-  - intent: deny
-  - slot_was_set:
-    - past_bookings: false
-  - action: restaurant_form
-  - slot_was_set:
-    - past_bookings: false
-  - slot_was_set:
-    - requested_slot: cuisine_preferences
-  - intent: inform_booking_details
-    entities:
-    - cuisine_preferences: Italian
-    - cuisine_preferences: italian
-  - slot_was_set:
-    - cuisine_preferences:
-      - Italian
-      - italian
-  - action: restaurant_form
-  - slot_was_set:
-    - cuisine_preferences:
-      - Italian
-      - italian
-  - slot_was_set:
-    - requested_slot: dietary_preferences
-  - intent: inform_booking_details
-    entities:
-    - dietary_preferences: omnivore
-  - slot_was_set:
-    - dietary_preferences:
-      - omnivore
-  - action: restaurant_form
-  - slot_was_set:
-    - dietary_preferences:
-      - omnivore
-  - slot_was_set:
-    - requested_slot: date_and_time
-  - intent: inform_booking_details
-    entities:
-    - time: 6pm
-    - time: '2025-04-25T18:00:00.000+02:00'
-  - slot_was_set:
-    - date_and_time: '2025-04-25T18:00:00.000+02:00'
-  - action: restaurant_form
-  - slot_was_set:
-    - date_and_time: '2025-04-25T18:00:00.000+02:00'
-  - slot_was_set:
-    - requested_slot: num_of_guests
-  - intent: inform_booking_details
-    entities:
-    - number: two
-    - number: 2
-  - slot_was_set:
-    - num_of_guests: 2
-  - action: restaurant_form
-  - slot_was_set:
-    - num_of_guests: 2
-  - slot_was_set:
-    - requested_slot: null
-  - slot_was_set:
-    - requested_slot: null
-  - active_loop: null
-  - action: action_suggest_restaurant
-  - intent: nlu_fallback
-  - intent: affirm
-    entities:
-    - affirm: Yes please
-  - action: utter_submit
-  - action: action_clear_slots
+    # 2) Rule kicks in and activates the form immediately
+    - action: restaurant_form
+    - active_loop: restaurant_form
+    - slot_was_set:
+      - past_restaurant_name: "La Bella Italia"
+      - requested_slot: date_and_time
+
+    # 3) User provides the date & time
+    - intent: inform_booking_details
+      entities:
+      - time: "2025-04-25T22:00:00.000+02:00"
+    - slot_was_set:
+      - date_and_time: "2025-04-25T22:00:00.000+02:00"
+
+    # 4) User provides number of guests
+    - intent: inform_booking_details
+      entities:
+      - number: 2
+    - slot_was_set:
+      - num_of_guests: 2
+      - requested_slot: null
+    - action: restaurant_form
+    - active_loop: null
+
+    # 5) Suggest and confirm
+    - action: action_suggest_restaurant
+    - intent: affirm
+    - action: utter_submit
+    - action: action_clear_slots
+

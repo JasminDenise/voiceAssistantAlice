@@ -34,6 +34,15 @@ rules:
 
 # --- Form Rule ---
 
+- rule: Activate restaurant_form
+  condition:
+      - active_loop: null
+  steps:
+    - intent: inform_booking_details
+    - action: restaurant_form
+    - active_loop: restaurant_form
+
+
 - rule: Submit restaurant_form
   condition:
     - active_loop: restaurant_form
