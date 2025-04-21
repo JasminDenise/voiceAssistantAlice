@@ -5,7 +5,7 @@ from rasa_sdk.events import AllSlotsReset
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction 
 from rasa_sdk.types import DomainDict
-from rasa_sdk.events import SlotSet
+from rasa_sdk.events import SlotSet, FollowupAction
 from sklearn.metrics.pairwise import cosine_similarity
 from datetime import datetime
 from joblib import load
@@ -37,6 +37,10 @@ class ValidateRestaurantForm(FormValidationAction):
         tracker: Tracker,
         domain: DomainDict,
     ) -> List[Text]:
+        
+        if tracker.get_slot("past_restaurant_name"):
+            return ["date_and_time", "num_of_guests"]
+
         # always ask whether they’ve booked before
         slots = ["past_bookings"]
         if tracker.get_slot("past_bookings") is True:
@@ -84,9 +88,10 @@ class ValidateRestaurantForm(FormValidationAction):
         tracker: Tracker,
         domain: DomainDict,
     ) -> Dict[Text, Any]:
-        # set past booking to true if restaurant name was provided TODOO
-        if not slot_value == None:
+        # set past booking to true if restaurant name was provided 
+        if  slot_value:
             return {"past_restaurant_name": slot_value, "past_bookings": True} 
+        return {}
 
     async def validate_cuisine_preferences(
         self,
@@ -135,11 +140,9 @@ class ValidateRestaurantForm(FormValidationAction):
         # check if there is a valid datetime
         try:
             dt = datetime.fromisoformat(slot_value)
-            # print(dt)
-            # print(dt.time())
-            # print(dt.time().hour)
-            # print(dt.time().minute)
+
         except Exception:
+            print(dt)
             return {"date_and_time": None}
         
         # check if user only gave date (default time is 00:00:00) + ask again
@@ -157,21 +160,47 @@ class ValidateRestaurantForm(FormValidationAction):
         tracker: Tracker,
         domain: DomainDict,
     ) -> Dict[Text, Any]:
+        
+         # 1) Direct cast (most common if slot_value = "3")
         try:
             guests = int(slot_value)
             if guests < 1:
                 raise ValueError()
             return {"num_of_guests": guests}
         except Exception:
-            dispatcher.utter_message("Please provide a valid number of guests. It needs to be at least one person.")
-            return {"num_of_guests": None}
+            pass
+
+        # 2) Fallback: scan for a Duckling number entity
+        for ent in tracker.latest_message.get("entities", []):
+            if ent.get("entity") == "number":
+                try:
+                    guests = int(float(ent.get("value")))
+                    if guests < 1:
+                        raise ValueError()
+                    return {"num_of_guests": guests}
+                except Exception:
+                    break
+
+        # 3) Still nothing? Ask again
+        dispatcher.utter_message(
+            "Sorry, I didn't catch the number of guests."
+        )
+        return {"num_of_guests": None}
+        # try:
+        #     guests = int(slot_value)
+        #     if guests < 1:
+        #         raise ValueError()
+        #     return {"num_of_guests": guests}
+        # except Exception:
+        #     dispatcher.utter_message("Please provide a valid number of guests. It needs to be at least one person.")
+        #     return {"num_of_guests": None}
 
 
 class ActionSuggestRestaurant(Action):
     """
-    Suggests a restaurant prioritizing dietary restrictions over cuisine.
+      Suggests a restaurant by TF–IDF similarity on "cuisine + diet".
 
-    - Uses content-based TF–IDF encoding and cosine similarity for ranking
+    - Uses content-based filtering (TF–IDF encoding) and cosine similarity for ranking
     - Filters strictly by dietary preference (unless treated as no restriction)
     - If no restaurant meets diet and availability, returns an apology
     """
@@ -190,7 +219,6 @@ class ActionSuggestRestaurant(Action):
         self.omnivore_synonyms = {"omnivore", "none", "no preference", "anything", "no dietary restrictions"}
 
     def name(self) -> Text:
-        # Name of the action as defined in domain.yml
         return "action_suggest_restaurant"
 
     def run(
@@ -206,32 +234,31 @@ class ActionSuggestRestaurant(Action):
         past_name = tracker.get_slot("past_restaurant_name")
         cuisine   = [c.lower() for c in (tracker.get_slot("cuisine_preferences") or [])]
         raw_diet  = [d.lower() for d in (tracker.get_slot("dietary_preferences") or [])]
-        dt_iso    = tracker.get_slot("date_and_time")
+        dt    = tracker.get_slot("date_and_time")
         guests    = int(tracker.get_slot("num_of_guests") or 1)
+    
+        # normalize diet -> empty means “no restriction”
+        diet = [d for d in raw_diet if d not in self.omnivore_synonyms]
 
-        # Determine whether to apply dietary filter
-        diet = []
-        for d in raw_diet:
-            if d in self.omnivore_synonyms:
-                diet = []  # no restriction if synonym detected
-                break
-            diet.append(d)
 
         # --------------------------------
         # 2) Parse and validate datetime
         # --------------------------------
-        # if not dt_iso:
-        #     dispatcher.utter_message("When would you like to dine?")
-        #     return []
-        dt_obj = datetime.fromisoformat(dt_iso)
+     
+        dt_obj = datetime.fromisoformat(dt)
+       
         # If only a date is provided without time, prompt user again
         if dt_obj.hour == 0 and dt_obj.minute == 0:
             dispatcher.utter_message(
                 "It seems you only provided a date. Please include a time as well."
             )
-            return [SlotSet("date_and_time", None)]
-        day  = dt_obj.date().isoformat()
-        time = dt_obj.time().strftime("%I:%M %p").lstrip("0")
+            return [
+                SlotSet("date_and_time", None), # clear slot value
+                FollowupAction("restaurant_form") # re‑activate the form so it asks for date_and_time again
+            ]
+        
+        day  = dt_obj.date().isoformat() # save date
+        time = dt_obj.time().strftime("%I:%M %p").lstrip("0") # save time in 12-hour format
 
         # ------------------------------
         # 3) Rebooking path
@@ -241,9 +268,10 @@ class ActionSuggestRestaurant(Action):
                 (r for r in self.restaurants if r["name"].lower() == past_name.lower()),
                 None
             )
+            # Check if named restaurant is available
             if restaurant and self._is_available(restaurant, guests, day, time):
                 dispatcher.utter_message(
-                    f"{restaurant['name']} is available for {guests} guests on {day} at {time}. Would you like to book it?"
+                    f"Great news!{restaurant['name']} is available for {guests} guests on {day} at {time}. Would you like to book it?"
                 )
                 return []
             # Suggest an alternative from the same cuisine
@@ -256,61 +284,55 @@ class ActionSuggestRestaurant(Action):
             if candidates:
                 alt = random.choice(candidates)
                 dispatcher.utter_message(
-                    f"{restaurant['name']} is not available at that time. How about {alt['name']} instead?"
+                    f"I'm sorry, {restaurant['name']} is not available at that time. How about {alt['name']} instead?"
                 )
+                return [SlotSet("past_restaurant_name", alt["name"])] # overwrite with new restaurant
             else:
                 dispatcher.utter_message(
-                    f"No {alt_cuisine.title()} restaurants are available at that time."
+                    f"Sorry, no {alt_cuisine.title()} restaurants are available at that time."
                 )
             return []
 
         # --------------------------------------------------
-        # 4) New booking: prioritize dietary restrictions
+        # 4) New booking: content-based filtering
         # --------------------------------------------------
         # Build a preference string for TF–IDF vectorization, e.g. "italian vegetarian"
         pref_text = " ".join(cuisine + diet).strip()
-        # Retrieve from cache or compute and store
-        if pref_text in self.tf_cache:
-            query_vec = self.tf_cache[pref_text]
-        else:
-            query_vec = self.vectorizer.transform([pref_text])
-            self.tf_cache[pref_text] = query_vec
+        query_vec = self.vectorizer.transform([pref_text]) # TF–IDF vector 
 
-        # Apply dietary filter if applicable
-        filtered = self.restaurants
+        # compute similarity score across all restaurants
+        sim_score      = cosine_similarity(query_vec, self.restaurant_vecs).flatten()
+        best_id  = int(sim_score.argmax()) # position of the highest score 
+        best_r = self.restaurants[best_id] # top scoring restaurant
+
+        # check if the diet is still correct
         if diet:
-            filtered = [
-                r for r in self.restaurants
-                if all(d in (r.get("dietary_options") or []) for d in diet)
-            ]
-            if not filtered:
+            r_options = [o.lower() for o in best_r.get("dietary_options", [])]
+            if any(d not in r_options for d in diet):
+                 # pick the first cuisine the user asked for (or fallback to “selected”)
+                user_cuisine = cuisine[0].title() if cuisine else "suitable"
                 dispatcher.utter_message(
-                     f"No restaurants match your dietary requirements for {day} at {time}. "
-                    "Would you like to try a different date or time?"
+                    f"Sorry, I couldn’t find any {user_cuisine} restaurant that offers {', '.join(diet)} food."
                 )
                 return []
 
-        # Compute cosine similarity scores on the filtered subset
-        indices     = [self.restaurants.index(r) for r in filtered]
-        sub_vectors = self.restaurant_vecs[indices]
-        sims        = cosine_similarity(query_vec, sub_vectors).flatten()
-
-        # Choose best match by highest similarity score
-        best_idx  = int(sims.argmax())
-        best_rest = filtered[best_idx]
-
-        # Check availability of the best match
-        if self._is_available(best_rest, guests, day, time):
+        # finally check availability
+        if self._is_available(best_r, guests, day, time):
             dispatcher.utter_message(
-                f"I recommend {best_rest['name']}. It offers {best_rest['cuisine']} cuisine, "
-                f"has options {', '.join(best_rest.get('dietary_options', []))}, "
-                f"and can seat {guests} on {day} at {time}. Should I book it?"
+                f"Based on your preferences, I recommend {best_r['name']}. It offers {best_r['cuisine']} cuisine "
+                f"and can seat {guests} on {day} at {time}. Shall I book it?"
             )
+            return []
         else:
             dispatcher.utter_message(
-                f"{best_rest['name']} meets your preferences but is not available at that time. Would you like a reservation on another day?"
+                f"I'm sorry, {best_r['name']} meets your preferences but isn’t available then. "
+                 "Please provide another date and time slot."
             )
-        return []
+            # clear only the date so form can re‑ask it
+            return [
+                  SlotSet("date_and_time", None),
+                  #FollowupAction("restaurant_form")
+            ]
 
     def _is_available(self, restaurant: Dict, guests: int, day: str, time: str) -> bool:
         """
@@ -409,15 +431,15 @@ class ActionSuggestRestaurant(Action):
 #         # Compute similarity on that subset
 #         indices     = [idx for _, idx in candidates]
 #         sub_vectors = self.restaurant_vecs[indices]
-#         sims        = cosine_similarity(query_vec, sub_vectors).flatten()
+#         sim_score        = cosine_similarity(query_vec, sub_vectors).flatten()
 
 #         # Choose top match
-#         best_i       = int(sims.argmax())
-#         best_rest, _ = candidates[best_i]
+#         best_i       = int(sim_score.argmax())
+#         best_r, _ = candidates[best_i]
 
-#         if self._is_available(best_rest, guests, day, time):
+#         if self._is_available(best_r, guests, day, time):
 #             dispatcher.utter_message(
-#                 f"Based on your preferences, I recommend {best_rest['name']}. It offers {best_rest['cuisine']} cuisine and has {', '.join(best_rest.get('dietary_options', []))} options. They can seat {guests} on {day} at {time}. Shall I book it?"
+#                 f"Based on your preferences, I recommend {best_r['name']}. It offers {best_r['cuisine']} cuisine and has {', '.join(best_r.get('dietary_options', []))} options. They can seat {guests} on {day} at {time}. Shall I book it?"
 #             )
 #             return []
 #         return self._fallback(dispatcher, day, time, guests)
@@ -582,17 +604,17 @@ class ActionSuggestRestaurant(Action):
 #         # compute similarities only on the filtered subset
 #         indices     = [idx for _, idx in candidates]
 #         sub_vectors = self.restaurant_vecs[indices]
-#         sims        = cosine_similarity(query_vec, sub_vectors).flatten()
+#         sim_score        = cosine_similarity(query_vec, sub_vectors).flatten()
 
 #         # pick the best match among those
-#         best_i      = int(sims.argmax())
-#         best_rest, _ = candidates[best_i]
+#         best_i      = int(sim_score.argmax())
+#         best_r, _ = candidates[best_i]
 
-#         if is_available(best_rest, guests, day, time):
+#         if is_available(best_r, guests, day, time):
 #             dispatcher.utter_message(
-#                 f"Based on your preferences, I recommend {best_rest['name']}. "
-#                 f"It offers {best_rest['cuisine']} cuisine and has "
-#                 f"{', '.join(best_rest.get('dietary_options', []))} options. "
+#                 f"Based on your preferences, I recommend {best_r['name']}. "
+#                 f"It offers {best_r['cuisine']} cuisine and has "
+#                 f"{', '.join(best_r.get('dietary_options', []))} options. "
 #                 f"They can seat {guests} on {day} at {time}. Shall I book it?"
 #             )
 #             return []

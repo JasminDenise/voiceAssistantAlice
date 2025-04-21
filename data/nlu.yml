@@ -132,6 +132,10 @@ nlu:
     - Today
     - Sorry I want to eat at [8:30 PM](time)
     - [three](number) people
+    - I like [italian][{"entity": "cuisine_preferences", "value": "Italian"}, {"entity": "cuisine_preferences"}] food
+    - I can eat [anything]{"entity": "dietary_preferences", "value": "omnivore"}
+    - Friday at [6pm](time)
+    - [two](number) people
 - intent: out_of_scope
   examples: |
     - Who is your boss?
@@ -170,6 +174,7 @@ nlu:
     - yes, please
     - yes, I want to rebook
     - Yes, I'd like to book again
+    - [Yes please](affirm)
 - intent: deny
   examples: |
     - no, I don't want to rebook

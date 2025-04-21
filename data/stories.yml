@@ -16,49 +16,189 @@ stories:
     - action: restaurant_form
     - active_loop: restaurant_form
 
-- story: User wants to rebook past restaurant
+
+- story: interactive_story_1 - New booking, missing time & confirm
   steps:
-    - intent: greet
-    - action: utter_greet
-    - intent: inform_booking_details
-    - action: restaurant_form
-    - active_loop: restaurant_form
-    - slot_was_set:
-        - requested_slot: past_bookings
-    - intent: affirm
-    - slot_was_set:
-        - past_bookings: true
+  # User gives all details in one go (without time) Duckling returns midnight (default=no time)
+  - intent: inform_booking_details
+    entities:
+      - dietary_preferences: vegetarian
+      - cuisine_preferences: Italian
+      - number: 2
+      - time: '2025-04-21T00:00:00.000+02:00'
+  # Form activates and immediately validates date+time, rejects “00:00”
+  - action: restaurant_form
+  - active_loop: restaurant_form
+  - slot_was_set:
+      - date_and_time: null
+      # form sees missing time, so it asks again…
+  - slot_was_set:
+      - requested_slot: date_and_time
+  # User now provides a full datetime
+  - intent: inform_booking_details
+    entities:
+      - time: '2025-04-21T19:00:00.000+02:00'
+  - slot_was_set:
+      - date_and_time: '2025-04-21T19:00:00.000+02:00'
+  # Form finishes & Submit‑form rule kicks in
+  - action: restaurant_form
+  - active_loop: null
+  - slot_was_set:
+      - requested_slot: null
+  - action: action_suggest_restaurant
+  #  User confirms booking
+  - intent: affirm
+  - action: utter_submit
+  - action: action_clear_slots
 
-
-
-- story: User doesn't want to rebook past restaurant
-  steps:
-    - intent: greet
-    - action: utter_greet
-    - intent: inform_booking_details
-    - action: restaurant_form
-    - active_loop: restaurant_form
-    - slot_was_set:
-        - requested_slot: past_bookings
-    - intent: deny
-    - slot_was_set:
-        - past_bookings: false
-
-
-- story: interactive_story_1
+- story:  interactive_story_2 - New booking, all slots filled immediately
   steps:
   - intent: inform_booking_details
     entities:
+    - dietary_preferences: vegetarian
+    - cuisine_preferences: Italian
+    - number: two
     - time: 7pm
-    - time: '2025-04-19T19:00:00.000+02:00'
+    - number: '2'
+    - time: '2025-04-25T19:00:00.000+02:00'
+    - cuisine_preferences: Italian
   - slot_was_set:
-    - date_and_time: '2025-04-19T19:00:00.000+02:00'
+    - date_and_time: '2025-04-25T19:00:00.000+02:00'
+  - slot_was_set:
+    - num_of_guests: '2'
+  - slot_was_set:
+    - dietary_preferences:
+      - vegetarian
+  - slot_was_set:
+    - cuisine_preferences:
+      - Italian
   - action: restaurant_form
   - active_loop: restaurant_form
   - slot_was_set:
     - requested_slot: past_bookings
   - slot_was_set:
-    - date_and_time: '2025-04-19T19:00:00.000+02:00'
+    - date_and_time: '2025-04-25T19:00:00.000+02:00'
+  - slot_was_set:
+    - num_of_guests: '2'
+  - slot_was_set:
+    - dietary_preferences:
+      - vegetarian
+  - slot_was_set:
+    - cuisine_preferences:
+      - Italian
+  - intent: deny
+  - slot_was_set:
+    - past_bookings: false
+  - action: restaurant_form
+  - slot_was_set:
+    - past_bookings: false
+  - slot_was_set:
+    - requested_slot: null
+  - active_loop: null
+  - action: action_suggest_restaurant
+  - intent: affirm
+  - slot_was_set:
+    - past_bookings: true
+  - action: utter_submit
+  - action: action_clear_slots
+
+
+- story: interactive_story_3 - User cancels booking after no match was found
+  steps:
+  # 1) User provides all booking details but restaurant is never available
+  - intent: inform_booking_details
+    entities:
+      - dietary_preferences: vegan
+      - cuisine_preferences: german
+      - number: two
+      - time: '2025-04-25T00:00:00.000+02:00'
+  # 2) Form fills date/time, guests, diet & cuisine, then asks rebooking
+  - action: restaurant_form
+  - active_loop: restaurant_form
+  - slot_was_set:
+      - date_and_time: '2025-04-25T00:00:00.000+02:00'
+  - slot_was_set:
+      - num_of_guests: '2'
+  - slot_was_set:
+      - dietary_preferences:
+        - vegan
+  - slot_was_set:
+      - cuisine_preferences:
+        - german
+  - slot_was_set:
+      - requested_slot: past_bookings
+  # 3) User says “no” → new booking path, but form immediately closes (no more slots)
+  - intent: deny
+  - slot_was_set:
+      - past_bookings: false
+  - action: restaurant_form
+  - active_loop: null
+  - slot_was_set:
+      - requested_slot: null
+  # 4) Bot suggests none found → asks to pick another date
+  - action: action_suggest_restaurant
+  - slot_was_set:
+      - date_and_time: null
+  # 5) User decides to cancel entirely
+  - intent: cancel
+  - action: utter_booking_canceled
+  - action: action_clear_slots
+
+- story: interactive_story_4 - User wants to rebook in first message
+  steps:
+  - intent: inform_booking_details
+    entities:
+    - past_restaurant_name: La Bella Italia
+  - slot_was_set:
+    - past_restaurant_name: La Bella Italia
+  - intent: inform_booking_details
+    entities:
+    - past_restaurant_name: La Bella Italia
+  - slot_was_set:
+    - past_restaurant_name: La Bella Italia
+  - action: restaurant_form
+  - active_loop: restaurant_form
+  - slot_was_set:
+    - requested_slot: date_and_time
+  - slot_was_set:
+    - past_restaurant_name: La Bella Italia
+  - intent: inform_booking_details
+    entities:
+    - time: 10pm
+    - time: '2025-04-25T22:00:00.000+02:00'
+  - slot_was_set:
+    - date_and_time: '2025-04-25T22:00:00.000+02:00'
+  - action: restaurant_form
+  - slot_was_set:
+    - date_and_time: '2025-04-25T22:00:00.000+02:00'
+  - slot_was_set:
+    - requested_slot: num_of_guests
+  - intent: inform_booking_details
+    entities:
+    - number: two
+    - number: '2'
+  - slot_was_set:
+    - num_of_guests: '2'
+  - action: restaurant_form
+  - slot_was_set:
+    - num_of_guests: 2
+  - slot_was_set:
+    - requested_slot: null
+  - active_loop: null
+  - action: action_suggest_restaurant
+  - intent: affirm
+  - slot_was_set:
+    - past_bookings: true
+  - action: utter_submit
+  - action: action_clear_slots
+
+- story: interactive_story_1
+  steps:
+  - intent: inform_booking_details
+  - action: restaurant_form
+  - active_loop: restaurant_form
+  - slot_was_set:
+    - requested_slot: past_bookings
   - intent: deny
   - slot_was_set:
     - past_bookings: false
@@ -71,18 +211,15 @@ stories:
     entities:
     - cuisine_preferences: Italian
     - cuisine_preferences: italian
-    - cuisine_preferences: german
   - slot_was_set:
     - cuisine_preferences:
       - Italian
       - italian
-      - german
   - action: restaurant_form
   - slot_was_set:
     - cuisine_preferences:
       - Italian
       - italian
-      - german
   - slot_was_set:
     - requested_slot: dietary_preferences
   - intent: inform_booking_details
@@ -95,6 +232,17 @@ stories:
   - slot_was_set:
     - dietary_preferences:
       - omnivore
+  - slot_was_set:
+    - requested_slot: date_and_time
+  - intent: inform_booking_details
+    entities:
+    - time: 6pm
+    - time: '2025-04-25T18:00:00.000+02:00'
+  - slot_was_set:
+    - date_and_time: '2025-04-25T18:00:00.000+02:00'
+  - action: restaurant_form
+  - slot_was_set:
+    - date_and_time: '2025-04-25T18:00:00.000+02:00'
   - slot_was_set:
     - requested_slot: num_of_guests
   - intent: inform_booking_details
@@ -112,113 +260,9 @@ stories:
     - requested_slot: null
   - active_loop: null
   - action: action_suggest_restaurant
-  - intent: confirm_booking
-  - action: utter_submit
-  - action: action_clear_slots
-
-- story: interactive_story_2
-  steps:
-  - intent: inform_booking_details
-  - action: restaurant_form
-  - active_loop: restaurant_form
-  - slot_was_set:
-    - requested_slot: past_bookings
-  - intent: inform_booking_details
-    entities:
-    - affirm: Yes
-    - past_restaurant_name: Bella Roma
-    - past_restaurant_name: Bella Roma
-  - slot_was_set:
-    - past_restaurant_name: Bella Roma
-  - intent: inform_booking_details
-    entities:
-    - affirm: Yes
-  - intent: inform_booking_details
-    entities:
-    - affirm: Yes
-    - past_restaurant_name: la bella
-    - time: roma
-    - past_restaurant_name: bella roma
-  - slot_was_set:
-    - past_restaurant_name: bella roma
-  - slot_was_set:
-    - date_and_time: roma
-  - intent: inform_booking_details
-    entities:
-    - affirm: Yes
-    - past_restaurant_name: Bella Roma
-    - past_restaurant_name: Bella Roma
-  - slot_was_set:
-    - past_restaurant_name: Bella Roma
-  - intent: inform_booking_details
-    entities:
-    - affirm: Yes
-    - past_restaurant_name: Bella Roma
-    - past_restaurant_name: Bella Roma
-  - slot_was_set:
-    - past_restaurant_name: Bella Roma
-
-- story: interactive_story_3
-  steps:
-  - intent: inform_booking_details
-    entities:
-    - past_restaurant_name: Bella Roma
-  - slot_was_set:
-    - past_restaurant_name: Bella Roma
-  - action: restaurant_form
-  - active_loop: restaurant_form
-  - slot_was_set:
-    - requested_slot: past_bookings
-  - slot_was_set:
-    - past_restaurant_name: Bella Roma
+  - intent: nlu_fallback
   - intent: affirm
-  - slot_was_set:
-    - past_bookings: true
-  - action: restaurant_form
-  - slot_was_set:
-    - past_bookings: true
-  - slot_was_set:
-    - requested_slot: date_and_time
-  - intent: inform_booking_details
     entities:
-    - time: '2025-04-19T00:00:00.000+02:00'
-  - slot_was_set:
-    - date_and_time: '2025-04-19T00:00:00.000+02:00'
-  - action: restaurant_form
-  - slot_was_set:
-    - date_and_time: null
-  - slot_was_set:
-    - requested_slot: date_and_time
-  - intent: inform_booking_details
-    entities:
-    - time: 8:30 PM
-    - time: '2025-04-19T20:30:00.000+02:00'
-  - slot_was_set:
-    - date_and_time: '2025-04-19T20:30:00.000+02:00'
-  - action: restaurant_form
-  - slot_was_set:
-    - date_and_time: '2025-04-19T20:30:00.000+02:00'
-  - slot_was_set:
-    - requested_slot: num_of_guests
-  - intent: inform_booking_details
-    entities:
-    - number: three
-    - number: 3
-  - slot_was_set:
-    - num_of_guests: 3
-  - action: restaurant_form
-  - slot_was_set:
-    - num_of_guests: 3
-  - slot_was_set:
-    - requested_slot: null
-  - slot_was_set:
-    - requested_slot: null
-  - active_loop: null
-  - action: action_suggest_restaurant
-  - intent: nlu_fallback
-  - intent: nlu_fallback
-  - intent: confirm_booking
-    entities:
-    - confirm_booking: yes please!
+    - affirm: Yes please
   - action: utter_submit
   - action: action_clear_slots

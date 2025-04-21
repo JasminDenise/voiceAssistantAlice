@@ -67,7 +67,7 @@ def process_input():
         # Take the first valid text response from Rasa
         response_text = rasa_response[0].get('text')
 
-    print(f"Rasa response: {response_text}")  # For debugging 
+    #print(f"Rasa response: {response_text}")  # debugging 
 
     # Convert response text to speech (TTS) using Kokoro
     audio_url = generate_tts_audio(response_text)

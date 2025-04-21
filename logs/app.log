@@ -1,0 +1,10 @@
+[2025-04-21 16:40:05 +0200] [84249] [INFO] Starting gunicorn 23.0.0
+[2025-04-21 16:40:05 +0200] [84249] [INFO] Listening at: http://127.0.0.1:5000 (84249)
+[2025-04-21 16:40:05 +0200] [84249] [INFO] Using worker: sync
+[2025-04-21 16:40:05 +0200] [84356] [INFO] Booting worker with pid: 84356
+2025-04-21 16:40:15.844410: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+/Users/jasmin/Desktop/Master Applied Artificial Intelligence/Kurse/06 Voice Assistants/VoiceAssistant/va_env/lib/python3.10/site-packages/torch/nn/modules/rnn.py:83: UserWarning: dropout option adds dropout after all but last recurrent layer, so non-zero dropout expects num_layers greater than 1, but got dropout=0.2 and num_layers=1
+  warnings.warn("dropout option adds dropout after all but last "
+/Users/jasmin/Desktop/Master Applied Artificial Intelligence/Kurse/06 Voice Assistants/VoiceAssistant/va_env/lib/python3.10/site-packages/torch/nn/utils/weight_norm.py:28: UserWarning: torch.nn.utils.weight_norm is deprecated in favor of torch.nn.utils.parametrizations.weight_norm.
+  warnings.warn("torch.nn.utils.weight_norm is deprecated in favor of torch.nn.utils.parametrizations.weight_norm.")

@@ -16,7 +16,7 @@ rules:
     - intent: goodbye
     - action: utter_goodbye
 
-- rules: Thank you
+- rule: Thank you
   steps:
     - intent: thank_you
     - action: utter_no_problem
@@ -32,13 +32,7 @@ rules:
     - action: utter_default
 
 
-# --- Form Rules ---
-# - rule: Activate restaurant_form on booking request
-#   steps:
-#     - intent: inform_booking_details
-#     - action: restaurant_form
-#     - active_loop: restaurant_form
-
+# --- Form Rule ---
 
 - rule: Submit restaurant_form
   condition:
@@ -50,18 +44,30 @@ rules:
         - requested_slot: null
     - action: action_suggest_restaurant
 
+
+# ---  Only if user follows up with a new date/time (and NOT “no”), reopen form ---
+
+- rule: User provides a new date/time after suggestion
+  condition:
+    - active_loop: null      # form is currently closed
+  steps:
+    - action: action_suggest_restaurant
+    - intent: inform_booking_details
+    - action: restaurant_form
+    - active_loop: restaurant_form
+
 # --- Confirmation Rules ---
 - rule: User confirms booking
   steps:
     - action: action_suggest_restaurant
-    - intent: confirm_booking
+    - intent: affirm
     - action: utter_submit
     - action: action_clear_slots
 
 - rule: User cancels booking after suggestion
   steps:
     - action: action_suggest_restaurant
-    - intent: deny_booking
+    - intent: deny
     - action: utter_booking_canceled
     - action: action_clear_slots
 
@@ -114,14 +120,14 @@ rules:
 # - rule: Ask for Confirmation - User confirms
 #   steps:
 #     - action: action_suggest_restaurant
-#     - intent: confirm_booking
+#     - intent: affirm
 #     - action: utter_submit
 #     - action: action_clear_slots
 
 # - rule: Ask for Confirmation - User Denies
 #   steps:
 #     - action: action_suggest_restaurant
-#     - intent: deny_booking
+#     - intent: deny
 #     - action: utter_booking_canceled
 #     - action: action_clear_slots
 

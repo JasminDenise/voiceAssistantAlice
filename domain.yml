@@ -3,22 +3,19 @@ intents:
 - affirm
 - bot_challenge
 - cancel
-- confirm_booking
 - deny
-- deny_booking
 - goodbye
 - greet
 - inform_booking_details
 - out_of_scope
 - thank_you
 entities:
-- affirm
-- time
-- confirm_booking
-- number
-- past_restaurant_name
 - cuisine_preferences
 - dietary_preferences
+- time
+- affirm
+- number
+- past_restaurant_name
 - past_bookings
 responses:
   utter_greet:
@@ -60,7 +57,7 @@ responses:
   - text: I'm sorry, I didn't quite understand that. Could you please rephrase?
   out_of_scope:
   - text: Sorry, I can't handle that request. I'm only here to help you booking a restaurant.
-  utter_no_problem: 
+  utter_no_problem:
   - text: No problem!
   - text: That's fine.
 slots:
@@ -74,14 +71,13 @@ slots:
     - type: from_intent
       intent: deny
       value: false
-    - type: custom
   past_restaurant_name:
     type: text
     mappings:
     - type: from_entity
       entity: past_restaurant_name
   date_and_time:
-    type: any
+    type: text
     mappings:
     - type: from_entity
       entity: time
@@ -107,9 +103,11 @@ forms:
     - date_and_time
     - num_of_guests
 actions:
-- action_suggest_restaurant
-- validate_restaurant_form
 - action_clear_slots
+- utter_submit
+- action_suggest_restaurant
+- utter_booking_canceled
+- validate_restaurant_form
 session_config:
   session_expiration_time: 60
   carry_over_slots_to_new_session: true

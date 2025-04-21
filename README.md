@@ -1,8 +1,8 @@
 # VoiceAssistantAlice
 
-**Master’s Project: A Rasa‑Based Voice Assistant for Restaurant Reservations**
+**A Rasa‑Based Voice Assistant for Restaurant Reservations**
 
-This repository contains all components for a prototype voice assistant—VoiceAssistantAlice—that recommends and books restaurants based on user preferences, leveraging TF–IDF content filtering, Duckling for date/time parsing, and a Flask (or other) frontend for demonstration.
+This repository contains all components for a prototype voice assistant that recommends and books restaurants based on user preferences, leveraging TF–IDF content filtering, Duckling for date/time & number parsing, and a web UI for demonstration.
 
 ---
 
@@ -14,17 +14,17 @@ VoiceAssistantAlice demonstrates an end-to-end conversational AI system built on
 - **Recommendation Engine** (`ActionSuggestRestaurant`) that:
   - Precomputes TF–IDF vectors for each restaurant description.
   - Uses cosine similarity to match user preferences (dietary > cuisine).
-  - Checks real-time availability based on Duckling‑parsed date/time and guest count.
+  - Checks availability based on Duckling‑parsed date/time and guest count.
 - **Duckling Integration** for robust natural language date/time & number of guests understanding.
 - **Flask App** (`app.py`) as a minimal web interface to demonstrate interactions.
 - **Interactive Rasa Shell** for story creation and testing via `rasa interactive`.
-- **Automated Preprocessing Script** (`actions/preprocess.py`) to generate and serialize TF–IDF models for fast startup.
+- **Automated Preprocessing Script** (`preprocess.py`) to generate and serialize TF–IDF models for fast startup.
 
-All services can be launched via a single orchestrator script or manually per platform instructions.
+All services can be launched via a single script.
 
 ---
 
-## ⚙️ Architecture & Key Components
+## Architecture & Key Components TODO; Picture Flowchart
 
 ```plaintext
 ┌─────────┐    ┌────────────┐    ┌────────┐    ┌───────────┐
@@ -44,14 +44,14 @@ All services can be launched via a single orchestrator script or manually per pl
 3. **Duckling**: Parses date/time expressions into structured slots.  
 4. **Action Server**:  
    - **FormValidationAction**: Validates collected slots.  
-   - **ActionSuggestRestaurant**: Filters and ranks restaurants.  
+   - **ActionSuggestRestaurant**: Filters and ranks restaurants & suggest best matching one.  
 5. **Data**:  
    - `data/restaurants.json`: Restaurant metadata (cuisine, dietary options, availability).  
    - `vectorizer/`: Serialized TF–IDF vectorizer and restaurant vectors.  
 
 ---
 
-## 🚀 Setup & Usage (Master’s Student Guide)
+## Setup & Usage 
 
 ### 1. Clone & Navigate  
 ```bash
@@ -62,15 +62,15 @@ cd VoiceAssistantAlice
 ### 2. Create Virtual Environment & Install Dependencies  
 ```bash
 python3.10 -m venv va_env
-# macOS/Linux
-source va_env/bin/activate
-# Windows (PowerShell)
-.\va_env\Scripts\Activate.ps1
+
+source va_env/bin/activate # macOS/Linux
+.\va_env\Scripts\Activate.ps1 # Windows (PowerShell)
+
 pip install -r requirements.txt
 ```
 
 ### 3. Build & Run Duckling  
-Duckling is required for date/time parsing.  
+Duckling is required for date/time & number parsing.  
 ```bash
 cd duckling
 stack build
@@ -79,7 +79,7 @@ cd ..
 ```
 
 ### 4. Preprocess Restaurant Data  
-Whenever you update `data/restaurants.json`, regenerate TF–IDF artifacts:  
+Whenever you update `data/restaurants.json`, regenerate TF–IDF:  
 ```bash
 python preprocess.py
 ```
@@ -87,8 +87,8 @@ python preprocess.py
 ### 5. Launch All Services  
 #### macOS/Linux  
 ```bash
-chmod +x actions/start_bot.sh
-./actions/start_bot.sh
+chmod +x ./start_bot.sh
+./start_bot.sh
 ```
 
 #### Windows (PowerShell)  
@@ -109,10 +109,10 @@ Open your browser at `http://localhost:5000`.
 
 ---
 
-## 📝 Demonstration & Evaluation
+## Demonstration & Evaluation
 
 1. **Web UI / Flask App**: Interact at `app.py`’s address.  
-2. **Rasa Interactive**: Create/refine stories:  
+2. **Rasa Interactive**: Create new stories:  
 ```bash
 # Unix
 rasa interactive
@@ -129,10 +129,14 @@ Evaluate: slot flows, dietary-first recommendations, and error handling when no 
 
 ---
 
-## 🔄 Extensibility & Future Work
+## Extensibility & Future Work
 
-- **Large catalog**: Integrate ANN libraries (Faiss, Annoy).  
 - **Dynamic data**: Use a database instead of JSON.  
-- **Enhanced UX**: Add automatic voice recognition (Hey Alice) or customize front-end (Loading spinner and so on).
+- **Enhanced UX**: Add automatic voice recognition (Hey Alice) or customize the front-end (loading spinner, etc.).  
+- **User profiles & personalization**: Create user profiles and recommend based on past bookings over time.  
+- **Location-based suggestions**: Use a location API to suggest restaurants near the user.  
+- **Restaurant data API**: Integrate with third‑party restaurant APIs for live menus and availability.  
+- **Automated confirmations**: Automatically send confirmation emails after booking.
+- **Sentiment-aware recommendations**: Implement sentiment analysis on user utterances (e.g. detecting if they’re in a hurry) to prioritize quick suggestions and streamline the interaction.
 
 
