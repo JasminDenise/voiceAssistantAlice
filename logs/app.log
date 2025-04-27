@@ -8,3 +8,7 @@ To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other ope
   warnings.warn("dropout option adds dropout after all but last "
 /Users/jasmin/Desktop/Master Applied Artificial Intelligence/Kurse/06 Voice Assistants/VoiceAssistant/va_env/lib/python3.10/site-packages/torch/nn/utils/weight_norm.py:28: UserWarning: torch.nn.utils.weight_norm is deprecated in favor of torch.nn.utils.parametrizations.weight_norm.
   warnings.warn("torch.nn.utils.weight_norm is deprecated in favor of torch.nn.utils.parametrizations.weight_norm.")
+[2025-04-27 17:42:25 +0200] [65643] [INFO] Handling signal: term
+[2025-04-27 17:42:25 +0200] [65750] [INFO] Worker exiting (pid: 65750)
+WARNING: Defaulting repo_id to hexgrad/Kokoro-82M. Pass repo_id='hexgrad/Kokoro-82M' to suppress this warning.
+[2025-04-27 17:42:27 +0200] [65643] [INFO] Shutting down: Master

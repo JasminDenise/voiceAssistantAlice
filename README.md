@@ -24,20 +24,9 @@ All services can be launched via a single script.
 
 ---
 
-## Architecture & Key Components TODO; Picture Flowchart
+## Architecture & Key Components 
 
-```plaintext
-┌─────────┐    ┌────────────┐    ┌────────┐    ┌───────────┐
-│   User  │ ↔︎ │  Frontend  │ ↔︎ │ Rasa   │ ↔︎ │ Duckling  │
-└─────────┘    └────────────┘    └────────┘    └───────────┘
-                       │
-                       ▼
-                ┌──────────────────┐
-                │ Action Server    │
-                │ - TF–IDF models  │
-                │ - Recommendation │
-                └──────────────────┘
-```
+![System Architecture & Interaction Flow (Updates)](docs/images/Updated System Architecture@2x.png)
 
 1. **Frontend** (Flask or custom `app.py`): Captures voice/text, shows messages, plays TTS
 2. **Rasa Core & NLU**: Manages  dialog, slots, rules & forms
