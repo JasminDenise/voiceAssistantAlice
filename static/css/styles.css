@@ -114,3 +114,8 @@ button:hover {
 button:active {
     background-color: rgb(35, 18, 52);
 }
+
+button:focus {
+    border-color: #e6dcf5;
+    border-width: 3px;
+}

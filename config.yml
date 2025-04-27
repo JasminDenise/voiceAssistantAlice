@@ -24,9 +24,9 @@ pipeline:
     constrain_similarities: True
     epochs: 100
   - name: EntitySynonymMapper
-  - name: FallbackClassifier # the intent nlu_fallback will be predicted when all other intent predictions fall below the configured confidence threshold
+  - name: FallbackClassifier #  intent nlu_fallback will be predicted if all other intent predictions fall below  threshold
     threshold: 0.6
-  - name: RegexEntityExtractor
+  # - name: RegexEntityExtractor
   - name: DucklingEntityExtractor
     url: http://localhost:8000
     dimensions: ["time","number"]
@@ -39,66 +39,10 @@ policies:
     core_fallback_threshold: 0.3
     core_fallback_action_name: "action_default_fallback"
     enable_fallback_prediction: True
-    check_for_contradictions: True # make sure that slots and active loops set by actions are defined consistently for all rules
+    check_for_contradictions: True # make sure that slots & active loops set by actions are defined consistently for all rules
   - name: MemoizationPolicy
   - name: TEDPolicy
     constrain_similarities: True
     max_history: 5
     epochs: 100
-  # - name: FormPolicy
-  #   enable_form_validation: True  
-# pipeline: 
-# # No configuration for the NLU pipeline was provided. The following default pipeline was used to train your model.
-# # If you'd like to customize it, uncomment and adjust the pipeline.
-# # See https://rasa.com/docs/rasa/tuning-your-model for more information.
-#   - name: WhitespaceTokenizer
-#   - name: RegexFeaturizer
-#   - name: LexicalSyntacticFeaturizer
-#   - name: CountVectorsFeaturizer
-#   - name: CountVectorsFeaturizer
-#     analyzer: "char_wb"
-#     min_ngram: 1
-#     max_ngram: 4
-#   - name: DucklingEntityExtractor
-#     url: "http://duckling:8000"
-#     dimensions: ["time", "number"]
-#     locale: "en_US"
-#     timezone: "Europe/Luxembourg"
-#   - name: DIETClassifier
-#   - name: EntitySynonymMapper
-#   - name: ResponseSelector
-
-
-# # Configuration for Rasa Core.
-# # https://rasa.com/docs/rasa/core/policies/
-# policies: null
-# # # No configuration for policies was provided. The following default policies were used to train your model.
-# # # If you'd like to customize them, uncomment and adjust the policies.
-# # # See https://rasa.com/docs/rasa/policies for more information.
-# #   - name: MemoizationPolicy
-# #   - name: RulePolicy
-# #   - name: UnexpecTEDIntentPolicy
-# #     max_history: 5
-# #     epochs: 100
-# #   - name: TEDPolicy
-# #     max_history: 5
-# #     epochs: 100
-# #     constrain_similarities: true
-#   # - name: FallbackPolicy
-#   #   fallback_action_name: "action_default_fallback"
-#   #   core_threshold: 0.3 # determines how confident the model must be in predicting the next action
-#   #                       # If the confidence score is lower than this threshold, it will trigger the fallback action
-#   #   nlu_threshold: 0.3 # applies to the NLU model, controlling how confident the model must be in recognizing the intent
-
-# # # No configuration for policies was provided. The following default policies were used to train your model.
-# # # If you'd like to customize them, uncomment and adjust the policies.
-# # # See https://rasa.com/docs/rasa/policies for more information.
-# #   - name: MemoizationPolicy
-# #   - name: RulePolicy
-# #   - name: UnexpecTEDIntentPolicy
-# #     max_history: 5
-# #     epochs: 100
-# #   - name: TEDPolicy
-# #     max_history: 5
-# #     epochs: 100
-# #     constrain_similarities: true
+ 

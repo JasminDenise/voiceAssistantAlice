@@ -39,15 +39,15 @@ All services can be launched via a single script.
                 └──────────────────┘
 ```
 
-1. **Frontend** (Flask or custom `app.py`): Captures voice/text input and displays bot replies.  
-2. **Rasa Core & NLU**: Manages dialog and extracts intents/entities.  
-3. **Duckling**: Parses date/time expressions into structured slots.  
+1. **Frontend** (Flask or custom `app.py`): Captures voice/text, shows messages, plays TTS
+2. **Rasa Core & NLU**: Manages  dialog, slots, rules & forms
+3. **Duckling**: extracts time & number entities
 4. **Action Server**:  
-   - **FormValidationAction**: Validates collected slots.  
-   - **ActionSuggestRestaurant**: Filters and ranks restaurants & suggest best matching one.  
+   - **FormValidationAction**: Validates collected slots  
+   - **ActionSuggestRestaurant**: Filters and ranks restaurants & suggest best matching one
 5. **Data**:  
    - `data/restaurants.json`: Restaurant metadata (cuisine, dietary options, availability).  
-   - `vectorizer/`: Serialized TF–IDF vectorizer and restaurant vectors.  
+   - `vectorizer/`: Serialized TF–IDF vectorizer and restaurant vectors  
 
 ---
 
@@ -111,7 +111,7 @@ Open your browser at `http://localhost:5000`.
 
 ## Demonstration & Evaluation
 
-1. **Web UI / Flask App**: Interact at `app.py`’s address.  
+1. **Web UI / Flask App**:  chat + voice at `http://localhost:5000`
 2. **Rasa Interactive**: Create new stories:  
 ```bash
 # Unix
@@ -129,14 +129,14 @@ Evaluate: slot flows, dietary-first recommendations, and error handling when no 
 
 ---
 
-## Extensibility & Future Work
+## Possible Future Work
 
-- **Dynamic data**: Use a database instead of JSON.  
-- **Enhanced UX**: Add automatic voice recognition (Hey Alice) or customize the front-end (loading spinner, etc.).  
-- **User profiles & personalization**: Create user profiles and recommend based on past bookings over time.  
-- **Location-based suggestions**: Use a location API to suggest restaurants near the user.  
-- **Restaurant data API**: Integrate with third‑party restaurant APIs for live menus and availability.  
-- **Automated confirmations**: Automatically send confirmation emails after booking.
-- **Sentiment-aware recommendations**: Implement sentiment analysis on user utterances (e.g. detecting if they’re in a hurry) to prioritize quick suggestions and streamline the interaction.
+- **Dynamic data**: Use a database instead of JSON  
+- **Enhanced UX**: Add automatic voice recognition ("Hey Alice") or customize the front-end (loading spinner, etc.) 
+- **User profiles & personalization**: Create user profiles and recommend based on past bookings over time
+- **Location-based suggestions**: Use a location API to suggest nearby restaurants  
+- **Restaurant data API**: Integrate with third‑party restaurant APIs for live menus and availability
+- **Automated confirmations**: Automatically send confirmation emails/SMS after booking
+- **Sentiment-aware recommendations**: Implement sentiment analysis on user utterances (e.g. detecting if they’re in a hurry) to prioritize quick suggestions
 
 

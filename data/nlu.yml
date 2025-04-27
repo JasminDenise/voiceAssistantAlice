@@ -146,20 +146,8 @@ nlu:
     - What is the meaning of life?
     - What is a cat?
     - What is a dog?
-- intent: confirm_booking
-  examples: |
-    - yes, please book it there
-    - Sounds good. Please book the table there.
-    - I'll book it there
-    - yes please
-    - yes please book it
-    - yes please book it for me
-    - Yes please book it for me
-- intent: deny_booking
-  examples: |
-    - no, I don't want to book it there
-    - no, I don't want to book it
-    - no, I don't want to book that restaurant
+    - I want to go to the zoo
+
 - intent: affirm
   examples: |
     - yes, I'd like to rebook
@@ -176,6 +164,13 @@ nlu:
     - Yes, I'd like to book again
     - Yes please book it 
     - please go ahead
+    - yes, please book it there
+    - Sounds good. Please book the table there.
+    - I'll book it there
+    - yes please
+    - yes please book it
+    - yes please book it for me
+    - Yes please book it for me
 - intent: deny
   examples: |
     - no, I don't want to rebook
@@ -190,8 +185,11 @@ nlu:
     - No I haven't
     - No I haven't booke dbefore with you
     - No, I haven't
-    - I want to book it on a different time at [7pm](time)
+    - I want to book it on a different time 
     - No
+    - no, I don't want to book it there
+    - no, I don't want to book it
+    - no, I don't want to book that restaurant
 - intent: cancel
   examples: |
     - I want to cancel

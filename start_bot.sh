@@ -1,5 +1,5 @@
 #!/bin/bash
-# start it with: source ./start_bot.sh
+# start it with: source ./start_bot.sh or ./start_bot.sh
 
 cd "$(dirname "$0")"
 

@@ -17,29 +17,21 @@ if (!SpeechRecognition) {
   recognition.interimResults =
       false;  // Only return final results (not halfway guesses)
   recognition.maxAlternatives = 1;  // Return only one best match
-  recognition.continuous = false;   // make sure each session only fires once
+  recognition.continuous = false;   // Make sure each session only fires once
 
   // This function runs when speech is successfully recognized
   recognition.onresult = (event) => {
-    // Get the text version of the spoken words
-    // const transcript = event.results[0][0].transcript;
-    // get only the newly finalized result
-    const idx = event.resultIndex;
-    const transcript = event.results[idx][0].transcript.trim();
-
+    const transcript = event.results[0][0].transcript.trim();
     // Show the user's message in the chat
     addChatMessage('You:', transcript);
-
-    // Send the text to the backend for processing by Rasa and Kokoro
+    // Send the text to the backend for processing by Rasa
     sendTextToBackend(transcript);
   };
 
   // This function runs when there's an error during speech recognition
   recognition.onerror = (event) => {
     console.error('Speech recognition error:', event.error);
-
-    // Stop listening temporarily and prepare to restart
-    console.log('Restarting speech recognition...');
+    // Stop recognition; user can click again to restart
     recognition.stop();
   };
 
@@ -68,7 +60,7 @@ async function sendTextToBackend(text) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({text: text})  // Send the recognized text
+      body: JSON.stringify({text})
     });
 
     // Get the reply from the backend (includes both text and audio)
@@ -82,7 +74,7 @@ async function sendTextToBackend(text) {
       playAudio(data.audioUrl);
     } else {
       // If there's no audio, start listening again
-      if (!isRecognizing) recognition.start();
+      recognition.start();
     }
   } catch (error) {
     console.error('Error sending text to backend:', error);
@@ -101,7 +93,7 @@ function addChatMessage(sender, message) {
   const messageElement = document.createElement('p');
   messageElement.innerText = message;
 
-  // Apply different styles depending on the sender (user or bot)
+  // Apply different styles depending on the sender (user vs. bot)
   if (sender === 'You:') {
     wrapper.className = 'chat-message user-message';
   } else {
@@ -130,12 +122,12 @@ function playAudio(url) {
       .then(() => {
         // When the audio finishes playing, restart listening
         audio.onended = () => {
-          if (!isRecognizing) recognition.start();
+          recognition.start();
         };
       })
       .catch(error => {
         // If there's an error playing the audio, log it and restart listening
         console.error('Audio playback error:', error);
-        if (!isRecognizing) recognition.start();
+        recognition.start();
       });
 }

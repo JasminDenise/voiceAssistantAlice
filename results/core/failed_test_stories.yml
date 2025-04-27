@@ -1,0 +1,86 @@
+version: "3.1"
+stories:
+- story: new booking all slots at once (/Users/jasmin/Desktop/Master Applied Artificial Intelligence/Kurse/06 Voice Assistants/VoiceAssistant/tests/test_stories.yml)
+  steps:
+  - intent: inform_booking_details
+    entities:
+    - number: '3'
+    - cuisine_preferences: Mexican
+    - dietary_preferences: vegan
+    - time: '2025-05-01T19:30:00.000+02:00'
+  - slot_was_set:
+    - date_and_time: '2025-05-01T19:30:00.000+02:00'
+  - slot_was_set:
+    - num_of_guests: '3'
+  - slot_was_set:
+    - dietary_preferences:
+      - vegan
+  - slot_was_set:
+    - cuisine_preferences:
+      - Mexican
+  - action: restaurant_form
+  - active_loop: restaurant_form
+  - action: restaurant_form  # predicted: action_listen
+  - active_loop: null
+  - action: action_suggest_restaurant
+  - intent: affirm
+  - action: utter_submit
+  - action: action_listen  # predicted: action_clear_slots
+- story: new booking missing time (/Users/jasmin/Desktop/Master Applied Artificial Intelligence/Kurse/06 Voice Assistants/VoiceAssistant/tests/test_stories.yml)
+  steps:
+  - intent: inform_booking_details
+    entities:
+    - number: '2'
+    - cuisine_preferences: Italian
+    - dietary_preferences: vegetarian
+    - time: '2025-05-02T00:00:00.000+02:00'
+  - slot_was_set:
+    - date_and_time: '2025-05-02T00:00:00.000+02:00'
+  - slot_was_set:
+    - num_of_guests: '2'
+  - slot_was_set:
+    - dietary_preferences:
+      - vegetarian
+  - slot_was_set:
+    - cuisine_preferences:
+      - Italian
+  - action: restaurant_form
+  - active_loop: restaurant_form
+  - slot_was_set:
+    - date_and_time: null
+  - slot_was_set:
+    - requested_slot: date_and_time
+  - intent: inform_booking_details
+    entities:
+    - time: '2025-05-02T18:45:00.000+02:00'
+  - slot_was_set:
+    - date_and_time: '2025-05-02T18:45:00.000+02:00'
+  - action: restaurant_form
+  - active_loop: null
+  - action: action_suggest_restaurant
+  - intent: affirm
+  - action: utter_submit
+  - action: action_listen  # predicted: action_clear_slots
+- story: rebook available past restaurant (/Users/jasmin/Desktop/Master Applied Artificial Intelligence/Kurse/06 Voice Assistants/VoiceAssistant/tests/test_stories.yml)
+  steps:
+  - intent: inform_booking_details
+    entities:
+    - past_restaurant_name: Bollywood Spice
+  - slot_was_set:
+    - past_restaurant_name: Bollywood Spice
+  - action: restaurant_form
+  - active_loop: restaurant_form
+  - intent: inform_booking_details
+    entities:
+    - time: '2025-05-03T20:00:00.000+02:00'
+    - number: '4'
+  - slot_was_set:
+    - date_and_time: '2025-05-03T20:00:00.000+02:00'
+  - slot_was_set:
+    - num_of_guests: '4'
+  - action: restaurant_form
+  - active_loop: null
+  - action: action_suggest_restaurant
+  - intent: affirm
+  - action: utter_submit
+  - action: action_listen  # predicted: action_clear_slots

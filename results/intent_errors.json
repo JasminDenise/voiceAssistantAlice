@@ -1,0 +1,10 @@
+[
+  {
+    "text": "I want to go to the zoo",
+    "intent": "out_of_scope",
+    "intent_prediction": {
+      "name": "deny",
+      "confidence": 0.9423509240150452
+    }
+  }
+]

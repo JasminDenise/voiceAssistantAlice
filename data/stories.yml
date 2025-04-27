@@ -7,7 +7,6 @@ version: "3.1"
 
 stories:
 
-# User wants to book or rebook a past restaurant 
 - story: User wants to book a restaurant
   steps:
     - intent: greet

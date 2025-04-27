@@ -47,15 +47,15 @@ responses:
   - text: How many guests?
   utter_booking_canceled:
   - text: Okay, I have cancelled your booking request. Maybe next time. Have a nice day!
-  utter_booking_confirmation:
-  - text: Can I book it for you?
-  - text: Do you want to book it?
+  # utter_booking_confirmation:
+  # - text: Can I book it for you?
+  # - text: Do you want to book it?
   utter_submit:
   - text: All done. I hope you enjoy your meal!
   - text: Great! I’ve recorded your booking. Enjoy your meal!
   utter_default:
   - text: I'm sorry, I didn't quite understand that. Could you please rephrase?
-  out_of_scope:
+  utter_out_of_scope:
   - text: Sorry, I can't handle that request. I'm only here to help you booking a restaurant.
   utter_no_problem:
   - text: No problem!

@@ -10,7 +10,6 @@ stories:
     intent: greet
   - action: utter_greet
 
-
 - story: say goodbye
   steps:
   - user: |
@@ -25,26 +24,136 @@ stories:
     intent: bot_challenge
   - action: utter_iamabot
 
+- story: thank you
+  steps:
+  - user: |
+      thanks
+    intent: thank_you
+  - action: utter_no_problem
+
 ## restaurant specific
 
-- story: test restaurant form complete flow
+# 1) New booking: all details in one shot
+- story: new booking all slots at once
   steps:
-    - user: |
-        Where should I go for dinner?
-      intent: restaurant_request
+  - intent: inform_booking_details
+    entities:
+      - number: "3"
+      - cuisine_preferences: "Mexican"
+      - dietary_preferences: "vegan"
+      - time: "2025-05-01T19:30:00.000+02:00"
+  - action: restaurant_form
+  - active_loop: restaurant_form
+  - action: restaurant_form
+  - active_loop: null
+  - action: action_suggest_restaurant
+  - intent: affirm
+  - action: utter_submit
+  - action: action_clear_slots
+
+# 2) New booking: missing time → ask again
+- story: new booking missing time
+  steps:
+  - intent: inform_booking_details
+    entities:
+      - number: "2"
+      - cuisine_preferences: "Italian"
+      - dietary_preferences: "vegetarian"
+      - time: "2025-05-02T00:00:00.000+02:00"
+  - action: restaurant_form
+  - active_loop: restaurant_form
+  - slot_was_set:
+      - date_and_time: null
+  - slot_was_set:
+      - requested_slot: date_and_time
+  - intent: inform_booking_details
+    entities:
+      - time: "2025-05-02T18:45:00.000+02:00"
+  - action: restaurant_form
+  - active_loop: null
+  - action: action_suggest_restaurant
+  - intent: affirm
+  - action: utter_submit
+  - action: action_clear_slots
+
+
+# 3) Rebook known restaurant, available
+- story: rebook available past restaurant
+  steps:
+  - intent: inform_booking_details
+    entities:
+      - past_restaurant_name: "Bollywood Spice"
+  - action: restaurant_form
+  - active_loop: restaurant_form
+  - intent: inform_booking_details
+    entities:
+      - time: "2025-05-03T20:00:00.000+02:00"
+      - number: "4"
+  - action: restaurant_form
+  - active_loop: null
+  - action: action_suggest_restaurant
+  - intent: affirm
+  - action: utter_submit
+  - action: action_clear_slots
+
+# 4) Rebook known restaurant, unavailable → alternative
+- story: rebook unavailable past restaurant
+  steps:
+  - intent: inform_booking_details
+    entities:
+      - past_restaurant_name: "Dragon Wok"
+  - action: restaurant_form
+  - active_loop: restaurant_form
+  - intent: inform_booking_details
+    entities:
+      - time: "2025-05-04T19:00:00.000+02:00"
+      - number: "5"
+  - action: restaurant_form
+  - active_loop: null
+  - action: action_suggest_restaurant
+  - intent: affirm
+  - action: utter_submit
+  - action: action_clear_slots
+
+# 5) Out-of-scope fallback
+- story: user asks unrelated question
+  steps:
+  - user: |
+      Who designed you?
+  - intent: out_of_scope
+  - action: utter_default
+
+# 6) Rebooking unavailable → suggest alternative
+- story: Rebook but unavailable
+  steps:
+    - intent: inform_booking_details
+      entities:
+        - past_restaurant_name: "Dragon Wok"
+    - slot_was_set:
+        - past_restaurant_name: "Dragon Wok"
+        - past_bookings: true
     - action: restaurant_form
     - active_loop: restaurant_form
-    # Simulate slot filling through user inputs
     - slot_was_set:
-      - past_bookings: "Yes, I've booked before"
-    - slot_was_set:
-      - dietry_preferences: "vegetarian"
-    - slot_was_set:
-      - cuisine_preferences: "Italian"
-    - slot_was_set:
-      - time_of_booking: "7:00 PM"
-    - slot_was_set:
-      - day_of_booking: "2025-03-20"
-    - slot_was_set:
-      - num_of_guests: 4.0
+        - date_and_time: "2025-04-21T20:00:00.000+02:00"
+        - num_of_guests: 4
+        - requested_slot: null
     - action: action_suggest_restaurant
+      # expects “sorry … not available” then an alt suggestion
+    - intent: deny_booking
+    - action: utter_booking_canceled
+
+# 7) Cancel mid‐form
+- story: Cancel mid‐form
+  steps:
+    - intent: inform_booking_details
+      entities:
+        - number: 3
+    - action: restaurant_form
+    - active_loop: restaurant_form
+    - slot_was_set:
+        - num_of_guests: 3
+        - requested_slot: past_bookings
+    - intent: cancel
+    - action: utter_booking_canceled
+    - action: action_clear_slots
