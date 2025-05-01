@@ -1,11 +1,11 @@
 let recognition;
 
-// Check if the browser supports the Web Speech API
+// Check if browser supports  Web Speech API
 const SpeechRecognition =
     window.SpeechRecognition || window.webkitSpeechRecognition;
 
 if (!SpeechRecognition) {
-  // If the browser does not support voice input, show an alert
+  // If the browser does not support voice input, show alert
   alert(
       'Your browser does not support Speech Recognition. Please use Chrome or Edge.');
 } else {
@@ -15,8 +15,8 @@ if (!SpeechRecognition) {
   // Set recognition settings
   recognition.lang = 'en-US';  // Recognize English (US)
   recognition.interimResults =
-      false;  // Only return final results (not halfway guesses)
-  recognition.maxAlternatives = 1;  // Return only one best match
+      false;                        // Only return final results (not  guesses)
+  recognition.maxAlternatives = 1;  // Return only  best match
   recognition.continuous = false;   // Make sure each session only fires once
 
   // This function runs when speech is successfully recognized
@@ -28,14 +28,14 @@ if (!SpeechRecognition) {
     sendTextToBackend(transcript);
   };
 
-  // This function runs when there's an error during speech recognition
+  // Handles error during speech recognition
   recognition.onerror = (event) => {
     console.error('Speech recognition error:', event.error);
     // Stop recognition; user can click again to restart
     recognition.stop();
   };
 
-  // This function runs when the user stops speaking
+  // HAndles if the user stops speaking
   recognition.onspeechend = () => {
     // Stop recognition to prepare for next message
     recognition.stop();
@@ -54,7 +54,7 @@ if (!SpeechRecognition) {
 // --------------------------------------------
 async function sendTextToBackend(text) {
   try {
-    // Send the user's message to the Flask backend via POST request
+    // Send user's message to  Flask backend via POST request
     const response = await fetch('http://127.0.0.1:5000/process', {
       method: 'POST',
       headers: {
@@ -63,7 +63,7 @@ async function sendTextToBackend(text) {
       body: JSON.stringify({text})
     });
 
-    // Get the reply from the backend (includes both text and audio)
+    // Get  reply from the backend (includes both text + audio)
     const data = await response.json();
 
     // Display the bot's text response in the chat
@@ -93,14 +93,14 @@ function addChatMessage(sender, message) {
   const messageElement = document.createElement('p');
   messageElement.innerText = message;
 
-  // Apply different styles depending on the sender (user vs. bot)
+  // Apply different styles depending on  sender (user vs. bot)
   if (sender === 'You:') {
     wrapper.className = 'chat-message user-message';
   } else {
     wrapper.className = 'chat-message bot-message';
   }
 
-  // Add the message to the wrapper and chat box
+  // Add  message to the wrapper and chat box
   wrapper.appendChild(messageElement);
   chatBox.appendChild(wrapper);
 

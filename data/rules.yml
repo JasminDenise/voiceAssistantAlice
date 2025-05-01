@@ -85,3 +85,8 @@ rules:
     - intent: cancel
     - action: utter_booking_canceled
     - action: action_clear_slots
+
+# - rule: Clear slots
+#   steps:
+#     - action: action_clear_slots
+

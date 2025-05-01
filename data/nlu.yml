@@ -68,28 +68,28 @@ nlu:
     - Can I rebook [La Bella Italia](past_restaurant_name)?
     - I'd like to eat at [La Bella Italia](past_restaurant_name) again
     - I want to book a table I previously booked at [La Bella Italia](past_restaurant_name)
-    - I want to eat at [7 PM](time)
-    - I need a table for [tomorrow](time)
-    - I will book a table for [5](number) people
-    - I want to eat at [10 am](time)
-    - I need a table on [April 6th](time)
-    - I want  a table for [2](number) people
-    - I want to book a table for [two](number) people
-    - i want to book a table for [2](number) people
+    - I want to eat at 7 PM
+    - I need a table for tomorrow
+    - I will book a table for 5 people
+    - I want to eat at 10 am
+    - I need a table on April 6th
+    - I want  a table for 2 people
+    - I want to book a table for two people
+    - i want to book a table for 2 people
     - i prefer [italian][{"entity": "cuisine_preferences", "value": "Italian"}, {"entity": "cuisine_preferences"}] cuisine
     - yes, I'm [vegetarian](dietary_preferences)
     - I need a [vegetarian](dietary_preferences) and a [gluten-free](dietary_preferences) place
     - I’m looking for a [lactose-free](dietary_preferences) and [vegan](dietary_preferences) option
-    - I want to eat on friday at [7 PM](time)
+    - I want to eat on friday at 7pm
     - [Yes](affirm), i booked before at "[La Bella Italia](past_restaurant_name)"
     - [Sure](affirm), I have been to "[La Bella Italia](past_restaurant_name)"
     - I want [Italian](cuisine_preferences) and [Mexican](cuisine_preferences)
     - I'd like [Japanese](cuisine_preferences) and [Indian](cuisine_preferences)
     - [Chinese](cuisine_preferences) and [Thai](cuisine_preferences) for sure
-    - hi Alice, I want to book a table on friday at [7 PM](time) for [2](number) people
+    - hi Alice, I want to book a table on friday at 7pm for 2 people
     - I like [indian][{"entity": "cuisine_preferences", "value": "Indian"}, {"entity": "cuisine_preferences"}] and [mexican][{"entity": "cuisine_preferences", "value": "Mexican"}, {"entity": "cuisine_preferences"}] food
     - I am [vegetarian](dietary_preferences)
-    - hi, i want a table for six people on saturday evening at [7 PM](time)
+    - hi, i want a table for six people on saturday evening at 7 PM
     - [italian][{"entity": "cuisine_preferences", "value": "Italian"}, {"entity": "cuisine_preferences"}] but also [mexican][{"entity": "cuisine_preferences", "value": "Mexican"}, {"entity": "cuisine_preferences"}] food
     - i have [no restrictions](dietary_preferences) I can eat everything
     - I like [italian][{"entity": "cuisine_preferences", "value": "Italian"}, {"entity": "cuisine_preferences"}] and [french][{"entity": "cuisine_preferences", "value": "French"}, {"entity": "cuisine_preferences"}] food
@@ -97,45 +97,44 @@ nlu:
     - No I eat [everything]{"entity": "dietary_preferences", "value": "omnivore"}
     - [No I haven't any dietary restrictions]{"entity": "dietary_preferences", "value": "omnivore"}
     - I would like to book a table for today
-    - We are [five](number) people
-    - I want to eat at [7 PM](time) if possible
+    - We are five people
+    - I want to eat at 7pm if possible
     - I want to book a table for today
     - I like [Italian][{"entity": "cuisine_preferences"}, {"entity": "cuisine_preferences"}] and [French][{"entity": "cuisine_preferences"}, {"entity": "cuisine_preferences"}] food
     - no I eat [everything]{"entity": "dietary_preferences", "value": "omnivore"}
-    - we are [three](number)
-    - we are [two](number)
+    - we are three
+    - we are two
     - no I can eat [everything]{"entity": "dietary_preferences", "value": "omnivore"}
-    - I want to book for [5 PM](time)
+    - I want to book for 5pm
     - hi i want to book a restaurant
     - No i can eat [everything]{"entity": "dietary_preferences", "value": "omnivore"}
-    - I would like to eat today at [7pm](time)
-    - we are [three](number) people
+    - I would like to eat today at 7pm
     - Can I book a table for today?
     - [Yes](affirm) it was [la bella italia]{"entity": "past_restaurant_name", "value": "La Bella Italia"}
     - I think we are four people
-    - I would like to book for [7pm](time)
+    - I would like to book for 7pm
     - I want to book a restaurant
     - I prefer [italian][{"entity": "cuisine_preferences", "value": "Italian"}, {"entity": "cuisine_preferences"}] food
     - No I have [no restrictions]{"entity": "dietary_preferences", "value": "omnivore"}
-    - I would like to book a table on Friday at [6pm](time)
+    - I would like to book a table on Friday at 6pm
     - We are four people
     - I want to book a table for today please
     - I think it was [Viva Mexico](past_restaurant_name)
-    - Only [two](number)
-    - and what about [7:30 pm](time)?
-    - Hi I want to book a table for today at [7pm](time)
+    - Only two
+    - and what about 7:30 PM?
+    - Hi I want to book a table for today at 7pm
     - [italian][{"entity": "cuisine_preferences", "value": "Italian"}, {"entity": "cuisine_preferences"}] and [german](cuisine_preferences)
     - No I can eat [everything]{"entity": "dietary_preferences", "value": "omnivore"}
-    - we are only [two](number)
+    - we are only two
     - [Yes](affirm) I want to book again at [Bella Roma][{"entity": "past_restaurant_name"}, {"entity": "past_restaurant_name"}] if possible
     - Hi I want to book again at [Bella Roma][{"entity": "past_restaurant_name"}, {"entity": "past_restaurant_name"}]
     - Today
-    - Sorry I want to eat at [8:30 PM](time)
-    - [three](number) people
+    - Sorry I want to eat at 8:30 PM
+    - three people
     - I like [italian][{"entity": "cuisine_preferences", "value": "Italian"}, {"entity": "cuisine_preferences"}] food
     - I can eat [anything]{"entity": "dietary_preferences", "value": "omnivore"}
-    - Friday at [6pm](time)
-    - [two](number) people
+    - Friday at 6pm
+    - two people
 - intent: out_of_scope
   examples: |
     - Who is your boss?

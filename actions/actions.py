@@ -1,19 +1,63 @@
 import json
+import random
+import logging
+import inspect
 from typing import Any, Text, Dict, List
 from rasa_sdk import Action, Tracker
-from rasa_sdk.events import AllSlotsReset
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.forms import FormValidationAction 
 from rasa_sdk.types import DomainDict
-from rasa_sdk.events import SlotSet, FollowupAction
+from rasa_sdk.events import SlotSet, FollowupAction, EventType, AllSlotsReset
 from sklearn.metrics.pairwise import cosine_similarity
 from datetime import datetime
 from joblib import load
-import random
+
+
+# logging fallbacks
+# 1) Create  logger for this module
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.WARNING)
+
+# 2) Create  file handler which logs WARNING (and above) to 'fallbacks.log'
+fh = logging.FileHandler("logs/fallbacks.log")
+fh.setLevel(logging.WARNING)
+
+# 3) Add a formatter to get timestamps, levels &d messages
+formatter = logging.Formatter("%(asctime)s %(levelname)s %(name)s: %(message)s",
+                              datefmt="%Y-%m-%d %H:%M:%S")
+fh.setFormatter(formatter)
+
+# 4) Attach handler to your logger
+logger.addHandler(fh)
+
+
+def check_turns(fn):
+    async def wrapper(self, slot_value, dispatcher, tracker, domain):
+        current = tracker.get_slot("turn_counter") or 0
+        new_count = current + 1
+
+        # call the real validator
+        if inspect.iscoroutinefunction(fn):
+            result = await fn(self, slot_value, dispatcher, tracker, domain)
+        else:
+            result = fn(self, slot_value, dispatcher, tracker, domain)
+
+        # if they returned a dict, inject turn_counter into that dict
+        if isinstance(result, dict):
+            result["turn_counter"] = new_count
+            return result
+
+        # if they returned events, prepend the SlotSet event
+        if isinstance(result, list):
+            return [SlotSet("turn_counter", new_count)] + result
+
+        # fallback: just bump the counter
+        return {"turn_counter": new_count}
+    return wrapper
 
 # based on: https://legacy-docs-oss.rasa.com/docs/rasa/forms/#validating-form-input
-
 class ValidateRestaurantForm(FormValidationAction):
+    MAX_TURNS = 10
     def name(self) -> Text:
         return "validate_restaurant_form"
 
@@ -38,42 +82,44 @@ class ValidateRestaurantForm(FormValidationAction):
         domain: DomainDict,
     ) -> List[Text]:
         
-        if tracker.get_slot("past_restaurant_name"):
-            return ["date_and_time", "num_of_guests"]
+            """Dynamically ask only the needed slots, and don’t re-ask past_bookings once set."""
+             # 1) If they already gave a past_restaurant_name, skip the booking‐check
+            if tracker.get_slot("past_restaurant_name"):
+                return ["date_and_time", "num_of_guests"]
 
-        # always ask whether they’ve booked before
-        slots = ["past_bookings"]
-        if tracker.get_slot("past_bookings") is True:
-            # rebooking path: only need restaurant name, datetime & guests
-            slots += ["past_restaurant_name", "date_and_time", "num_of_guests"]
-        elif tracker.get_slot("past_bookings") is False:
-            # new booking: all the details are required
-            slots += [
-                "cuisine_preferences",
-                "dietary_preferences",
-                "date_and_time",
-                "num_of_guests",
-            ]
-        return slots
+            # 2) If we don’t yet know whether they’ve booked before, ask that first
+            if tracker.get_slot("past_bookings") is None:
+                return ["past_bookings"]
 
-    def validate_past_bookings(
+            # 3) They’ve said yes → rebooking path
+            if tracker.get_slot("past_bookings"):
+                return ["past_restaurant_name", "date_and_time", "num_of_guests"]
+
+            # 4) They’ve said no → full new booking path
+            return ["cuisine_preferences", "dietary_preferences", "date_and_time", "num_of_guests"]
+
+    @check_turns
+    async def validate_past_bookings(
         self,
         slot_value: Any,
         dispatcher: CollectingDispatcher,
         tracker: Tracker,
         domain: DomainDict,
     ) -> Dict[Text, Any]:
+        
+
         # check if past_restaurant_name was already provided
         # if user said yes but no restaurant yet, ask for it next
 
          # Get the last intent
+         
         last_intent = tracker.latest_message["intent"].get("name")
 
-        # Set value here based on intent because automatic intent mapping doesn't work 
+        # Set value here based on intent because automatic intent mapping doesn't worked as intented
         if last_intent == "affirm":
             return {"past_bookings": True}
         elif last_intent == "deny":
-            return {"past_bookings": False}
+            return {"past_bookings": False, "dietary_preferences": None}
         
         # if past_restaurant_name was already provided then past_bookings is True
         if tracker.get_slot("past_restaurant_name") is not None:
@@ -81,18 +127,22 @@ class ValidateRestaurantForm(FormValidationAction):
         
         return {"past_bookings": slot_value}
 
-    def validate_past_restaurant_name(
+    @check_turns
+    async def validate_past_restaurant_name(
         self,
         slot_value: Any,
         dispatcher: CollectingDispatcher,
         tracker: Tracker,
         domain: DomainDict,
     ) -> Dict[Text, Any]:
+        
+        
         # set past booking to true if restaurant name was provided 
         if  slot_value:
             return {"past_restaurant_name": slot_value, "past_bookings": True} 
         return {}
 
+    @check_turns
     async def validate_cuisine_preferences(
         self,
         slot_value: List[Text],
@@ -100,6 +150,7 @@ class ValidateRestaurantForm(FormValidationAction):
         tracker: Tracker,
         domain: DomainDict,
     ) -> Dict[Text, Any]:
+        
         # check if there are any invalid cuisine preferences
         invalid = [v for v in (v.lower() for v in slot_value) if v not in self.cuisine_db()]
         if invalid:
@@ -109,27 +160,40 @@ class ValidateRestaurantForm(FormValidationAction):
             return {"cuisine_preferences": None}
         return {"cuisine_preferences": slot_value}
 
-    async def validate_dietary_preferences(
-        self,
-        slot_value: List[Text],
-        dispatcher: CollectingDispatcher,
-        tracker: Tracker,
-        domain: DomainDict,
-    ) -> Dict[Text, Any]:
-        last_intent = tracker.get_intent_of_latest_message()
-        # Handle case where user says "no", "none", or similar
-        if last_intent == "deny":
-            dispatcher.utter_message("Got it, I’ll assume you have no special dietary needs.")
+    @check_turns
+    async def validate_dietary_preferences(self, slot_value, dispatcher, tracker, domain):
+        # 1) if we’re asking for diet and they said “no”, map immediately
+        if tracker.get_slot("requested_slot") == "dietary_preferences" \
+        and tracker.latest_message["intent"].get("name") == "deny":
             return {"dietary_preferences": ["omnivore"]}
 
-        invalid = [v for v in (v.lower() for v in slot_value) if v not in self.dietary_db()]
+        # 2) normalize whatever actually came in from the extractor
+        values: List[str] = []
+        if isinstance(slot_value, list):
+            for v in slot_value:
+                if isinstance(v, list):
+                    values.extend(v)
+                else:
+                    values.append(v)
+        elif isinstance(slot_value, str):
+            values = [slot_value]
+        else:
+            # truly nothing at all
+            return {"dietary_preferences": None}
+
+        # 3) now your DB‐check on values
+        invalid = [v for v in (v.lower() for v in values)
+                if v not in self.dietary_db()]
         if invalid:
             dispatcher.utter_message(
-                f"Sorry, I don’t offer {', '.join(invalid)}. I only support: {', '.join(self.dietary_db())}."
+                f"Sorry, I don’t offer {', '.join(invalid)}. "
+                f"I only support: {', '.join(self.dietary_db())}."
             )
             return {"dietary_preferences": None}
-        return {"dietary_preferences": slot_value}
 
+        return {"dietary_preferences": values}
+
+    @check_turns
     async def validate_date_and_time(
         self,
         slot_value: Any,
@@ -137,6 +201,7 @@ class ValidateRestaurantForm(FormValidationAction):
         tracker: Tracker,
         domain: DomainDict,
     ) -> Dict[Text, Any]:
+        
         # check if there is a valid datetime
         try:
             dt = datetime.fromisoformat(slot_value)
@@ -152,6 +217,7 @@ class ValidateRestaurantForm(FormValidationAction):
             return {"date_and_time": None}
         return {"date_and_time": slot_value}
 
+    @check_turns
     async def validate_num_of_guests(
         self,
         slot_value: Any,
@@ -160,6 +226,7 @@ class ValidateRestaurantForm(FormValidationAction):
         domain: DomainDict,
     ) -> Dict[Text, Any]:
         
+
          # 1) Direct cast (most common if slot_value = "3")
         try:
             guests = int(slot_value)
@@ -189,7 +256,7 @@ class ActionSuggestRestaurant(Action):
       Suggests a restaurant by TF–IDF similarity on "cuisine + diet".
 
     - Uses content-based filtering (TF–IDF encoding) and cosine similarity for ranking
-    - Filters strictly by dietary preference (unless treated as no restriction)
+    - Filters strictly by dietary preference 
     - If no restaurant meets diet and availability, returns an apology
     """
 
@@ -321,7 +388,7 @@ class ActionSuggestRestaurant(Action):
                   SlotSet("date_and_time", None),
                   #FollowupAction("restaurant_form")
             ]
-
+    #helper function
     def _is_available(self, restaurant: Dict, guests: int, day: str, time: str) -> bool:
         """
         Determine if a given restaurant has availability for the specified day, time, and guest count.
@@ -334,12 +401,33 @@ class ActionSuggestRestaurant(Action):
             return False
 
 
-
-
 class ActionClearSlots(Action):
     def name(self) -> str:
         return "action_clear_slots"
 
     async def run(self, dispatcher, tracker, domain):
-        dispatcher.utter_message(text="All set! I've cleared our previous conversation. Feel free to start a new booking whenever you're ready!")
+        dispatcher.utter_message(response="utter_clear_slots")
+        return [AllSlotsReset()]
+
+# logging fallbacks
+class ActionLogAndFallback(Action):
+    def name(self) -> str:
+        return "action_log_and_fallback"
+
+    async def run(
+        self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: dict,
+    ):
+        # 1) Log the fallback event
+        user_msg = tracker.latest_message.get("text")
+        turn    = tracker.get_slot("turn_counter") or "?"
+        logger.warning(f"FALLBACK triggered at turn {turn}: \"{user_msg}\"")
+        # (Optionally write to file / database here)
+
+        # 2) Notify the user
+        dispatcher.utter_message(response="utter_default")
+
+        # 3)  reset slots to start fresh
         return [AllSlotsReset()]

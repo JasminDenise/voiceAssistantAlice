@@ -9,7 +9,7 @@ with open("data/restaurants.json") as f:
     restaurants = json.load(f)
 
 # Create and save preprocessed texts
-# creates a query string for each restaurant e.g. La Bella Italia Italian Vegetarian Gluten-Free Omnivore
+# creates a query string for each restaurant e.g. "La Bella Italia Italian Vegetarian Gluten-Free Omnivore..."
 restaurant_texts = [
     f"{r['name']} {r['cuisine']} {' '.join(r.get('dietary_options', []))}"
     for r in restaurants

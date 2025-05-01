@@ -60,17 +60,28 @@ responses:
   utter_no_problem:
   - text: No problem!
   - text: That's fine.
+  utter_clear_slots:
+  - text: All set! I've cleared our previous conversation. Feel free to start a new booking whenever you're ready!"
+  utter_max_reached:
+  - text: You've reached the maximum number of booking attempts. Please try again later.
+  - text: Looks like we're going in circles. Let's start over.
 slots:
   past_bookings:
     type: bool
-    influence_conversation: true
     mappings:
-    - type: from_intent
-      intent: affirm
-      value: true
-    - type: from_intent
-      intent: deny
-      value: false
+      # only map affirm/deny when the form is active _and_ requested_slot = past_bookings
+      - type: from_intent
+        intent: affirm
+        value: true
+        conditions:
+          - active_loop: restaurant_form
+          - requested_slot: past_bookings
+      - type: from_intent
+        intent: deny
+        value: false
+        conditions:
+          - active_loop: restaurant_form
+          - requested_slot: past_bookings
   past_restaurant_name:
     type: text
     mappings:
@@ -86,19 +97,45 @@ slots:
     mappings:
     - type: from_entity
       entity: number
+      
   dietary_preferences:
     type: list
     mappings:
-    - type: from_entity
-      entity: dietary_preferences
+      # 1) if user denies when asked for diet, map to omnivore
+      # - type: from_intent
+      #   intent: deny
+      #   value:
+      #     - omnivore
+      #   conditions:
+      #     - active_loop: restaurant_form
+      #     - requested_slot: dietary_preferences
+
+      # 2) if they say “vegetarian” / “vegan” etc.
+      - type: from_entity
+        entity: dietary_preferences
+        conditions:
+          - active_loop: restaurant_form
+          - requested_slot: dietary_preferences
+       # 2) FALLBACK: *any* text (including “no”) when asking for diet
+      # - type: from_text
+      #   conditions:
+      #     - active_loop: restaurant_form
+      #     - requested_slot: dietary_preferences
+
+    
   cuisine_preferences:
     type: list
     mappings:
     - type: from_entity
       entity: cuisine_preferences
+  turn_counter:
+    type: float
+    initial_value: 0.0
+    mappings: []
 forms:
   restaurant_form:
     required_slots:
+    - dietary_preferences
     - past_bookings
     - date_and_time
     - num_of_guests
@@ -106,6 +143,7 @@ actions:
 - action_clear_slots
 - utter_submit
 - action_suggest_restaurant
+- action_log_and_fallback
 - utter_booking_canceled
 - validate_restaurant_form
 session_config:

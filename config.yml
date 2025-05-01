@@ -10,7 +10,6 @@ assistant_id: voice-assistant-alice
 # https://rasa.com/docs/rasa/nlu/components/
 language: en
 
-
 pipeline:
   - name: WhitespaceTokenizer
   - name: RegexFeaturizer
@@ -23,10 +22,14 @@ pipeline:
   - name: DIETClassifier
     constrain_similarities: True
     epochs: 100
+    entity_recognition: True
+    entity_recognition_constraints:
+      exclude_entities:  # exclude time & number -> duckling
+        - time
+        - number
   - name: EntitySynonymMapper
   - name: FallbackClassifier #  intent nlu_fallback will be predicted if all other intent predictions fall below  threshold
     threshold: 0.6
-  # - name: RegexEntityExtractor
   - name: DucklingEntityExtractor
     url: http://localhost:8000
     dimensions: ["time","number"]
@@ -37,7 +40,7 @@ pipeline:
 policies:
   - name: RulePolicy
     core_fallback_threshold: 0.3
-    core_fallback_action_name: "action_default_fallback"
+    core_fallback_action_name: "action_log_and_fallback"
     enable_fallback_prediction: True
     check_for_contradictions: True # make sure that slots & active loops set by actions are defined consistently for all rules
   - name: MemoizationPolicy
