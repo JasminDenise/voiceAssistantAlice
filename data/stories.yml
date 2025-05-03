@@ -141,7 +141,7 @@ stories:
   # 5) User decides to cancel entirely
   - intent: cancel
   - action: utter_booking_canceled
-  - action: action_clear_slots
+ 
 
 - story: interactive_story_4 - Rebook in first message
   steps:
@@ -180,3 +180,67 @@ stories:
     - action: utter_submit
     - action: action_clear_slots
 
+
+- story: interactive_story_5 - User cancels booking process in the middle of the form
+  steps:
+  - intent: inform_booking_details
+    entities:
+    - number: 2
+    - time: '2025-05-03T19:00:00.000+02:00'
+  - slot_was_set:
+    - date_and_time: '2025-05-03T19:00:00.000+02:00'
+  - slot_was_set:
+    - num_of_guests: 2
+  - action: restaurant_form
+  - active_loop: restaurant_form
+  - slot_was_set:
+    - requested_slot: past_bookings
+  - slot_was_set:
+    - date_and_time: '2025-05-03T19:00:00.000+02:00'
+  - slot_was_set:
+    - num_of_guests: 2
+  - intent: deny
+  - slot_was_set:
+    - past_bookings: false
+  - action: restaurant_form
+  - slot_was_set:
+    - requested_slot: cuisine_preferences
+  - intent: cancel
+  - action: action_clear_slots
+  - action: utter_booking_canceled
+  - action: action_deactivate_loop
+  - active_loop: null
+  - slot_was_set:
+    - requested_slot: null
+
+- story: interactive_story_6
+  steps:
+  - intent: inform_booking_details
+    entities:
+    - number: 2
+    - time: '2025-05-03T19:00:00.000+02:00'
+  - slot_was_set:
+    - date_and_time: '2025-05-03T19:00:00.000+02:00'
+  - slot_was_set:
+    - num_of_guests: 2
+  - action: restaurant_form
+  - active_loop: restaurant_form
+  - slot_was_set:
+    - requested_slot: past_bookings
+  - slot_was_set:
+    - date_and_time: '2025-05-03T19:00:00.000+02:00'
+  - slot_was_set:
+    - num_of_guests: 2
+  - intent: affirm
+  - slot_was_set:
+    - past_bookings: true
+  - action: restaurant_form
+  - slot_was_set:
+    - requested_slot: past_restaurant_name
+  - intent: cancel
+  - action: action_clear_slots
+  - action: utter_booking_canceled
+  - action: action_deactivate_loop
+  - active_loop: null
+  - slot_was_set:
+    - requested_slot: null

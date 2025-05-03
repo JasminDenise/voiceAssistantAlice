@@ -1,69 +1,69 @@
 {
-  "action_listen": {
-    "precision": 1.0,
-    "recall": 1.0,
-    "f1-score": 1.0,
-    "support": 15
-  },
-  "action_suggest_restaurant": {
-    "precision": 1.0,
-    "recall": 1.0,
-    "f1-score": 1.0,
-    "support": 4
-  },
-  "utter_booking_canceled": {
-    "precision": 1.0,
-    "recall": 1.0,
-    "f1-score": 1.0,
-    "support": 1
-  },
   "utter_submit": {
     "precision": 1.0,
     "recall": 1.0,
     "f1-score": 1.0,
-    "support": 3
+    "support": 4
   },
-  "utter_greet": {
+  "action_deactivate_loop": {
     "precision": 1.0,
     "recall": 1.0,
     "f1-score": 1.0,
-    "support": 1
+    "support": 2
   },
   "restaurant_form": {
     "precision": 1.0,
-    "recall": 1.0,
-    "f1-score": 1.0,
-    "support": 9
+    "recall": 0.9444444444444444,
+    "f1-score": 0.9714285714285714,
+    "support": 18
+  },
+  "utter_booking_canceled": {
+    "precision": 1.0,
+    "recall": 0.8,
+    "f1-score": 0.888888888888889,
+    "support": 5
+  },
+  "action_suggest_restaurant": {
+    "precision": 0.8,
+    "recall": 0.6666666666666666,
+    "f1-score": 0.7272727272727272,
+    "support": 6
   },
   "action_clear_slots": {
-    "precision": 1.0,
-    "recall": 1.0,
-    "f1-score": 1.0,
-    "support": 4
+    "precision": 0.7777777777777778,
+    "recall": 0.875,
+    "f1-score": 0.823529411764706,
+    "support": 8
   },
-  "accuracy": 1.0,
-  "macro avg": {
-    "precision": 1.0,
-    "recall": 1.0,
-    "f1-score": 1.0,
-    "support": 37
-  },
-  "weighted avg": {
-    "precision": 1.0,
-    "recall": 1.0,
-    "f1-score": 1.0,
-    "support": 37
+  "action_listen": {
+    "precision": 0.8461538461538461,
+    "recall": 0.8148148148148148,
+    "f1-score": 0.830188679245283,
+    "support": 27
   },
   "micro avg": {
-    "precision": 1.0,
-    "recall": 1.0,
-    "f1-score": 1.0,
-    "support": 37
+    "precision": 0.8955223880597015,
+    "recall": 0.8571428571428571,
+    "f1-score": 0.8759124087591241,
+    "support": 70
   },
+  "macro avg": {
+    "precision": 0.9177045177045177,
+    "recall": 0.8715608465608466,
+    "f1-score": 0.8916154683714537,
+    "support": 70
+  },
+  "weighted avg": {
+    "precision": 0.8981196581196581,
+    "recall": 0.8571428571428571,
+    "f1-score": 0.8756732103933627,
+    "support": 70
+  },
+  "accuracy": 0.8571428571428571,
   "conversation_accuracy": {
-    "accuracy": 1.0,
+    "accuracy": 0.5555555555555556,
     "correct": 5,
     "with_warnings": 0,
-    "total": 5
+    "total": 9
   }
 }

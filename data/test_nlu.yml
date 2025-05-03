@@ -52,6 +52,7 @@ nlu:
 - intent: cancel
   examples: |
     - cancel
+    - stop
     - I want to cancel
 
 - intent: out_of_scope

@@ -7,7 +7,7 @@ from flask_cors import CORS
 
 # Initialize Flask app
 app = Flask(__name__)
-CORS(app) # Allow all origins
+CORS(app)  # Allow all origins
 
 # Initialize Kokoro Text-to-Speech pipeline (American English)
 pipeline = KPipeline(lang_code='a')  # 'a' = American English voice model
@@ -60,21 +60,23 @@ def process_input():
             "audioUrl": None
         })
 
-    # Fallback if Rasa does not return a valid text response
-    if not rasa_response or not rasa_response[0].get('text'):
-        response_text = 'Sorry, I did not understand that. What did you say?'
+    # ----------------------------------------------------------------
+    # Collect ALL of Rasa's text replies in this turn, in order:
+    # ----------------------------------------------------------------
+    texts = [msg.get("text") for msg in rasa_response if msg.get("text")]
+    if not texts:
+        # Fallback if no text at all
+        combined_text = "Sorry, I did not understand that. What did you say?"
     else:
-        # Take the first valid text response from Rasa
-        response_text = rasa_response[0].get('text')
-
-    #print(f"Rasa response: {response_text}")  # debugging 
+        # Join with newline so front-end can split into multiple messages
+        combined_text = "\n".join(texts)
 
     # Convert response text to speech (TTS) using Kokoro
-    audio_url = generate_tts_audio(response_text)
+    audio_url = generate_tts_audio(combined_text)
 
     # Return JSON with both text and audio file path
     return jsonify({
-        "response": response_text,
+        "response": combined_text,
         "audioUrl": audio_url if audio_url else None
     })
 

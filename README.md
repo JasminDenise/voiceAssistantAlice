@@ -6,60 +6,52 @@ This repository contains all components for a prototype voice assistant that rec
 
 ---
 
-##  Overview
+## Overview
 
 VoiceAssistantAlice demonstrates an end-to-end conversational AI system built on Rasa. It includes:
 
-- **Custom Form Validation** (`ValidateRestaurantForm`) to collect and validate user slots (cuisine, dietary restrictions, date/time, number of guests, past bookings).
-- **Recommendation Engine** (`ActionSuggestRestaurant`) that:
-  - Precomputes TF–IDF vectors for each restaurant description.
-  - Uses cosine similarity to match user preferences (dietary > cuisine).
-  - Checks availability based on Duckling‑parsed date/time and guest count.
-- **Duckling Integration** for robust natural language date/time & number of guests understanding.
-- **Flask App** (`app.py`) as a minimal web interface to demonstrate interactions.
-- **Interactive Rasa Shell** for story creation and testing via `rasa interactive`.
-- **Automated Preprocessing Script** (`preprocess.py`) to generate and serialize TF–IDF models for fast startup.
+* **Custom Form Validation** (`ValidateRestaurantForm`) to collect and validate user slots (cuisine, dietary restrictions, date/time, number of guests, past bookings).
+* **Recommendation Engine** (`ActionSuggestRestaurant`) that:
+
+  * Precomputes TF–IDF vectors for each restaurant description.
+  * Uses cosine similarity to match user preferences (cuisine + diet).
+  * Checks availability based on Duckling‑parsed date/time and guest count.
+* **Duckling Integration** for robust natural language date/time & number of guests understanding.
+* **Flask App** (`app.py`) as a minimal web interface to demonstrate interactions.
+* **Interactive Rasa Shell** for story creation and testing via `rasa interactive`.
+* **Automated Preprocessing Script** (`preprocess.py`) to generate and serialize TF–IDF models for fast startup.
 
 All services can be launched via a single script.
-
----
 
 ## Architecture & Key Components 
 
 ![System Architecture & Interaction Flow (Updates)](docs/images/Updated System Architecture@2x.png)
 
-1. **Frontend** (Flask or custom `app.py`): Captures voice/text, shows messages, plays TTS
-2. **Rasa Core & NLU**: Manages  dialog, slots, rules & forms
-3. **Duckling**: extracts time & number entities
-4. **Action Server**:  
-   - **FormValidationAction**: Validates collected slots  
-   - **ActionSuggestRestaurant**: Filters and ranks restaurants & suggest best matching one
-5. **Data**:  
-   - `data/restaurants.json`: Restaurant metadata (cuisine, dietary options, availability).  
-   - `vectorizer/`: Serialized TF–IDF vectorizer and restaurant vectors  
-
 ---
 
-## Setup & Usage 
+## Setup & Usage
 
-### 1. Clone & Navigate  
+### 1. Clone & Navigate
+
 ```bash
 git clone https://github.com/<your-username>/VoiceAssistantAlice.git
 cd VoiceAssistantAlice
 ```
 
-### 2. Create Virtual Environment & Install Dependencies  
+### 2. Create Virtual Environment & Install Dependencies
+
 ```bash
 python3.10 -m venv va_env
-
-source va_env/bin/activate # macOS/Linux
-.\va_env\Scripts\Activate.ps1 # Windows (PowerShell)
+source va_env/bin/activate   # macOS/Linux
+# or .\va_env\Scripts\Activate.ps1  # Windows (PowerShell)
 
 pip install -r requirements.txt
 ```
 
-### 3. Build & Run Duckling  
-Duckling is required for date/time & number parsing.  
+### 3. Run Duckling
+
+Duckling is required for date/time & number parsing.
+
 ```bash
 cd duckling
 stack build
@@ -67,20 +59,25 @@ stack exec duckling-example-exe > ../logs/duckling.log 2>&1 &
 cd ..
 ```
 
-### 4. Preprocess Restaurant Data  
-Whenever you update `data/restaurants.json`, regenerate TF–IDF:  
+### 4. Preprocess Restaurant Data
+
+Whenever you update `data/restaurants.json`, regenerate TF–IDF:
+
 ```bash
 python preprocess.py
 ```
 
-### 5. Launch All Services  
-#### macOS/Linux  
+### 5. Launch All Services
+
+#### macOS/Linux
+
 ```bash
 chmod +x ./start_bot.sh
 ./start_bot.sh
 ```
 
-#### Windows (PowerShell)  
+#### Windows (PowerShell)
+
 ```powershell
 # Activate venv
 .\va_env\Scripts\Activate.ps1
@@ -98,34 +95,75 @@ Open your browser at `http://localhost:5000`.
 
 ---
 
+## Testing & Evaluation
+
+### Core (Conversation) Tests
+
+Define conversation test stories in `tests/test_stories.yml` and run:
+
+```bash
+rasa test core --stories tests/test_stories.yml
+```
+
+### NLU Tests
+
+Define NLU test cases in `data/test_nlu.yml` and run:
+
+```bash
+rasa test nlu --nlu data/test_nlu.yml
+```
+
+After running, inspect the reports generated under `results/`:
+
+* `results/intent_report.json`  and `results/intent_confusion_matrix.png` for NLU classification metrics and confusion matrix
+* `results/DIETClassifier_report.json` and `results/DIETClassifier_confusion_matrix.png` for entity extraction performance.
+* `results/story_report.json` & `results/core/failed_test_stories.yml` for conversation‐level accuracy and failed stories
+
+
 ## Demonstration & Evaluation
 
-1. **Web UI / Flask App**:  chat + voice at `http://localhost:5000`
-2. **Rasa Interactive**: Create new stories:  
-```bash
-# Unix
-rasa interactive
-# Windows
-rasa interactive --endpoints endpoints.yml
-```
-3. **Shell Testing**:  
-```bash
-rasa shell --endpoints endpoints.yml
-```
-4. **Logs**: Check `logs/actions.log` for action outputs and slot values.
+1. **Web UI / Flask App**: chat + voice at `http://localhost:5000`
+2. **Rasa Interactive**: Create and refine stories:
 
-Evaluate: slot flows, dietary-first recommendations, and error handling when no matches exist.
+   ```bash
+   rasa interactive
+   ```
+3. **Shell Testing**:
+
+   ```bash
+   rasa shell --endpoints endpoints.yml
+   ```
+4. **Logs**: Check `logs/actions.log` and `logs/rasa.log` for diagnostics.
+
+---
+
+## Privacy Considerations and Future Enhancements
+
+**Privacy in API Integration**
+
+* Minimal data collection (only what's necessary, e.g., location)
+* Encrypt all data in transit (TLS) and at rest
+* Explicit user consent and opt‑out commands (e.g., "Stop sharing my data")
+
+**Optional UX Features**
+
+* Exit commands (implemented but under refinement) to cancel at any point
+* Personalization (remember favorite cuisines)
+* Multilingual support with fallbacks to user’s locale
+
+**Risks & Mitigation**
+
+* Privacy: encryption, strict data lifecycle, transparent notices
+* Model bias: continuous monitoring, diverse utterance examples
+* Complexity: incremental rollout and user acceptance testing
 
 ---
 
 ## Possible Future Work
 
-- **Dynamic data**: Use a database instead of JSON  
-- **Enhanced UX**: Add automatic voice recognition ("Hey Alice") or customize the front-end (loading spinner, etc.) 
-- **User profiles & personalization**: Create user profiles and recommend based on past bookings over time
-- **Location-based suggestions**: Use a location API to suggest nearby restaurants  
-- **Restaurant data API**: Integrate with third‑party restaurant APIs for live menus and availability
-- **Automated confirmations**: Automatically send confirmation emails/SMS after booking
-- **Sentiment-aware recommendations**: Implement sentiment analysis on user utterances (e.g. detecting if they’re in a hurry) to prioritize quick suggestions
-
-
+* Dynamic data backend (database instead of JSON)
+* Voice activation keywords and enhanced front‑end (loading spinners)
+* User profiles for long‑term personalization
+* Location-based restaurant suggestions via external APIs
+* Automated booking confirmations (email/SMS)
+* Sentiment-aware recommendations for context‑aware suggestions

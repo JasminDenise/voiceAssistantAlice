@@ -33,6 +33,34 @@ rules:
 
 
 # --- Form Rule ---
+#fallback 
+- rule: Form fallback → cancel booking
+  condition:
+    - active_loop: restaurant_form
+  steps:
+    - intent: nlu_fallback        # fires when FallbackClassifier is below threshold
+    - action: action_deactivate_loop
+    - action: action_clear_slots
+    - action: utter_booking_canceled
+
+- rule: Cancel restaurant form
+  condition:
+    - active_loop: restaurant_form
+  steps:
+    - intent: cancel
+    - action: action_clear_slots       # 1st: clear everything
+    - action: utter_booking_canceled    # 2nd: tell user it’s cancelled
+    - action: action_deactivate_loop    # 3rd: shut the form off
+    - action: action_listen             # 4th: go back to listening
+
+
+# Generic cancel (not in form)
+- rule: Cancel outside form
+  condition:
+    - active_loop: null
+  steps:
+    - intent: cancel
+    - action: utter_booking_canceled
 
 - rule: Activate restaurant_form
   condition:
@@ -54,6 +82,7 @@ rules:
     - action: action_suggest_restaurant
 
 
+
 # ---  Only if user follows up with a new date/time (and NOT “no”), reopen form ---
 
 - rule: User provides a new date/time after suggestion
@@ -73,18 +102,14 @@ rules:
     - action: utter_submit
     - action: action_clear_slots
 
-- rule: User cancels booking after suggestion
+- rule: User denies booking after suggestion
   steps:
     - action: action_suggest_restaurant
     - intent: deny
     - action: utter_booking_canceled
     - action: action_clear_slots
 
-- rule: Cancel booking 
-  steps:
-    - intent: cancel
-    - action: utter_booking_canceled
-    - action: action_clear_slots
+
 
 # - rule: Clear slots
 #   steps:

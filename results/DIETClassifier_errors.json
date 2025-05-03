@@ -1,5 +1,37 @@
 [
   {
+    "text": "I don't have any dietary restrictions",
+    "entities": [
+      {
+        "start": 2,
+        "end": 37,
+        "value": "don't have any dietary restrictions",
+        "entity": "dietary_preferences"
+      }
+    ],
+    "predicted_entities": [
+      {
+        "entity": "dietary_preferences",
+        "start": 0,
+        "end": 1,
+        "confidence_entity": 0.8862987756729126,
+        "value": "I",
+        "extractor": "DIETClassifier"
+      },
+      {
+        "entity": "dietary_preferences",
+        "start": 2,
+        "end": 37,
+        "confidence_entity": 0.9840171337127686,
+        "value": "don't have any dietary restrictions",
+        "extractor": "DIETClassifier",
+        "processors": [
+          "EntitySynonymMapper"
+        ]
+      }
+    ]
+  },
+  {
     "text": "i have no restrictions I can eat everything",
     "entities": [
       {
@@ -14,7 +46,7 @@
         "entity": "dietary_preferences",
         "start": 7,
         "end": 22,
-        "confidence_entity": 0.9916554093360901,
+        "confidence_entity": 0.9953518509864807,
         "value": "omnivore",
         "extractor": "DIETClassifier",
         "processors": [
@@ -25,39 +57,7 @@
         "entity": "dietary_preferences",
         "start": 33,
         "end": 43,
-        "confidence_entity": 0.884814441204071,
-        "value": "omnivore",
-        "extractor": "DIETClassifier",
-        "processors": [
-          "EntitySynonymMapper"
-        ]
-      }
-    ]
-  },
-  {
-    "text": "No I have no restrictions",
-    "entities": [
-      {
-        "start": 10,
-        "end": 25,
-        "value": "omnivore",
-        "entity": "dietary_preferences"
-      }
-    ],
-    "predicted_entities": [
-      {
-        "entity": "dietary_preferences",
-        "start": 0,
-        "end": 2,
-        "confidence_entity": 0.6664401292800903,
-        "value": "No",
-        "extractor": "DIETClassifier"
-      },
-      {
-        "entity": "dietary_preferences",
-        "start": 10,
-        "end": 25,
-        "confidence_entity": 0.9948058128356934,
+        "confidence_entity": 0.9589051008224487,
         "value": "omnivore",
         "extractor": "DIETClassifier",
         "processors": [

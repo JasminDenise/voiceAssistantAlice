@@ -33,26 +33,34 @@ logger.addHandler(fh)
 
 def check_turns(fn):
     async def wrapper(self, slot_value, dispatcher, tracker, domain):
+        # 1) compute new turn count
         current = tracker.get_slot("turn_counter") or 0
         new_count = current + 1
 
-        # call the real validator
+        # 2) if we've reached or exceeded the max, go ahead with suggestion
+        if new_count >= getattr(self, "MAX_TURNS", float("inf")):
+            dispatcher.utter_message(response="utter_max_reached")
+            return [
+                SlotSet("turn_counter", new_count),
+                FollowupAction("action_suggest_restaurant")
+            ]
+
+        # 3) otherwise, run the normal validator
         if inspect.iscoroutinefunction(fn):
             result = await fn(self, slot_value, dispatcher, tracker, domain)
         else:
             result = fn(self, slot_value, dispatcher, tracker, domain)
 
-        # if they returned a dict, inject turn_counter into that dict
+        # 4) inject the updated turn_counter into whatever the validator returned (e.g. a dict)
         if isinstance(result, dict):
             result["turn_counter"] = new_count
             return result
-
-        # if they returned events, prepend the SlotSet event
         if isinstance(result, list):
             return [SlotSet("turn_counter", new_count)] + result
 
-        # fallback: just bump the counter
+        # 5) fallback: just increment the counter
         return {"turn_counter": new_count}
+
     return wrapper
 
 # based on: https://legacy-docs-oss.rasa.com/docs/rasa/forms/#validating-form-input
@@ -60,6 +68,7 @@ class ValidateRestaurantForm(FormValidationAction):
     MAX_TURNS = 10
     def name(self) -> Text:
         return "validate_restaurant_form"
+        
 
     # valid cuisines
     @staticmethod
@@ -81,8 +90,14 @@ class ValidateRestaurantForm(FormValidationAction):
         tracker: Tracker,
         domain: DomainDict,
     ) -> List[Text]:
-        
             """Dynamically ask only the needed slots, and don’t re-ask past_bookings once set."""
+            # Immediate cancel check 
+            if  tracker.latest_message["intent"].get("name") == "cancel":
+                # inform user 
+                dispatcher.utter_message(response="utter_booking_canceled")
+                return []  # returning empty list -> deactivate the form
+
+            
              # 1) If they already gave a past_restaurant_name, skip the booking‐check
             if tracker.get_slot("past_restaurant_name"):
                 return ["date_and_time", "num_of_guests"]
@@ -98,7 +113,7 @@ class ValidateRestaurantForm(FormValidationAction):
             # 4) They’ve said no → full new booking path
             return ["cuisine_preferences", "dietary_preferences", "date_and_time", "num_of_guests"]
 
-    @check_turns
+    # @check_turns
     async def validate_past_bookings(
         self,
         slot_value: Any,
@@ -127,7 +142,7 @@ class ValidateRestaurantForm(FormValidationAction):
         
         return {"past_bookings": slot_value}
 
-    @check_turns
+    #@check_turns
     async def validate_past_restaurant_name(
         self,
         slot_value: Any,
@@ -160,9 +175,9 @@ class ValidateRestaurantForm(FormValidationAction):
             return {"cuisine_preferences": None}
         return {"cuisine_preferences": slot_value}
 
-    @check_turns
+    #@check_turns
     async def validate_dietary_preferences(self, slot_value, dispatcher, tracker, domain):
-        # 1) if we’re asking for diet and they said “no”, map immediately
+        # 1) if bot asking for diet and user said “no”, map immediately
         if tracker.get_slot("requested_slot") == "dietary_preferences" \
         and tracker.latest_message["intent"].get("name") == "deny":
             return {"dietary_preferences": ["omnivore"]}
@@ -193,7 +208,7 @@ class ValidateRestaurantForm(FormValidationAction):
 
         return {"dietary_preferences": values}
 
-    @check_turns
+   # @check_turns
     async def validate_date_and_time(
         self,
         slot_value: Any,
@@ -217,7 +232,7 @@ class ValidateRestaurantForm(FormValidationAction):
             return {"date_and_time": None}
         return {"date_and_time": slot_value}
 
-    @check_turns
+    #@check_turns
     async def validate_num_of_guests(
         self,
         slot_value: Any,
@@ -424,7 +439,6 @@ class ActionLogAndFallback(Action):
         user_msg = tracker.latest_message.get("text")
         turn    = tracker.get_slot("turn_counter") or "?"
         logger.warning(f"FALLBACK triggered at turn {turn}: \"{user_msg}\"")
-        # (Optionally write to file / database here)
 
         # 2) Notify the user
         dispatcher.utter_message(response="utter_default")

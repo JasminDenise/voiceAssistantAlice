@@ -1,1 +1,58 @@
-# None of the test stories failed - all good!
+version: "3.1"
+stories:
+- story: new booking all slots at once (/Users/jasmin/Desktop/Master Applied Artificial Intelligence/Kurse/06 Voice Assistants/VoiceAssistant/tests/test_stories.yml)
+  steps:
+  - intent: inform_booking_details
+  - action: restaurant_form
+  - active_loop: restaurant_form
+  - action: restaurant_form  # predicted: action_listen
+  - active_loop: null
+  - action: action_suggest_restaurant
+  - intent: affirm
+  - action: utter_submit
+  - action: action_clear_slots
+- story: rebook unavailable past restaurant (/Users/jasmin/Desktop/Master Applied Artificial Intelligence/Kurse/06 Voice Assistants/VoiceAssistant/tests/test_stories.yml)
+  steps:
+  - intent: inform_booking_details
+  - action: restaurant_form
+  - active_loop: restaurant_form
+  - intent: inform_booking_details
+  - action: restaurant_form
+  - action: action_suggest_restaurant  # predicted: action_listen
+  - action: action_listen  # predicted: action_log_and_fallback
+  - intent: deny
+  - action: utter_booking_canceled
+  - action: action_clear_slots
+  - action: action_listen  # predicted: action_suggest_restaurant
+- story: rebook but unavailable (alternative test) (/Users/jasmin/Desktop/Master Applied Artificial Intelligence/Kurse/06 Voice Assistants/VoiceAssistant/tests/test_stories.yml)
+  steps:
+  - intent: inform_booking_details
+    entities:
+    - past_restaurant_name: Dragon Wok
+  - slot_was_set:
+    - past_restaurant_name: Dragon Wok
+  - slot_was_set:
+    - past_restaurant_name: Dragon Wok
+  - slot_was_set:
+    - past_bookings: true
+  - action: restaurant_form
+  - active_loop: restaurant_form
+  - intent: inform_booking_details
+  - action: action_suggest_restaurant  # predicted: action_listen
+  - action: action_listen  # predicted: action_log_and_fallback
+  - intent: deny
+  - action: utter_booking_canceled
+  - action: action_listen  # predicted: action_clear_slots
+- story: cancel in the middle of the form (/Users/jasmin/Desktop/Master Applied Artificial Intelligence/Kurse/06 Voice Assistants/VoiceAssistant/tests/test_stories.yml)
+  steps:
+  - intent: inform_booking_details
+  - action: restaurant_form
+  - active_loop: restaurant_form
+  - slot_was_set:
+    - num_of_guests: 3
+  - slot_was_set:
+    - requested_slot: past_bookings
+  - intent: cancel
+  - action: utter_booking_canceled  # predicted: action_clear_slots
+  - action: action_clear_slots  # predicted: action_listen
+  - action: action_listen  # predicted: action_log_and_fallback

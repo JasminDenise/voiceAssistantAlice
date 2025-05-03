@@ -2,48 +2,17 @@
 #### If you want to learn more, please see the docs: https://rasa.com/docs/rasa/testing-your-assistant
 
 stories:
-
-- story: say hello
-  steps:
-  - user: |
-      good morning Alice
-    intent: greet
-  - action: utter_greet
-
-- story: say goodbye
-  steps:
-  - user: |
-      see you later, bye
-    intent: goodbye
-  - action: utter_goodbye
-
-- story: bot challenge
-  steps:
-  - user: |
-      what are you? a bot?
-    intent: bot_challenge
-  - action: utter_iamabot
-
-- story: thank you
-  steps:
-  - user: |
-      awesome, thanks!
-    intent: thank_you
-  - action: utter_no_problem
-
-## restaurant specific
-
 # 1) New booking: all details in one shot
 - story: new booking all slots at once
   steps:
   - user: |
-      I’d like a vegan Mexican table for three at 7:30 PM tomorrow.
+      I’d like a vegan Mexican table for three at 7:30 PM on Saturday.
     intent: inform_booking_details
     entities:
       - dietary_preferences: "vegan"
       - cuisine_preferences: "Mexican"
       - number: "3"
-      - time: "2025-05-02T19:30:00.000+02:00"
+      - time: "2025-05-03T19:30:00.000+02:00"
   - action: restaurant_form
   - active_loop: restaurant_form
   - action: restaurant_form
@@ -51,15 +20,15 @@ stories:
   - action: action_suggest_restaurant
   - user: |
       yes please
-  - intent: affirm
+    intent: affirm
   - action: utter_submit
   - action: action_clear_slots
 
-# 2) New booking: missing time → ask again
+# 2) New booking: missing time -> ask again
 - story: new booking missing time
   steps:
   - user: |
-      Book two Italian vegetarian seats for saturday.
+      Book two Italian vegetarian seats for Saturday.
     intent: inform_booking_details
     entities:
       - number: 2
@@ -73,10 +42,10 @@ stories:
   - slot_was_set:
       - requested_slot: date_and_time
   - user: |
-      Let’s do 6:45 PM on May 3rd.
+      Let’s do 6:30 PM on May 3rd.
     intent: inform_booking_details
     entities:
-      - time: "2025-05-02T18:45:00.000+02:00"
+      - time: "2025-05-03T18:30:00.000+02:00"
   - action: restaurant_form
   - active_loop: null
   - action: action_suggest_restaurant
@@ -85,7 +54,6 @@ stories:
     intent: affirm
   - action: utter_submit
   - action: action_clear_slots
-
 
 # 3) Rebook known restaurant, available
 - story: rebook available past restaurant
@@ -98,10 +66,10 @@ stories:
   - action: restaurant_form
   - active_loop: restaurant_form
   - user: |
-      How about tomorrow at 8 PM for four?
+      How about Friday at 8:00 PM for four?
     intent: inform_booking_details
     entities:
-      - time: "2025-05-04T20:00:00.000+02:00"
+      - time: "2025-05-02T20:00:00.000+02:00"
       - number: 4
   - action: restaurant_form
   - active_loop: null
@@ -112,7 +80,7 @@ stories:
   - action: utter_submit
   - action: action_clear_slots
 
-# 4) Rebook known restaurant, unavailable → alternative
+# 4) Rebook known restaurant, unavailable -> suggest alternative
 - story: rebook unavailable past restaurant
   steps:
   - user: |
@@ -123,29 +91,21 @@ stories:
   - action: restaurant_form
   - active_loop: restaurant_form
   - user: |
-      Friday at 7 please, party of five.
+      Friday at 7:00 PM, party of 6.
     intent: inform_booking_details
     entities:
-      - time: "2025-05-05T19:00:00.000+02:00"
-      - number: 5
+      - time: "2025-05-02T19:00:00.000+02:00"
+      - number: 6
   - action: restaurant_form
-  - action: action_suggest_restaurant    # bot says “not available… how about X?”
+  - action: action_suggest_restaurant    # bot says “not available... how about X?”
   - user: |
       no, thanks
     intent: deny
   - action: utter_booking_canceled
   - action: action_clear_slots
 
-# 5) Out-of-scope fallback
-- story: user asks unrelated question
-  steps:
-  - user: |
-      tell me a joke
-  - intent: out_of_scope
-  - action: utter_default
-
-# 6) Rebooking unavailable → suggest alternative
-- story: Rebook but unavailable
+# 5) Rebooking unavailable -> suggest alternative
+- story: rebook but unavailable (alternative test)
   steps:
     - intent: inform_booking_details
       entities:
@@ -155,30 +115,126 @@ stories:
         - past_bookings: true
     - action: restaurant_form
     - active_loop: restaurant_form
-    - slot_was_set:
-        - date_and_time: "2025-04-21T20:00:00.000+02:00"
-        - num_of_guests: 4
-        - requested_slot: null
+    - user: |
+        Friday at 7:00 PM for 6 people.
+      intent: inform_booking_details
+      entities:
+        - time: "2025-05-02T19:00:00.000+02:00"
+        - number: 6
     - action: action_suggest_restaurant
-      # expects “sorry … not available” then an alt suggestion
-    - intent: deny_booking
+    - intent: deny
     - action: utter_booking_canceled
 
-# 7) Cancel mid‐form
-- story: Cancel in the middle of the form
+# 6) Cancel mid-form
+- story: cancel in the middle of the form
   steps:
-   - user: |
+  - user: |
       I need a table for 3 people.
-     intent: inform_booking_details
-     entities:
-        - number: 3
-   - action: restaurant_form
-   - active_loop: restaurant_form
-   - slot_was_set:
+    intent: inform_booking_details
+    entities:
+      - number: 3
+  - action: restaurant_form
+  - active_loop: restaurant_form
+  - slot_was_set:
       - num_of_guests: 3
       - requested_slot: past_bookings
-   - user: |
+  - user: |
       actually, stop
-   - intent: cancel
-   - action: utter_booking_canceled
-   - action: action_clear_slots
+    intent: cancel
+  - action: utter_booking_canceled
+  - action: action_clear_slots
+
+# 7) Form fallback -> cancel booking
+- story: form fallback cancels booking
+  steps:
+  - user: |
+      I need a table for 2 at 7.
+    intent: inform_booking_details
+    entities:
+      - number: 2
+      - time: "2025-05-03T19:00:00.000+02:00"
+  - action: restaurant_form
+  - active_loop: restaurant_form
+  - user: |
+      I’m not sure what to say
+    intent: nlu_fallback
+  - action: action_deactivate_loop
+  - action: action_clear_slots
+  - action: utter_booking_canceled
+
+# 8) Cancel restaurant form mid-flow
+- story: cancel restaurant form mid-flow
+  steps:
+  - user: |
+      Book me a Chinese table for 3.
+    intent: inform_booking_details
+    entities:
+      - cuisine_preferences: "Chinese"
+      - number: 3
+  - action: restaurant_form
+  - active_loop: restaurant_form
+  - user: |
+      cancel
+    intent: cancel
+  - action: action_clear_slots
+  - action: utter_booking_canceled
+  - action: action_deactivate_loop
+  - action: action_listen
+
+# 9) Minimal initial booking -> sequential slot filling (German cuisine)
+- story: minimal start new booking with German cuisine
+  steps:
+    - user: |
+        I want to book a restaurant
+      intent: inform_booking_details
+    - action: restaurant_form
+    - active_loop: restaurant_form
+    - user: |
+        no
+      intent: deny
+    - slot_was_set:
+        - past_bookings: false
+    - action: restaurant_form
+    - active_loop: restaurant_form
+    - user: |
+        German
+      intent: inform_booking_details
+      entities:
+        - cuisine_preferences: "German"
+    - slot_was_set:
+        - cuisine_preferences: ["German"]
+    - action: restaurant_form
+    - active_loop: restaurant_form
+    - user: |
+        I can eat anything
+      intent: inform_booking_details
+      entities:
+        - dietary_preferences: "omnivore"
+    - slot_was_set:
+        - dietary_preferences: ["omnivore"]
+    - action: restaurant_form
+    - active_loop: restaurant_form
+    - user: |
+        Tomorrow at 8 PM
+      intent: inform_booking_details
+      entities:
+        - time: "2025-05-04T20:00:00.000+02:00"
+    - slot_was_set:
+        - date_and_time: "2025-05-04T20:00:00.000+02:00"
+    - action: restaurant_form
+    - active_loop: restaurant_form
+    - user: |
+        Two people
+      intent: inform_booking_details
+      entities:
+        - number: "2"
+    - slot_was_set:
+        - num_of_guests: 2
+    - action: restaurant_form
+    - active_loop: null
+    - action: action_suggest_restaurant
+    - user: |
+        yes please
+      intent: affirm
+    - action: utter_submit
+    - action: action_clear_slots

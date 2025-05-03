@@ -135,6 +135,7 @@ nlu:
     - I can eat [anything]{"entity": "dietary_preferences", "value": "omnivore"}
     - Friday at 6pm
     - two people
+    - I want to book a table for two people for today at 7:00 p.m.
 - intent: out_of_scope
   examples: |
     - Who is your boss?
@@ -146,7 +147,6 @@ nlu:
     - What is a cat?
     - What is a dog?
     - I want to go to the zoo
-
 - intent: affirm
   examples: |
     - yes, I'd like to rebook
@@ -161,7 +161,7 @@ nlu:
     - yes, please
     - yes, I want to rebook
     - Yes, I'd like to book again
-    - Yes please book it 
+    - Yes please book it
     - please go ahead
     - yes, please book it there
     - Sounds good. Please book the table there.
@@ -182,18 +182,25 @@ nlu:
     - nope
     - no not yet
     - No I haven't
-    - No I haven't booke dbefore with you
+    - No I haven't booked before with you
     - No, I haven't
-    - I want to book it on a different time 
+    - I want to book it on a different time
     - No
     - no, I don't want to book it there
     - no, I don't want to book it
     - no, I don't want to book that restaurant
+    - no i haven't
+    - no i havent
 - intent: cancel
   examples: |
     - I want to cancel
-    - I don't want to book anymore
     - I want to cancel the process
+    - cancel
+    - stop
+    - exit
+    - never mind
+    - forget it
+    - quit
 - synonym: Italian
   examples: |
     - italian

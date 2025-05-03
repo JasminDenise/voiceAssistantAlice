@@ -47,9 +47,6 @@ responses:
   - text: How many guests?
   utter_booking_canceled:
   - text: Okay, I have cancelled your booking request. Maybe next time. Have a nice day!
-  # utter_booking_confirmation:
-  # - text: Can I book it for you?
-  # - text: Do you want to book it?
   utter_submit:
   - text: All done. I hope you enjoy your meal!
   - text: Great! I’ve recorded your booking. Enjoy your meal!
@@ -61,7 +58,7 @@ responses:
   - text: No problem!
   - text: That's fine.
   utter_clear_slots:
-  - text: All set! I've cleared our previous conversation. Feel free to start a new booking whenever you're ready!"
+  - text: I've cleared our previous conversation. Feel free to start a new booking whenever you're ready!
   utter_max_reached:
   - text: You've reached the maximum number of booking attempts. Please try again later.
   - text: Looks like we're going in circles. Let's start over.
@@ -69,19 +66,18 @@ slots:
   past_bookings:
     type: bool
     mappings:
-      # only map affirm/deny when the form is active _and_ requested_slot = past_bookings
-      - type: from_intent
-        intent: affirm
-        value: true
-        conditions:
-          - active_loop: restaurant_form
-          - requested_slot: past_bookings
-      - type: from_intent
-        intent: deny
-        value: false
-        conditions:
-          - active_loop: restaurant_form
-          - requested_slot: past_bookings
+    - type: from_intent
+      intent: affirm
+      value: true
+      conditions:
+      - active_loop: restaurant_form
+      - requested_slot: past_bookings
+    - type: from_intent
+      intent: deny
+      value: false
+      conditions:
+      - active_loop: restaurant_form
+      - requested_slot: past_bookings
   past_restaurant_name:
     type: text
     mappings:
@@ -97,32 +93,14 @@ slots:
     mappings:
     - type: from_entity
       entity: number
-      
   dietary_preferences:
     type: list
     mappings:
-      # 1) if user denies when asked for diet, map to omnivore
-      # - type: from_intent
-      #   intent: deny
-      #   value:
-      #     - omnivore
-      #   conditions:
-      #     - active_loop: restaurant_form
-      #     - requested_slot: dietary_preferences
-
-      # 2) if they say “vegetarian” / “vegan” etc.
-      - type: from_entity
-        entity: dietary_preferences
-        conditions:
-          - active_loop: restaurant_form
-          - requested_slot: dietary_preferences
-       # 2) FALLBACK: *any* text (including “no”) when asking for diet
-      # - type: from_text
-      #   conditions:
-      #     - active_loop: restaurant_form
-      #     - requested_slot: dietary_preferences
-
-    
+    - type: from_entity
+      entity: dietary_preferences
+      conditions:
+      - active_loop: restaurant_form
+      - requested_slot: dietary_preferences
   cuisine_preferences:
     type: list
     mappings:
@@ -140,11 +118,11 @@ forms:
     - date_and_time
     - num_of_guests
 actions:
+- utter_booking_canceled
 - action_clear_slots
 - utter_submit
 - action_suggest_restaurant
 - action_log_and_fallback
-- utter_booking_canceled
 - validate_restaurant_form
 session_config:
   session_expiration_time: 60
