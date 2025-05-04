@@ -62,7 +62,7 @@ cd voiceAssistantAlice
 ### 2. Create Virtual Environment & Install Dependencies
 
 ```bash
-python3.10 -m venv va_env
+python3 -m venv "va_env"
 source va_env/bin/activate   # macOS/Linux
 # or .\va_env\Scripts\Activate.ps1  # Windows (PowerShell)
 
