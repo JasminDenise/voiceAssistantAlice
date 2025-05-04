@@ -27,7 +27,6 @@ All services can be launched via a single script.
 
 ![System Architecture & Interaction Flow](docs/images/UpdatedSystemArchitecture.png)
 
-
 ---
 
 ## Setup & Usage
