@@ -56,7 +56,7 @@ All services can be launched via a single script.
 
 ```bash
 git clone https://github.com/<your-username>/voiceAssistantAlice.git
-cd VoiceAssistantAlice
+cd voiceAssistantAlice
 ```
 
 ### 2. Create Virtual Environment & Install Dependencies
