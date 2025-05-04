@@ -144,8 +144,8 @@ Watch a live session demonstrating the assistant handling new bookings, rebookin
 
 <a href="https://www.youtube.com/watch?v=IKRH7u9VYPU" target="_blank">
   <img src="https://img.youtube.com/vi/IKRH7u9VYPU/0.jpg" width="400" alt="Live Demo auf YouTube" />
-</a>
-![Watch the demo on Youtube](https://www.youtube.com/watch?v=IKRH7u9VYPU)
+</a><br/>
+Watch the demo on Youtube: https://www.youtube.com/watch?v=IKRH7u9VYPU
 
 
 
