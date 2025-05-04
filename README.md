@@ -79,6 +79,31 @@ stack build
 stack exec duckling-example-exe > ../logs/duckling.log 2>&1 &
 cd ..
 ```
+### 3. Run Duckling (from source)
+
+Duckling is required for date/time & number parsing. To build it locally:
+
+```bash
+# 1) Clone the official Duckling repo (includes Stack project files)
+git clone https://github.com/facebook/duckling.git
+cd duckling
+
+# 2) Ensure you have Haskell Stack installed (e.g. `brew install haskell-stack`)
+#    and then bootstrap GHC if needed:
+stack setup
+
+# 3) Build Duckling:
+stack build
+
+# 4) Start the Duckling HTTP server on port 8000:
+stack exec duckling-example-exe -- start --port 8000 > ../logs/duckling.log 2>&1 &
+
+# 5) Return to your project root:
+cd ..
+
+Note: If you prefer Docker:
+docker pull rasa/duckling
+docker run -d --name duckling -p 8000:8000 rasa/duckling
 
 ### 4. Preprocess Restaurant Data
 
