@@ -25,7 +25,7 @@ All services can be launched via a single script.
 
 ## Architecture & Key Components 
 
-![System Architecture & Interaction Flow (Updates)](docs/images/Updated%20System%20Architecture%404x.png)
+![System Architecture & Interaction Flow](docs/images/UpdatedSystemArchitecture.png)
 
 
 ---
