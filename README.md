@@ -62,11 +62,11 @@ cd voiceAssistantAlice
 ### 2. Create Virtual Environment & Install Dependencies
 
 ```bash
-python3 -m venv "va_env"
+python3.10 -m venv "va_env" # version 3.10 is required to work
 source va_env/bin/activate   # macOS/Linux
 # or .\va_env\Scripts\Activate.ps1  # Windows (PowerShell)
 
-pip3 install -r requirements.txt
+pip install -r requirements.txt
 ```
 
 ### 3. Run Duckling
