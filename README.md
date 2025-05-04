@@ -142,6 +142,8 @@ After running, inspect the reports generated under `results/`:
 Watch a live session demonstrating the assistant handling new bookings, rebookings, and cancellations:
 
 [https://youtu.be/](https://youtu.be/IKRH7u9VYPU)
+[![Live-Demo auf YouTube](https://img.youtube.com/vi/IKRH7u9VYPU/0.jpg)](https://youtu.be/IKRH7u9VYPU)
+
 
 ---
 
