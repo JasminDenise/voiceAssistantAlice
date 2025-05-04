@@ -2,4 +2,3 @@ va_env/
 __pycache__/
 .rasa/cache/
 __init__.py
-logs/
