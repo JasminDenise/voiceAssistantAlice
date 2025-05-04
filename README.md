@@ -100,11 +100,12 @@ stack exec duckling-example-exe -- start --port 8000 > ../logs/duckling.log 2>&1
 
 # 5) Return to your project root:
 cd ..
-
+```
 Note: If you prefer Docker:
+```bash
 docker pull rasa/duckling
 docker run -d --name duckling -p 8000:8000 rasa/duckling
-
+```
 ### 4. Preprocess Restaurant Data
 
 Whenever you update `data/restaurants.json`, regenerate TF–IDF:
