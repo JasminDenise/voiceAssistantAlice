@@ -55,7 +55,7 @@ All services can be launched via a single script.
 ### 1. Clone & Navigate
 
 ```bash
-git clone https://github.com/JasminDenise/voiceAssistantAlice.git
+git clone --depth 1 https://github.com/JasminDenise/voiceAssistantAlice.git # for faster setup
 cd voiceAssistantAlice
 ```
 
