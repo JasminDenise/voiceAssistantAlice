@@ -10,23 +10,43 @@ This repository contains all components for a prototype voice assistant that rec
 
 VoiceAssistantAlice demonstrates an end-to-end conversational AI system built on Rasa. It includes:
 
-* **Custom Form Validation** (`ValidateRestaurantForm`) to collect and validate user slots (cuisine, dietary restrictions, date/time, number of guests, past bookings).
+* **Custom Form Validation** (`ValidateRestaurantForm`) to collect and validate user slots (cuisine, dietary restrictions, date/time, number of guests, past bookings).  
 * **Recommendation Engine** (`ActionSuggestRestaurant`) that:
-
-  * Precomputes TF–IDF vectors for each restaurant description.
-  * Uses cosine similarity to match user preferences (cuisine + diet).
-  * Checks availability based on Duckling‑parsed date/time and guest count.
-* **Duckling Integration** for robust natural language date/time & number of guests understanding.
-* **Flask App** (`app.py`) as a minimal web interface to demonstrate interactions.
-* **Interactive Rasa Shell** for story creation and testing via `rasa interactive`.
-* **Automated Preprocessing Script** (`preprocess.py`) to generate and serialize TF–IDF models for fast startup.
+  * Precomputes TF–IDF vectors for each restaurant description.  
+  * Uses cosine similarity to match user preferences (cuisine + diet).  
+  * Checks availability based on Duckling-parsed date/time and guest count.  
+* **Duckling Integration** for robust natural language date/time & number of guests understanding.  
+* **Flask App** (`app.py`) as a minimal web interface to demonstrate interactions.  
+* **Interactive Rasa Shell** for story creation and testing via `rasa interactive`.  
+* **Automated Preprocessing Script** (`preprocess.py`) to generate and serialize TF–IDF models for fast startup.  
 
 All services can be launched via a single script.
 
+---
+
 ## Architecture & Key Components 
 
-<img src="docs/images/UpdatedSystemArchitecture.png" width="600" alt="System Architecture & Interaction Flow" />
+### 1. System Architecture & Interaction Flow  
+<p >
+  <img src="docs/images/UpdatedSystemArchitecture.png" alt="System Architecture & Interaction Flow" width="600"/><br/>
+  <em>Figure 1: End-to-end architecture and message flow</em>
+</p>
 
+### 2. Form Handling & Validation Logic  
+<p >
+  <img src="docs/images/FormLogic.png" alt="Form Activation Logic" width="400"/><br/>
+  <em>Figure 2: Form handling logic</em>
+</p>  
+<p >
+  <img src="docs/images/FormValidationLogic.png" alt="Form Validation Logic" width="400"/><br/>
+  <em>Figure 3: Form validation flow</em>
+</p>
+
+### 3. Recommendation Logic  
+<p >
+  <img src="docs/images/RecommendationLogic.png" alt="Recommendation Logic" width="400"/><br/>
+  <em>Figure 4: TF–IDF based recommendation and availability check</em>
+</p>
 
 ---
 
