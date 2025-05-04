@@ -28,23 +28,23 @@ All services can be launched via a single script.
 
 ### 1. System Architecture & Interaction Flow  
 <p >
-  <img src="docs/images/UpdatedSystemArchitecture.png" alt="System Architecture & Interaction Flow" width="600"/><br/>
+  <img src="docs/images/UpdatedSystemArchitecture.png" alt="System Architecture & Interaction Flow" width="500"/><br/>
   <em>Figure 1: End-to-end architecture and message flow</em>
 </p>
 
 ### 2. Form Handling & Validation Logic  
 <p >
-  <img src="docs/images/FormLogic.png" alt="Form Activation Logic" width="400"/><br/>
+  <img src="docs/images/FormLogic.png" alt="Form Activation Logic" width="500"/><br/>
   <em>Figure 2: Form handling logic</em>
 </p>  
 <p >
-  <img src="docs/images/FormValidationLogic.png" alt="Form Validation Logic" width="400"/><br/>
+  <img src="docs/images/FormValidationLogic.png" alt="Form Validation Logic" width="500"/><br/>
   <em>Figure 3: Form validation flow</em>
 </p>
 
 ### 3. Recommendation Logic  
 <p >
-  <img src="docs/images/RecommendationLogic.png" alt="Recommendation Logic" width="400"/><br/>
+  <img src="docs/images/RecommendationLogic.png" alt="Recommendation Logic" width="500"/><br/>
   <em>Figure 4: TF–IDF based recommendation and availability check</em>
 </p>
 
