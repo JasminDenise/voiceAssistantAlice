@@ -66,7 +66,7 @@ python3 -m venv "va_env"
 source va_env/bin/activate   # macOS/Linux
 # or .\va_env\Scripts\Activate.ps1  # Windows (PowerShell)
 
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 ### 3. Run Duckling
