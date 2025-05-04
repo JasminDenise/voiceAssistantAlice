@@ -106,14 +106,14 @@ class ValidateRestaurantForm(FormValidationAction):
             if tracker.get_slot("past_bookings") is None:
                 return ["past_bookings"]
 
-            # 3) They’ve said yes → rebooking path
+            # 3) They’ve said yes -> rebooking path
             if tracker.get_slot("past_bookings"):
                 return ["past_restaurant_name", "date_and_time", "num_of_guests"]
 
-            # 4) They’ve said no → full new booking path
+            # 4) They’ve said no -> full new booking path
             return ["cuisine_preferences", "dietary_preferences", "date_and_time", "num_of_guests"]
 
-    # @check_turns
+    @check_turns
     async def validate_past_bookings(
         self,
         slot_value: Any,
@@ -124,10 +124,9 @@ class ValidateRestaurantForm(FormValidationAction):
         
 
         # check if past_restaurant_name was already provided
-        # if user said yes but no restaurant yet, ask for it next
+        # if user said "yes" but no restaurant yet, ask for it next
 
-         # Get the last intent
-         
+        # Get the last intent 
         last_intent = tracker.latest_message["intent"].get("name")
 
         # Set value here based on intent because automatic intent mapping doesn't worked as intented
@@ -142,7 +141,7 @@ class ValidateRestaurantForm(FormValidationAction):
         
         return {"past_bookings": slot_value}
 
-    #@check_turns
+    @check_turns
     async def validate_past_restaurant_name(
         self,
         slot_value: Any,
@@ -175,7 +174,7 @@ class ValidateRestaurantForm(FormValidationAction):
             return {"cuisine_preferences": None}
         return {"cuisine_preferences": slot_value}
 
-    #@check_turns
+    @check_turns
     async def validate_dietary_preferences(self, slot_value, dispatcher, tracker, domain):
         # 1) if bot asking for diet and user said “no”, map immediately
         if tracker.get_slot("requested_slot") == "dietary_preferences" \
@@ -208,7 +207,7 @@ class ValidateRestaurantForm(FormValidationAction):
 
         return {"dietary_preferences": values}
 
-   # @check_turns
+    @check_turns
     async def validate_date_and_time(
         self,
         slot_value: Any,
@@ -232,7 +231,7 @@ class ValidateRestaurantForm(FormValidationAction):
             return {"date_and_time": None}
         return {"date_and_time": slot_value}
 
-    #@check_turns
+    @check_turns
     async def validate_num_of_guests(
         self,
         slot_value: Any,

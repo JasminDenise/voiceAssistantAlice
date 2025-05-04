@@ -137,6 +137,14 @@ After running, inspect the reports generated under `results/`:
 
 ---
 
+## Live Demo Recording
+
+Watch a live session demonstrating the assistant handling new bookings, rebookings, and cancellations:
+
+[https://youtu.be/](https://youtu.be/IKRH7u9VYPU)
+
+---
+
 ## Privacy Considerations and Future Enhancements
 
 **Privacy in API Integration**

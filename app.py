@@ -9,7 +9,7 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)  # Allow all origins
 
-# Initialize Kokoro Text-to-Speech pipeline (American English)
+# Initialize Kokoro Text-to-Speech pipeline 
 pipeline = KPipeline(lang_code='a')  # 'a' = American English voice model
 
 # ---------------------------------------------
@@ -61,14 +61,14 @@ def process_input():
         })
 
     # ----------------------------------------------------------------
-    # Collect ALL of Rasa's text replies in this turn, in order:
+    # Collect all of Rasa's text replies in this turn & in order:
     # ----------------------------------------------------------------
     texts = [msg.get("text") for msg in rasa_response if msg.get("text")]
     if not texts:
         # Fallback if no text at all
         combined_text = "Sorry, I did not understand that. What did you say?"
     else:
-        # Join with newline so front-end can split into multiple messages
+        # Join with newline for better readibility
         combined_text = "\n".join(texts)
 
     # Convert response text to speech (TTS) using Kokoro
