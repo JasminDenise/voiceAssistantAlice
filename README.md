@@ -25,7 +25,8 @@ All services can be launched via a single script.
 
 ## Architecture & Key Components 
 
-![System Architecture & Interaction Flow](docs/images/UpdatedSystemArchitecture.png)
+<img src="docs/images/UpdatedSystemArchitecture.png" width="400" alt="System Architecture & Interaction Flow" />
+
 
 ---
 
@@ -143,6 +144,10 @@ Watch a live session demonstrating the assistant handling new bookings, rebookin
 
 [https://youtu.be/](https://youtu.be/IKRH7u9VYPU)
 [![Live-Demo auf YouTube](https://img.youtube.com/vi/IKRH7u9VYPU/0.jpg)](https://youtu.be/IKRH7u9VYPU)
+<a href="https://www.youtube.com/watch?v=IKRH7u9VYPU" target="_blank">
+  <img src="https://img.youtube.com/vi/IKRH7u9VYPU/0.jpg" width="400" alt="Live Demo auf YouTube" />
+</a>
+
 
 
 ---
