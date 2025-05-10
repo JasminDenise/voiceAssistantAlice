@@ -69,9 +69,16 @@ source va_env/bin/activate   # macOS/Linux
 pip install -r requirements.txt
 ```
 
-### 3. Run Duckling (from source)
+### 3. Run Duckling (via Docker)
 
-Duckling is required for date/time & number parsing. To build it locally:
+Duckling is required for date/time & number parsing. 
+
+```bash
+docker pull rasa/duckling
+docker run -d --name duckling -p 8000:8000 rasa/duckling
+```
+
+To build it locally:
 
 ```bash
 # 1) Clone the official Duckling repo (includes Stack project files)
@@ -91,11 +98,7 @@ stack exec duckling-example-exe -- start --port 8000 > ../logs/duckling.log 2>&1
 # 5) Return to your project root:
 cd ..
 ```
-Note: If you prefer Docker:
-```bash
-docker pull rasa/duckling
-docker run -d --name duckling -p 8000:8000 rasa/duckling
-```
+
 ### 4. Preprocess Restaurant Data
 
 Whenever you update `data/restaurants.json`, regenerate TF–IDF:
