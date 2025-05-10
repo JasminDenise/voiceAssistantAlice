@@ -101,24 +101,22 @@ docker run -d --name duckling -p 8000:8000 rasa/duckling
 Whenever you update `data/restaurants.json`, regenerate TF–IDF:
 
 ```bash
-python preprocess.py
+python3 preprocess.py
 ```
 
 ### 5. Launch All Services
 
 #### macOS/Linux
-Optional (installing Gunicorn)
-If you’d rather use Gunicorn in Linux/macOS, install it first:
+Using Gunicorn in Linux/macOS:
  ```bash
-pip install gunicorn
 gunicorn -b 127.0.0.1:5000 app:app > logs/app.log 2>&1 &
 ```
 ```bash
 chmod +x ./start_bot.sh
 ./start_bot.sh
 # if you prefer to start Flask manually:
-#   cd 03_VoiceAssistantAlice
-#   python app.py
+#   cd voiceAssistantAlice
+#   python3 app.py
 
 
 #### Windows (PowerShell)
