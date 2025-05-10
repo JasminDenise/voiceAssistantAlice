@@ -10,15 +10,15 @@ This repository contains all components for a prototype voice assistant that rec
 
 VoiceAssistantAlice demonstrates an end-to-end conversational AI system built on Rasa. It includes:
 
-* **Custom Form Validation** (`ValidateRestaurantForm`) to collect and validate user slots (cuisine, dietary restrictions, date/time, number of guests, past bookings).  
+* **Custom Form Validation** (`ValidateRestaurantForm`) to collect and validate user slots (cuisine, dietary restrictions, date/time, number of guests, past bookings)  
 * **Recommendation Engine** (`ActionSuggestRestaurant`) that:
-  * Precomputes TF–IDF vectors for each restaurant description.  
-  * Uses cosine similarity to match user preferences (cuisine + diet).  
-  * Checks availability based on Duckling-parsed date/time and guest count.  
-* **Duckling Integration** for robust natural language date/time & number of guests understanding.  
-* **Flask App** (`app.py`) as a minimal web interface to demonstrate interactions.  
-* **Interactive Rasa Shell** for story creation and testing via `rasa interactive`.  
-* **Automated Preprocessing Script** (`preprocess.py`) to generate and serialize TF–IDF models for fast startup.  
+  * Precomputes TF–IDF vectors for each restaurant description
+  * Uses cosine similarity to match user preferences (cuisine + diet) 
+  * Checks availability based on Duckling-parsed date/time and guest count  
+* **Duckling Integration** for robust natural language date/time & number of guests understanding  
+* **Flask App** (`app.py`) as a minimal web interface to demonstrate interactions  
+* **Interactive Rasa Shell** for story creation and testing via `rasa interactive`  
+* **Automated Preprocessing Script** (`preprocess.py`) to generate and serialize TF–IDF models for fast startup  
 
 All services can be launched via a single script.
 
@@ -69,16 +69,6 @@ source va_env/bin/activate   # macOS/Linux
 pip install -r requirements.txt
 ```
 
-### 3. Run Duckling
-
-Duckling is required for date/time & number parsing.
-
-```bash
-cd duckling
-stack build
-stack exec duckling-example-exe > ../logs/duckling.log 2>&1 &
-cd ..
-```
 ### 3. Run Duckling (from source)
 
 Duckling is required for date/time & number parsing. To build it locally:
