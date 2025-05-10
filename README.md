@@ -69,17 +69,16 @@ source va_env/bin/activate   # macOS/Linux
 pip install -r requirements.txt
 ```
 
-### 3. Run Duckling (via Docker)
+### 3. Run Duckling 
+Duckling is required for date/time & number parsing. You have two options:
 
-Duckling is required for date/time & number parsing. 
-
+a) Via Docker (recommended)
 ```bash
 docker pull rasa/duckling
 docker run -d --name duckling -p 8000:8000 rasa/duckling
 ```
 
-To build it locally:
-
+b) From source
 ```bash
 # 1) Clone the official Duckling repo (includes Stack project files)
 git clone https://github.com/facebook/duckling.git
@@ -110,35 +109,36 @@ python3 preprocess.py
 ### 5. Launch All Services
 
 #### macOS/Linux
-Using Gunicorn in Linux/macOS:
- ```bash
-gunicorn -b 127.0.0.1:5000 app:app > logs/app.log 2>&1 &
-```
+
 ```bash
 chmod +x ./start_bot.sh
 ./start_bot.sh
-# if you prefer to start Flask manually:
-#   cd voiceAssistantAlice
-#   python3 app.py
-
-
-#### Windows (PowerShell)
-
-```powershell
-# Activate venv
-.\va_env\Scripts\Activate.ps1
-# Start Duckling
-cd duckling; stack exec duckling-example-exe > ..\logs\duckling.log 2>&1 ; cd ..
-# Start Rasa server
-rasa run --enable-api --cors "*" > logs\rasa.log 2>&1 &
-# Start action server
-rasa run actions > logs\actions.log 2>&1 &
-# Run Flask app
-gunicorn -b 127.0.0.1:5000 app:app > logs\app.log 2>&1 &
 ```
+ *If you prefer manual setup:*
+> ```bash
+> # Rasa server
+> rasa run --enable-api --cors "*"    > logs/rasa.log 2>&1 &
+> # Rasa action server
+> rasa run actions                   > logs/actions.log 2>&1 &
+> # Flask web app via Gunicorn
+> gunicorn -b 127.0.0.1:5000 app:app > logs/app.log 2>&1 &
+> ```
+#### Windows (Powershell)
 
-Open your browser at `http://localhost:5000`.
+```bash
+.\va_env\Scripts\Activate.ps1
 
+# Rasa server
+rasa run --enable-api --cors "*"    > logs\rasa.log 2>&1 &
+
+# Rasa action server
+rasa run actions                   > logs\actions.log 2>&1 &
+
+# Flask web app via Gunicorn
+gunicorn -b 127.0.0.1:5000 app:app > logs\app.log 2>&1 &
+
+```
+#### Once all services are running, open your browser to http://127.0.0.1:5000.
 ---
 
 ## Testing & Evaluation
@@ -168,7 +168,7 @@ After running, inspect the reports generated under `results/`:
 
 ## Demonstration & Evaluation
 
-1. **Web UI / Flask App**: chat + voice at `http://localhost:5000`
+1. **Web UI / Flask App**: chat + voice at `127.0.0.1:5000`
 2. **Rasa Interactive**: Create and refine stories:
 
    ```bash
